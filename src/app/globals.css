@@ -1,0 +1,348 @@
+@import "tailwindcss";
+
+/* ───────────────────────── Design tokens ───────────────────────── */
+@theme {
+  --color-night: #0b1426;
+  --color-navy: #0e1a36;
+  --color-navy-soft: #17264a;
+  --color-light: #f5f6f8;
+  --color-white: #ffffff;
+  --color-accent: #f2b705;
+  --color-accent-deep: #d9a404;
+
+  /* Text */
+  --color-ink: #0b1426;
+  --color-muted: #545e73; /* pe light/white: ≥ 6:1 */
+  --color-mist: #aab3c7; /* pe night/navy: ≥ 8:1 */
+  --color-line: #e3e6ec;
+  --color-line-dark: #24314f;
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: var(--font-inter-tight), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+
+  --radius-card: 1.5rem;
+  --shadow-lift: 0 1px 2px rgb(11 20 38 / 0.04), 0 12px 32px -8px rgb(11 20 38 / 0.18);
+  --shadow-lift-dark: 0 1px 2px rgb(0 0 0 / 0.3), 0 18px 40px -12px rgb(0 0 0 / 0.6);
+
+  --animate-reveal-up: reveal-up 1s var(--ease-out-expo) both;
+  --animate-fade-in: fade-in 1.2s var(--ease-out-quart) both;
+
+  @keyframes reveal-up {
+    from {
+      transform: translateY(105%);
+    }
+    to {
+      transform: translateY(0);
+    }
+  }
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+}
+
+/* ───────────────────────── Base ───────────────────────── */
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    scroll-padding-top: 5rem;
+  }
+  body {
+    @apply bg-white font-sans text-ink;
+    font-feature-settings: "cv11", "ss01";
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-display;
+    text-wrap: balance;
+  }
+  p {
+    text-wrap: pretty;
+  }
+  ::selection {
+    background: var(--color-accent);
+    color: var(--color-night);
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+}
+
+/* ───────────────────────── Typography helpers ───────────────────────── */
+@utility display-xl {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2.75rem, 1.2rem + 7.2vw, 8rem);
+  line-height: 0.94;
+  letter-spacing: -0.045em;
+}
+@utility display-lg {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2.25rem, 1.2rem + 4.4vw, 5.25rem);
+  line-height: 0.98;
+  letter-spacing: -0.04em;
+}
+@utility display-md {
+  font-family: var(--font-display);
+  font-weight: 650;
+  font-size: clamp(1.75rem, 1.1rem + 2.4vw, 3.25rem);
+  line-height: 1.04;
+  letter-spacing: -0.03em;
+}
+@utility eyebrow {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+@utility container-x {
+  width: 100%;
+  max-width: 84rem;
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+  @media (width >= 48rem) {
+    padding-inline: 2.5rem;
+  }
+}
+@utility section-y {
+  padding-block: 5.5rem;
+  @media (width >= 48rem) {
+    padding-block: 8.5rem;
+  }
+}
+
+/* ───────────────────────── Components ───────────────────────── */
+
+/* Butoane: săgeata se mișcă la hover */
+@layer components {
+  .btn {
+    @apply inline-flex min-h-12 items-center justify-center gap-2.5 rounded-full px-6 text-[0.95rem] font-semibold whitespace-nowrap;
+    transition:
+      background-color 0.25s var(--ease-out-quart),
+      color 0.25s var(--ease-out-quart),
+      border-color 0.25s var(--ease-out-quart),
+      transform 0.25s var(--ease-out-quart);
+  }
+  .btn:active {
+    transform: scale(0.98);
+  }
+  .btn-primary {
+    @apply bg-accent text-night hover:bg-[#ffc61a];
+  }
+  .btn-dark {
+    @apply bg-night text-white hover:bg-navy-soft;
+  }
+  .btn-light {
+    @apply bg-white text-night hover:bg-light;
+  }
+  .btn-ghost-light {
+    @apply border border-white/25 text-white hover:border-white/60 hover:bg-white/5;
+  }
+  .btn-ghost-dark {
+    @apply border border-night/15 text-night hover:border-night/40 hover:bg-night/[0.03];
+  }
+  .btn .arrow {
+    transition: transform 0.35s var(--ease-out-expo);
+  }
+  .btn:hover .arrow,
+  .link-arrow:hover .arrow {
+    transform: translateX(4px);
+  }
+  .link-arrow {
+    @apply inline-flex items-center gap-2 font-semibold;
+  }
+  .link-arrow .arrow {
+    transition: transform 0.35s var(--ease-out-expo);
+  }
+
+  /* Carduri care se ridică la hover */
+  .card-lift {
+    transition:
+      transform 0.5s var(--ease-out-expo),
+      box-shadow 0.5s var(--ease-out-expo),
+      border-color 0.3s;
+  }
+  @media (hover: hover) {
+    .card-lift:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-lift);
+    }
+    .card-lift-dark:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-lift-dark);
+    }
+  }
+
+  /* Câmpuri de formular */
+  .field {
+    @apply block w-full rounded-2xl border border-line bg-white px-4 py-3.5 text-base text-ink placeholder:text-muted/70;
+    transition:
+      border-color 0.2s,
+      box-shadow 0.2s;
+  }
+  .field:hover {
+    border-color: #c9ced8;
+  }
+  .field:focus {
+    outline: none;
+    border-color: var(--color-night);
+    box-shadow: 0 0 0 4px rgb(242 183 5 / 0.35);
+  }
+  .field[aria-invalid="true"] {
+    border-color: #b42318;
+  }
+  .label {
+    @apply mb-2 block text-sm font-medium text-ink;
+  }
+
+  /* Bandă orizontală cu snap */
+  .snap-strip {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: min(84%, 22rem);
+    gap: 1rem;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: 1.25rem;
+    padding-inline: 1.25rem;
+    padding-block: 0.75rem 1.5rem;
+    scrollbar-width: none;
+  }
+  .snap-strip::-webkit-scrollbar {
+    display: none;
+  }
+  .snap-strip > * {
+    scroll-snap-align: start;
+  }
+  @media (width >= 48rem) {
+    .snap-strip {
+      grid-auto-columns: 24rem;
+      gap: 1.25rem;
+      padding-inline: max(2.5rem, calc((100vw - 84rem) / 2 + 2.5rem));
+      scroll-padding-inline: max(2.5rem, calc((100vw - 84rem) / 2 + 2.5rem));
+    }
+  }
+}
+
+/* ───────────────────────── Header: sticlă mată la scroll ───────────────────────── */
+.site-header {
+  transition:
+    background-color 0.4s var(--ease-out-quart),
+    border-color 0.4s var(--ease-out-quart),
+    color 0.4s var(--ease-out-quart);
+}
+.site-header[data-scrolled="true"] {
+  background-color: rgb(11 20 38 / 0.72);
+  border-color: rgb(255 255 255 / 0.08);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  backdrop-filter: saturate(180%) blur(20px);
+}
+.site-header[data-theme="light"][data-scrolled="true"] {
+  background-color: rgb(255 255 255 / 0.72);
+  border-color: rgb(11 20 38 / 0.08);
+}
+
+/* ───────────────────────── Hero: text reveal la încărcare ───────────────────────── */
+.reveal-line {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.08em;
+  margin-bottom: -0.08em;
+}
+.reveal-line > span {
+  display: block;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .reveal-line > span {
+    animation: var(--animate-reveal-up);
+    animation-delay: calc(var(--i, 0) * 90ms + 80ms);
+  }
+  .reveal-fade {
+    animation: var(--animate-fade-in);
+    animation-delay: calc(var(--i, 0) * 90ms + 300ms);
+  }
+}
+
+/* ───────────────────────── Statement: cuvintele se aprind ───────────────────────── */
+/* Fără JS, sau cu mișcare redusă, textul este complet vizibil. */
+@media (prefers-reduced-motion: no-preference) {
+  /* Culoarea „stinsă” păstrează un contrast de 3.3:1 pe alb (text mare). */
+  .js [data-words] .w {
+    color: #868e9f;
+  }
+}
+
+/* ───────────────────────── Harta traseelor ───────────────────────── */
+.route-stop circle.dot {
+  transition:
+    fill 0.4s var(--ease-out-quart),
+    r 0.4s var(--ease-out-expo);
+}
+.route-stop text {
+  transition:
+    fill 0.4s var(--ease-out-quart),
+    opacity 0.4s;
+}
+.route-stop circle.halo {
+  transition:
+    opacity 0.5s,
+    r 0.6s var(--ease-out-expo);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .js .route-map[data-animate] .route-stop:not([data-lit]) circle.dot {
+    fill: var(--color-navy);
+  }
+  .js .route-map[data-animate] .route-stop:not([data-lit]) circle.halo {
+    opacity: 0;
+  }
+  .js .route-map[data-animate] .route-stop:not([data-lit]) text {
+    opacity: 0.35;
+  }
+}
+
+/* ───────────────────────── Rândunica ───────────────────────── */
+@media (prefers-reduced-motion: no-preference) {
+  .js .swallow-trail[data-animate] .trail-mask {
+    stroke-dashoffset: var(--trail-len, 3200);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .js .swallow-trail[data-animate] .swallow {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .js .route-map[data-animate] .route-line {
+    stroke-dashoffset: var(--len);
+  }
+}

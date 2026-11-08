@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 120" role="img" aria-label="Danca Way">
+  <!-- LOGO PROVIZORIU. Înlocuiește acest fișier cu logo-ul oficial (același nume). -->
+  <g transform="translate(4 10)"><path fill="#0E1A36" d="M20 4H70C98 4 116 22 112 48C108 76 84 96 56 96H2L20 4Z"/>
+<g transform="translate(14 22) rotate(-18 32 32) scale(1.12)"><path fill="#FFFFFF" d="M55 32C52 36.5 46 37.5 40 35.5C42 46 34 57 17 62C25 53 28 44 28 35L17 33.5L0 46L10 32L0 18L17 30.5L28 29C28 20 25 11 17 2C34 7 42 18 40 28.5C46 26.5 52 27.5 55 32Z"/><path fill="#F2B705" d="M53.6 30.4L59.5 32L53.6 33.6C54.2 32.6 54.2 31.4 53.6 30.4Z"/></g></g>
+  <text x="132" y="88" fill="#0E1A36" font-family="'Brush Script MT', 'Segoe Script', 'Inter Tight', Arial, sans-serif" font-style="italic" font-size="76" font-weight="800" letter-spacing="-1">Danca Way</text>
+</svg>
