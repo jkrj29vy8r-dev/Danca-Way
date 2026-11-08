@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { site } from "@/config/site";
+import { pilgrimageItems, tripItems } from "@/data/catalog";
 
 /** Toate paginile publice. Adaugă aici orice pagină nouă. */
 export const sitePages: { path: string; priority: number }[] = [
@@ -21,7 +22,11 @@ export const sitePages: { path: string; priority: number }[] = [
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const lastModified = new Date();
-  return sitePages.map(({ path, priority }) => ({
+  const pages = [
+    ...sitePages,
+    ...[...tripItems, ...pilgrimageItems].map((i) => ({ path: i.href, priority: 0.6 })),
+  ];
+  return pages.map(({ path, priority }) => ({
     url: `${site.url}${path === "/" ? "" : path}`,
     lastModified,
     changeFrequency: path === "/curse-regulate" ? "weekly" : "monthly",

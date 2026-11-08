@@ -1,32 +1,34 @@
-/* eslint-disable @next/next/no-img-element -- SVG static, nu are nevoie de optimizare */
-import { readFileSync } from "node:fs";
-import path from "node:path";
-
-type Props = { variant?: "navy" | "alb"; className?: string; inline?: boolean };
-
-const files = { navy: "danca-way-logo.svg", alb: "danca-way-logo-alb.svg" } as const;
-
-function readSvg(file: string) {
-  return readFileSync(path.join(process.cwd(), "public", "brand", file), "utf8")
-    .replace(/<\?xml[^>]*\?>/g, "")
-    .replace(/<!--[\s\S]*?-->/g, "")
-    .trim();
-}
+import Image from "next/image";
 
 /**
- * Logo-ul din /public/brand. Pentru a schimba logo-ul, înlocuiește fișierele SVG (același nume).
- * `inline` îl include direct în HTML (fără cerere suplimentară) — folosit în header, pentru viteză.
+ * Logo-ul din /public/brand, randat ca <Image>.
+ * - `alb`  (danca-way-logo-alb.svg): pe fundal închis
+ * - `navy` (danca-way-logo.svg): pe fundal deschis
+ * Pentru a schimba logo-ul, înlocuiește fișierele SVG păstrând aceleași nume.
+ * LOGO_RATIO = lățime / înălțime a fișierului (2000 × 456 pentru logo-ul actual).
  */
-export function Logo({ variant = "navy", className = "h-8 w-auto", inline = false }: Props) {
-  if (inline) {
-    return (
-      <span
-        role="img"
-        aria-label="Danca Way"
-        className={`inline-block [&>svg]:h-full [&>svg]:w-auto ${className}`}
-        dangerouslySetInnerHTML={{ __html: readSvg(files[variant]) }}
-      />
-    );
-  }
-  return <img src={`/brand/${files[variant]}`} alt="Danca Way" width={140} height={30} className={className} />;
+export const LOGO_RATIO = 2000 / 456;
+
+type Props = {
+  variant?: "navy" | "alb";
+  /** Înălțimea în pixeli (lățimea rezultă din proporții) */
+  height?: number;
+  className?: string;
+  priority?: boolean;
+  alt?: string;
+};
+
+export function Logo({ variant = "navy", height = 32, className = "", priority = false, alt = "Danca Way" }: Props) {
+  const src = variant === "alb" ? "/brand/danca-way-logo-alb.svg" : "/brand/danca-way-logo.svg";
+  return (
+    <Image
+      src={src}
+      alt={alt}
+      width={Math.round(height * LOGO_RATIO)}
+      height={height}
+      priority={priority}
+      className={className}
+      style={{ height, width: "auto" }}
+    />
+  );
 }

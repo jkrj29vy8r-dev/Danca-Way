@@ -1,11 +1,14 @@
+import { readFileSync } from "node:fs";
+import path from "node:path";
 import { ImageResponse } from "next/og";
-import { SWALLOW_BEAK, SWALLOW_PATH } from "@/components/icons";
 
-export const alt = "Danca Way — Transport persoane din Neamț";
+export const alt = "Danca Way — curse Neamț – București, Otopeni, Constanța";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
 export default function OpengraphImage() {
+  const logo = readFileSync(path.join(process.cwd(), "public", "brand", "danca-way-logo-alb.svg"));
+  const logoSrc = `data:image/svg+xml;base64,${logo.toString("base64")}`;
   return new ImageResponse(
     (
       <div
@@ -21,18 +24,12 @@ export default function OpengraphImage() {
           fontFamily: "sans-serif",
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
-          <svg width="72" height="72" viewBox="0 0 60 64">
-            <path d={SWALLOW_PATH} fill="#fff" />
-            <path d={SWALLOW_BEAK} fill="#F2B705" />
-          </svg>
-          <div style={{ fontSize: 40, fontWeight: 800, letterSpacing: 1 }}>DANCA WAY</div>
-        </div>
+        <img src={logoSrc} alt="" height={64} width={281} />
         <div style={{ display: "flex", flexDirection: "column" }}>
-          <div style={{ fontSize: 88, fontWeight: 800, lineHeight: 1, letterSpacing: -3 }}>Din Neamț,</div>
-          <div style={{ fontSize: 88, fontWeight: 800, lineHeight: 1, letterSpacing: -3 }}>oriunde vrei să ajungi.</div>
+          <div style={{ fontSize: 80, fontWeight: 800, lineHeight: 1.02, letterSpacing: -3 }}>Din Neamț la București.</div>
+          <div style={{ fontSize: 80, fontWeight: 800, lineHeight: 1.02, letterSpacing: -3 }}>Din Otopeni, acasă.</div>
           <div style={{ marginTop: 32, fontSize: 30, color: "#AAB3C7" }}>
-            Curse zilnice București · Otopeni · Constanța · Transfer 8+1 · Excursii · Pelerinaje
+            Târgu Neamț 05:00 și 09:00 · Otopeni 12:00 și 16:00 · Roman – Constanța 07:00
           </div>
         </div>
         <div style={{ display: "flex", width: 160, height: 8, borderRadius: 4, background: "#F2B705" }} />

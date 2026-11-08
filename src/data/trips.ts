@@ -1,6 +1,7 @@
 /**
  * Excursiile. Adaugă, șterge sau modifică intrări direct aici.
  * `featured: true` le afișează și în banda de pe pagina principală.
+ * Imaginea implicită: /public/images/excursii-<slug>.jpg (4:3, minimum 1600×1200).
  */
 
 export type TripCategory = "o-zi" | "weekend" | "craciun" | "city-break" | "litoral";
@@ -20,10 +21,13 @@ export type Trip = {
   /** Ex.: „1 zi”, „3 zile / 2 nopți” */
   duration: string;
   places: string[];
+  /** Fraze concrete: ce se vizitează, ce include, când */
   description: string;
   /** Perioada recomandată, opțional */
   season?: string;
   featured?: boolean;
+  /** Suprascrie imaginea implicită */
+  image?: string;
 };
 
 export const trips: Trip[] = [
@@ -33,7 +37,8 @@ export const trips: Trip[] = [
     category: "o-zi",
     duration: "1 zi",
     places: ["Barajul Izvorul Muntelui", "Cheile Bicazului", "Lacul Roșu"],
-    description: "Cea mai frumoasă zi de munte la o oră de casă: baraj, chei și lacul legendar.",
+    description:
+      "Oprire la barajul Izvorul Muntelui, drum prin Cheile Bicazului și timp liber la Lacul Roșu. Întoarcerea în Neamț este seara, în aceeași zi.",
     featured: true,
   },
   {
@@ -42,7 +47,8 @@ export const trips: Trip[] = [
     category: "o-zi",
     duration: "1 zi",
     places: ["Cetatea Neamțului", "Casa memorială Ion Creangă", "Mănăstirea Neamț"],
-    description: "Istorie și copilărie: cetatea lui Ștefan cel Mare și casa lui Creangă.",
+    description:
+      "Cetatea Neamțului, casa lui Ion Creangă din Humulești și Mănăstirea Neamț, toate la mai puțin de 15 km una de alta.",
   },
   {
     slug: "salina-praid-sovata",
@@ -50,25 +56,28 @@ export const trips: Trip[] = [
     category: "o-zi",
     duration: "1 zi",
     places: ["Salina Praid", "Lacul Ursu", "Sovata"],
-    description: "Aer de salină și o plimbare pe malul Lacului Ursu.",
+    description:
+      "Coborâre în Salina Praid și plimbare pe malul Lacului Ursu din Sovata, la circa trei ore de mers din Piatra Neamț.",
   },
   {
     slug: "transilvania-sibiu-brasov",
-    title: "Transilvania: Brașov, Sibiu, Transfăgărășan",
+    title: "Brașov, Sibiu & Transfăgărășan",
     category: "weekend",
     duration: "3 zile / 2 nopți",
     places: ["Brașov", "Sibiu", "Bâlea Lac", "Transfăgărășan"],
-    description: "Orașele medievale și cel mai spectaculos drum din țară.",
+    description:
+      "O noapte la Brașov, una la Sibiu și urcarea pe Transfăgărășan până la Bâlea Lac. Drumul este deschis de regulă între 1 iulie și 31 octombrie.",
     season: "iulie – octombrie",
     featured: true,
   },
   {
     slug: "maramures",
-    title: "Maramureșul autentic",
+    title: "Maramureș",
     category: "weekend",
     duration: "3 zile / 2 nopți",
     places: ["Cimitirul Vesel Săpânța", "Mănăstirea Bârsana", "Mocănița Vișeu de Sus"],
-    description: "Porți de lemn, biserici înalte și mocănița pe Valea Vaserului.",
+    description:
+      "Cimitirul Vesel din Săpânța, Mănăstirea Bârsana și o tură cu Mocănița pe Valea Vaserului, cu două nopți în Maramureș.",
   },
   {
     slug: "delta-dunarii",
@@ -76,7 +85,8 @@ export const trips: Trip[] = [
     category: "weekend",
     duration: "3 zile / 2 nopți",
     places: ["Tulcea", "Crișan", "Canalele Deltei"],
-    description: "Plimbări cu barca printre nuferi și pelicani, pește proaspăt la cină.",
+    description:
+      "Drum până la Tulcea, de unde continui cu barca spre Crișan, pe canalele Deltei, și înapoi după două nopți.",
     season: "mai – septembrie",
   },
   {
@@ -85,7 +95,8 @@ export const trips: Trip[] = [
     category: "craciun",
     duration: "2 zile / 1 noapte",
     places: ["Piața Sfatului, Brașov", "Piața Mare, Sibiu"],
-    description: "Vin fiert, colinde și luminițe în cele mai frumoase piețe din țară.",
+    description:
+      "Seara în Piața Sfatului din Brașov, a doua zi în Piața Mare din Sibiu, cu o noapte de cazare între ele.",
     season: "decembrie",
     featured: true,
   },
@@ -95,7 +106,8 @@ export const trips: Trip[] = [
     category: "craciun",
     duration: "3 zile / 2 nopți",
     places: ["Vörösmarty tér", "Bazilica Sf. Ștefan", "Parlamentul", "Dunărea"],
-    description: "Unul dintre cele mai frumoase târguri din Europa, la o zi de drum.",
+    description:
+      "Două nopți în Budapesta, cu târgurile din Vörösmarty tér și din fața Bazilicii Sf. Ștefan, la 10 minute de mers pe jos unul de altul.",
     season: "decembrie",
   },
   {
@@ -104,7 +116,8 @@ export const trips: Trip[] = [
     category: "craciun",
     duration: "4 zile / 3 nopți",
     places: ["Rathausplatz", "Schönbrunn", "Stephansdom"],
-    description: "Târgurile vieneze, palatele imperiale și cafenelele de poveste.",
+    description:
+      "Târgul din Rathausplatz, cel de la Palatul Schönbrunn și catedrala Stephansdom, cu trei nopți în Viena.",
     season: "decembrie",
   },
   {
@@ -113,7 +126,8 @@ export const trips: Trip[] = [
     category: "city-break",
     duration: "3 zile / 2 nopți",
     places: ["Bastionul Pescarilor", "Băile Széchenyi", "Insula Margareta"],
-    description: "Băi termale, poduri peste Dunăre și seri lungi în Pesta.",
+    description:
+      "Bastionul Pescarilor, Băile Széchenyi și o seară pe Insula Margareta, cu două nopți în Budapesta.",
     featured: true,
   },
   {
@@ -122,15 +136,16 @@ export const trips: Trip[] = [
     category: "city-break",
     duration: "5 zile / 4 nopți",
     places: ["Viena", "Brno", "Praga", "Podul Carol"],
-    description: "Două capitale imperiale într-un singur drum.",
+    description: "Două nopți la Viena, două la Praga și o oprire de prânz la Brno, pe drumul dintre ele.",
   },
   {
     slug: "litoral-romanesc",
     title: "Litoralul românesc",
     category: "litoral",
-    duration: "transport dus-întors",
+    duration: "dus-întors, la date alese",
     places: ["Mamaia", "Constanța", "Eforie", "Vama Veche"],
-    description: "Te ducem la mare și te aducem înapoi, la data aleasă de tine.",
+    description:
+      "Te lăsăm la hotel în Mamaia, Eforie sau Vama Veche și te luăm înapoi la data aleasă. Pentru o persoană, cursa Roman – Constanța de la 07:00 costă 160 lei.",
     season: "iunie – septembrie",
     featured: true,
   },
@@ -140,7 +155,12 @@ export const trips: Trip[] = [
     category: "litoral",
     duration: "4 zile / 3 nopți",
     places: ["Balcic", "Capul Kaliakra", "Nisipurile de Aur"],
-    description: "Grădina Reginei Maria și plajele Bulgariei.",
+    description:
+      "Castelul și grădina botanică din Balcic, Capul Kaliakra și trei nopți la Nisipurile de Aur. La graniță ai nevoie de buletin sau pașaport valabil.",
     season: "iunie – septembrie",
   },
 ];
+
+export const tripImage = (t: Pick<Trip, "slug" | "image">) => t.image ?? `/images/excursii-${t.slug}.jpg`;
+export const tripHref = (t: Pick<Trip, "slug">) => `/excursii/${t.slug}`;
+export const tripCategoryLabel = (c: TripCategory) => tripCategories.find((x) => x.id === c)?.label ?? "";

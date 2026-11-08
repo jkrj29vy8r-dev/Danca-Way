@@ -13,14 +13,14 @@ const legalLinks = [
 export function Footer() {
   const year = new Date().getFullYear();
   return (
-    <footer className="bg-night text-white">
+    <footer className="bg-night text-white" data-surface="dark">
       <div className="container-x pt-20 pb-10 md:pt-28">
         <div className="grid gap-14 lg:grid-cols-12">
           <div className="lg:col-span-5">
-            <Logo variant="alb" className="h-10 w-auto" />
+            <Logo variant="alb" height={40} />
             <p className="mt-6 max-w-sm text-mist">
-              Transport de persoane din județul Neamț: curse regulate, transferuri, excursii și
-              pelerinaje. Din Neamț, oriunde vrei să ajungi.
+              Curse regulate Târgu Neamț – București, București – Otopeni – Roman și Roman – Constanța.
+              Transfer privat 8+1, închiriere microbuz cu șofer, excursii și pelerinaje.
             </p>
             <ul className="mt-8 space-y-3 text-[0.95rem]">
               <li>

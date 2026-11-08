@@ -28,7 +28,7 @@ export function localBusinessJsonLd() {
     logo: `${site.url}/brand/danca-way-logo.svg`,
     image: `${site.url}/opengraph-image`,
     description:
-      "Transport de persoane din județul Neamț: curse regulate spre București, Aeroport Otopeni și Constanța, transfer privat 8+1, închiriere microbuz cu șofer, excursii și pelerinaje.",
+      "Curse regulate Târgu Neamț – București Obor (05:00, 09:00), București – Otopeni – Roman și Roman – Constanța; transfer privat 8+1, închiriere microbuz cu șofer, excursii și pelerinaje.",
     telephone: contact.phoneE164,
     email: contact.email,
     priceRange: "$$",
@@ -41,12 +41,6 @@ export function localBusinessJsonLd() {
       addressCountry: contact.address.country,
     },
     areaServed: site.areaServed.map((name) => ({ "@type": "AdministrativeArea", name })),
-    openingHoursSpecification: {
-      "@type": "OpeningHoursSpecification",
-      dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
-      opens: "07:00",
-      closes: "22:00",
-    },
   };
 }
 

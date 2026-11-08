@@ -30,7 +30,8 @@ export const site = {
       postalCode: "",
       country: "RO",
     },
-    hours: "Luni–Duminică, 07:00–22:00",
+    /** PLACEHOLDER — programul de lucru; gol = nu se afișează. Ex.: "Luni–Duminică, 07:00–22:00" */
+    hours: "",
   },
 
   ticketsUrl: "https://danca-transport.autogari.ro/",

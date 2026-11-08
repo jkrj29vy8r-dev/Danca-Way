@@ -47,7 +47,7 @@ export async function sendQuote(_prev: QuoteState, formData: FormData): Promise<
   if (rateLimited(ip)) {
     return {
       status: "error",
-      message: "Ai trimis deja mai multe cereri. Te rugăm să ne suni pentru o ofertă rapidă.",
+      message: `Ai trimis deja 5 cereri în ultimele 10 minute. Pentru alte trasee, sună la ${site.contact.phoneDisplay}.`,
       values: raw,
     };
   }

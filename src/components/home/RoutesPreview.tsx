@@ -14,18 +14,18 @@ import {
 
 export function RoutesPreview() {
   return (
-    <section className="section-y bg-navy text-white" aria-labelledby="curse-title">
+    <section className="section-y bg-navy text-white" aria-labelledby="curse-title" data-surface="dark">
       <div className="container-x grid gap-16 lg:grid-cols-12 lg:gap-10">
         <div className="lg:col-span-7">
           <p className="eyebrow text-mist">Curse regulate</p>
           <h2 id="curse-title" className="display-lg mt-6">
-            În fiecare zi,
+            Șapte curse,
             <br />
-            pe același drum.
+            trei direcții.
           </h2>
           <p className="mt-6 max-w-xl text-lg text-mist">
-            Târgu Neamț, Piatra Neamț, Roman, Bacău, Focșani și Buzău, legate zilnic de București și
-            Aeroportul Otopeni. Plus o cursă directă Roman – Constanța.
+            Două curse pleacă din Târgu Neamț spre București Obor, trei se întorc de la Obor spre Neamț și
+            Roman, iar două leagă Roman de Constanța Autogara Sud.
           </p>
 
           <div className="mt-12 space-y-10">

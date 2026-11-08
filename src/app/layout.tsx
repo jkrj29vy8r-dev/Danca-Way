@@ -3,7 +3,6 @@ import { Inter, Inter_Tight } from "next/font/google";
 import "lenis/dist/lenis.css";
 import "./globals.css";
 import { Header } from "@/components/Header";
-import { Logo } from "@/components/Logo";
 import { Footer } from "@/components/Footer";
 import { SmoothScroll } from "@/components/SmoothScroll";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
@@ -11,10 +10,13 @@ import { JsonLd } from "@/components/JsonLd";
 import { site } from "@/config/site";
 import { localBusinessJsonLd } from "@/lib/seo";
 
+// Fontul de text nu se preîncarcă: fotografia din hero (LCP pe mobil) primește banda întâi.
+// next/font generează un font de rezervă cu aceleași metrici, deci schimbarea nu mișcă layout-ul.
 const inter = Inter({
   subsets: ["latin", "latin-ext"],
   variable: "--font-inter",
   display: "swap",
+  preload: false,
 });
 
 const interTight = Inter_Tight({
@@ -31,7 +33,7 @@ export const metadata: Metadata = {
     template: "%s | Danca Way",
   },
   description:
-    "Transport persoane din Neamț: curse zilnice Târgu Neamț – Piatra Neamț – Roman – București și Aeroport Otopeni, Roman – Constanța, transfer privat 8+1, închiriere microbuz cu șofer, excursii și pelerinaje.",
+    "Curse Târgu Neamț – Piatra Neamț – Roman – Bacău – București Obor la 05:00 și 09:00, preluare de la Aeroportul Otopeni la 12:00 și 16:00, Roman – Constanța la 07:00. Transfer privat 8+1, închiriere microbuz cu șofer, excursii și pelerinaje.",
   applicationName: site.name,
   authors: [{ name: site.legalName }],
   formatDetection: { telephone: false },
@@ -53,7 +55,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }} />
       </head>
       <body>
-        <Header logo={<Logo variant="alb" inline className="h-8 md:h-9" />} />
+        <Header />
         <main id="continut">{children}</main>
         <Footer />
         <WhatsAppButton />

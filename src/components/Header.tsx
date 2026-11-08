@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useId, useRef, useState } from "react";
 import { ArrowRight, ChevronDown, Close, Menu, Phone } from "./icons";
+import { Logo } from "./Logo";
 import { site, telHref } from "@/config/site";
 import { services } from "@/data/services";
 
@@ -18,21 +19,45 @@ const mainLinks = [
   { href: "/contact", label: "Contact" },
 ];
 
-export function Header({ logo }: { logo: React.ReactNode }) {
+export function Header() {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
+  /** Fundalul de sub header: „dark” → logo alb, „light” → logo bleumarin */
+  const [surface, setSurface] = useState<"dark" | "light">("dark");
+  const headerRef = useRef<HTMLElement>(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
   const servicesRef = useRef<HTMLLIElement>(null);
   const servicesId = useId();
   const menuId = useId();
 
+  // Starea „scrolled” și tema headerului, după secțiunea aflată sub el (atributul data-surface).
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
-    onScroll();
+    let raf = 0;
+    const update = () => {
+      raf = 0;
+      setScrolled(window.scrollY > 24);
+      const header = headerRef.current;
+      const y = header ? header.offsetHeight / 2 : 36;
+      const under = document
+        .elementsFromPoint(window.innerWidth / 2, y)
+        .find((el) => !header?.contains(el));
+      const s = under?.closest("[data-surface]")?.getAttribute("data-surface");
+      // Fără data-surface: fundalul paginii (alb) → temă deschisă.
+      setSurface(s === "dark" ? "dark" : "light");
+    };
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(update);
+    };
+    update();
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+    window.addEventListener("resize", onScroll);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, [pathname]);
 
   // Închide meniurile la navigare. (Ajustare de stare în timpul randării, nu în efect.)
   const [prevPath, setPrevPath] = useState(pathname);
@@ -77,12 +102,26 @@ export function Header({ logo }: { logo: React.ReactNode }) {
         Sari la conținut
       </a>
       <header
-        className="site-header fixed inset-x-0 top-0 z-50 border-b border-transparent text-white"
+        ref={headerRef}
+        className="site-header group/hdr fixed inset-x-0 top-0 z-50 border-b border-transparent text-white data-[theme=light]:text-night"
         data-scrolled={scrolled || menuOpen ? "true" : "false"}
+        data-theme={menuOpen ? "dark" : surface}
       >
         <div className="container-x flex h-16 items-center justify-between gap-6 md:h-[4.5rem]">
-          <Link href="/" className="-m-2 shrink-0 rounded-lg p-2" aria-label="Danca Way — Acasă">
-            {logo}
+          <Link href="/" className="relative -m-2 block shrink-0 rounded-lg p-2" aria-label="Danca Way — Acasă">
+            <Logo
+              variant="alb"
+              height={32}
+              priority
+              alt=""
+              className="transition-opacity duration-300 group-data-[theme=light]/hdr:opacity-0"
+            />
+            <Logo
+              variant="navy"
+              height={32}
+              alt=""
+              className="absolute top-2 left-2 opacity-0 transition-opacity duration-300 group-data-[theme=light]/hdr:opacity-100"
+            />
           </Link>
 
           <nav aria-label="Navigare principală" className="hidden lg:block">
@@ -95,8 +134,8 @@ export function Header({ logo }: { logo: React.ReactNode }) {
               <li className="relative" ref={servicesRef}>
                 <button
                   type="button"
-                  className={`flex items-center gap-1 rounded-full px-3.5 py-2 transition-colors hover:text-white ${
-                    serviceActive || servicesOpen ? "text-white" : "text-white/75"
+                  className={`flex items-center gap-1 rounded-full px-3.5 py-2 transition-colors hover:opacity-100 ${
+                    serviceActive || servicesOpen ? "" : "opacity-75"
                   }`}
                   aria-expanded={servicesOpen}
                   aria-controls={servicesId}
@@ -146,7 +185,7 @@ export function Header({ logo }: { logo: React.ReactNode }) {
           <div className="flex items-center gap-2">
             <a
               href={telHref}
-              className="hidden items-center gap-2 rounded-full px-3 py-2 text-sm font-medium text-white/80 transition-colors hover:text-white xl:flex"
+              className="hidden items-center gap-2 rounded-full px-3 py-2 text-sm font-medium opacity-80 transition-opacity hover:opacity-100 xl:flex"
             >
               <Phone size={16} />
               {site.contact.phoneDisplay}
@@ -157,7 +196,7 @@ export function Header({ logo }: { logo: React.ReactNode }) {
             </Link>
             <button
               type="button"
-              className="-mr-2 grid size-11 place-items-center rounded-full text-white lg:hidden"
+              className="-mr-2 grid size-11 place-items-center rounded-full lg:hidden"
               aria-expanded={menuOpen}
               aria-controls={menuId}
               aria-label={menuOpen ? "Închide meniul" : "Deschide meniul"}
@@ -213,9 +252,7 @@ function NavLink({ href, active, children }: { href: string; active: boolean; ch
     <Link
       href={href}
       aria-current={active ? "page" : undefined}
-      className={`relative rounded-full px-3.5 py-2 transition-colors hover:text-white ${
-        active ? "text-white" : "text-white/75"
-      }`}
+      className={`relative rounded-full px-3.5 py-2 transition-opacity hover:opacity-100 ${active ? "" : "opacity-75"}`}
     >
       {children}
       {active && <span className="absolute inset-x-3.5 -bottom-0.5 h-px bg-accent" aria-hidden />}

@@ -4,10 +4,12 @@ import { useEffect, useRef } from "react";
 import { SWALLOW_BEAK, SWALLOW_PATH } from "../icons";
 import { loadGsap, prefersReducedMotion } from "@/lib/gsap";
 
-/** Traseul rândunicii (viewBox 0 0 1440 900). Se termină în dreapta-sus, orientat la ~-35°. */
-const TRAIL =
-  "M640 980C700 860 760 760 900 740S1120 760 1140 590S1100 330 1180 262";
-const END = { x: 1180, y: 262, rotate: -36 };
+/**
+ * Traseul rândunicii (viewBox 0 0 1440 640, peste fotografia din hero).
+ * Pornește de jos, din centru, și se oprește în dreapta-sus (cerul), orientată la ~-27°.
+ */
+const TRAIL = "M560 700C680 580 800 540 940 530S1140 480 1120 340S1120 210 1180 180";
+const END = { x: 1180, y: 180, rotate: -27 };
 
 export function SwallowTrail() {
   const root = useRef<SVGSVGElement>(null);
@@ -76,15 +78,15 @@ export function SwallowTrail() {
   return (
     <svg
       ref={root}
-      className="swallow-trail pointer-events-none absolute inset-x-0 top-0 h-[44svh] w-full md:inset-0 md:h-full"
-      viewBox="0 0 1440 900"
+      className="swallow-trail pointer-events-none absolute inset-0 h-full w-full"
+      viewBox="0 0 1440 640"
       preserveAspectRatio="xMaxYMid slice"
       aria-hidden
       focusable="false"
       data-animate=""
     >
       <defs>
-        <mask id="trail-reveal" maskUnits="userSpaceOnUse" x="-200" y="0" width="1800" height="900">
+        <mask id="trail-reveal" maskUnits="userSpaceOnUse" x="-200" y="-100" width="1800" height="900">
           <path className="trail-mask" d={TRAIL} fill="none" stroke="#fff" strokeWidth="14" strokeDasharray="3200" />
         </mask>
       </defs>
@@ -92,7 +94,7 @@ export function SwallowTrail() {
         className="trail-path"
         d={TRAIL}
         fill="none"
-        stroke="rgb(255 255 255 / 0.32)"
+        stroke="rgb(255 255 255 / 0.45)"
         strokeWidth="3"
         strokeLinecap="round"
         strokeDasharray="0 13"

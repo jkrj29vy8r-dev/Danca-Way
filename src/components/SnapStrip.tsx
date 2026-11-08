@@ -3,10 +3,10 @@
 import { useEffect, useRef, useState } from "react";
 import { ArrowLeft, ArrowRight } from "./icons";
 
-type Props = { children: React.ReactNode; label: string; tone?: "dark" | "light" };
+type Props = { children: React.ReactNode; label: string; tone?: "dark" | "light"; variant?: "default" | "tall" };
 
 /** Bandă orizontală cu scroll-snap și butoane anterior/următor. Funcționează și fără JS (scroll nativ). */
-export function SnapStrip({ children, label, tone = "dark" }: Props) {
+export function SnapStrip({ children, label, tone = "dark", variant = "default" }: Props) {
   const ref = useRef<HTMLUListElement>(null);
   const [edges, setEdges] = useState({ start: true, end: false });
 
@@ -50,7 +50,7 @@ export function SnapStrip({ children, label, tone = "dark" }: Props) {
           <ArrowRight className="" aria-hidden />
         </button>
       </div>
-      <ul ref={ref} className="snap-strip" aria-label={label}>
+      <ul ref={ref} className={`snap-strip ${variant === "tall" ? "snap-strip-tall" : ""}`} aria-label={label}>
         {children}
       </ul>
     </div>

@@ -11,16 +11,18 @@ import { PREFILL_EVENT, type QuotePrefill } from "./QuoteLink";
 type Props = {
   /** Serviciul preselectat (ex. pe paginile de serviciu) */
   defaultService?: ServiceId;
+  /** Text precompletat în „Detalii” (ex. numele excursiei) */
+  defaultSubject?: string;
 };
 
 const initial: QuoteState = { status: "idle" };
 
 const subjectLine = (subject?: string) => (subject ? `Sunt interesat(ă) de: ${subject}\n` : "");
 
-export function QuoteForm({ defaultService }: Props) {
+export function QuoteForm({ defaultService, defaultSubject }: Props) {
   const [state, action, pending] = useActionState(sendQuote, initial);
   const [service, setService] = useState<string>(defaultService ?? "");
-  const [details, setDetails] = useState("");
+  const [details, setDetails] = useState(subjectLine(defaultSubject));
   const formRef = useRef<HTMLFormElement>(null);
   const uid = useId();
 
@@ -57,7 +59,7 @@ export function QuoteForm({ defaultService }: Props) {
           Mulțumim{state.name ? `, ${state.name.split(" ")[0]}` : ""}!
         </h3>
         <p className="mt-3 max-w-md text-lg text-muted">
-          Am primit cererea ta. Te sunăm sau îți scriem în cel mai scurt timp cu oferta.
+          Am primit cererea ta. Te sunăm la numărul din formular cu prețul și ora de plecare.
         </p>
         <button
           type="button"

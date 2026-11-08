@@ -90,6 +90,13 @@
   line-height: 0.94;
   letter-spacing: -0.045em;
 }
+@utility display-hero {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2.6rem, 0.9rem + 5.4vw, 6.75rem);
+  line-height: 0.98;
+  letter-spacing: -0.042em;
+}
 @utility display-lg {
   font-family: var(--font-display);
   font-weight: 700;
@@ -231,12 +238,18 @@
   .snap-strip > * {
     scroll-snap-align: start;
   }
+  .snap-strip-tall {
+    grid-auto-columns: min(75%, 19rem);
+  }
   @media (width >= 48rem) {
     .snap-strip {
       grid-auto-columns: 24rem;
       gap: 1.25rem;
       padding-inline: max(2.5rem, calc((100vw - 84rem) / 2 + 2.5rem));
       scroll-padding-inline: max(2.5rem, calc((100vw - 84rem) / 2 + 2.5rem));
+    }
+    .snap-strip-tall {
+      grid-auto-columns: 22rem;
     }
   }
 }
@@ -344,5 +357,22 @@
 @media (prefers-reduced-motion: no-preference) {
   .js .route-map[data-animate] .route-line {
     stroke-dashoffset: var(--len);
+  }
+}
+
+/* Link „Detalii →” care se mișcă și la hover pe rândul întreg */
+@media (hover: hover) {
+  .group:hover .link-arrow .arrow {
+    transform: translateX(4px);
+  }
+}
+
+/* Butonul WhatsApp: pe desktop, ascuns până treci de hero (doar când JS rulează) */
+@media (width >= 48rem) {
+  .js .wa-fab:not([data-visible]) {
+    opacity: 0;
+    transform: translateY(8px);
+    pointer-events: none;
+    visibility: hidden;
   }
 }

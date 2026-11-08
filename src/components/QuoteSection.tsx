@@ -7,24 +7,21 @@ type Props = {
   title?: React.ReactNode;
   intro?: string;
   defaultService?: ServiceId;
+  /** Text precompletat în „Detalii” (ex. numele excursiei) */
+  defaultSubject?: string;
   headingLevel?: "h1" | "h2";
 };
 
 /** Secțiunea cu formularul de ofertă și datele de contact directe. */
 export function QuoteSection({
-  title = (
-    <>
-      Spune-ne unde mergi.
-      <br />
-      Noi ne ocupăm de drum.
-    </>
-  ),
-  intro = "Completează formularul și revenim cu o ofertă clară. Dacă te grăbești, sună-ne sau scrie-ne pe WhatsApp.",
+  title = "Cere o ofertă",
+  intro = "Pentru transfer, închiriere, excursie sau grup: scrie de unde pleci, unde mergi, data și câți pasageri sunteți. Biletele la cursele regulate se cumpără online, pe autogari.ro.",
   defaultService,
+  defaultSubject,
   headingLevel: H = "h2",
 }: Props) {
   return (
-    <section id="oferta" className="section-y scroll-mt-16 bg-light" aria-labelledby="oferta-title">
+    <section id="oferta" className="section-y scroll-mt-16 bg-light" aria-labelledby="oferta-title" data-surface="light">
       <div className="container-x grid gap-14 lg:grid-cols-12 lg:gap-10">
         <div className="lg:col-span-5">
           <p className="eyebrow text-muted">Cere ofertă</p>
@@ -36,7 +33,7 @@ export function QuoteSection({
           <ul className="mt-10 space-y-3">
             {[
               { href: telHref, icon: <Phone size={20} />, label: "Telefon", value: site.contact.phoneDisplay },
-              { href: whatsappHref, icon: <WhatsApp size={20} />, label: "WhatsApp", value: "Scrie-ne un mesaj", external: true },
+              { href: whatsappHref, icon: <WhatsApp size={20} />, label: "WhatsApp", value: site.contact.phoneDisplay, external: true },
               { href: mailHref, icon: <Mail size={20} />, label: "Email", value: site.contact.email },
             ].map((c) => (
               <li key={c.label}>
@@ -54,11 +51,11 @@ export function QuoteSection({
               </li>
             ))}
           </ul>
-          <p className="mt-6 text-sm text-muted">Program: {site.contact.hours}</p>
+          {site.contact.hours && <p className="mt-6 text-sm text-muted">Program: {site.contact.hours}</p>}
         </div>
 
         <div className="lg:col-span-7">
-          <QuoteForm defaultService={defaultService} />
+          <QuoteForm defaultService={defaultService} defaultSubject={defaultSubject} />
         </div>
       </div>
     </section>
