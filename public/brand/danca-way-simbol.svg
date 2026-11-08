@@ -1,7 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" role="img" aria-label="Danca Way">
-<!-- SIMBOL PROVIZORIU (stand-in). Înlocuiește cu simbolul oficial, păstrând același nume. -->
-<defs><mask id="dw-cut-s" maskUnits="userSpaceOnUse" x="0" y="0" width="640" height="640"><rect width="640" height="640" fill="#fff"/><path transform="translate(306 214) rotate(-27) scale(6.4) translate(-30 -32)" d="M55 32C52 36.5 46 37.5 40 35.5C42 46 34 57 17 62C25 53 28 44 28 35L17 33.5L0 46L10 32L0 18L17 30.5L28 29C28 20 25 11 17 2C34 7 42 18 40 28.5C46 26.5 52 27.5 55 32Z" fill="#000"/></mask></defs>
-<rect width="640" height="640" rx="140" fill="#FFFFFF"/>
-<g transform="translate(18 117)"><path d="M88 22H440C548 22 588 114 582 206C575 308 484 384 330 384H22Z" fill="#0E1A36" mask="url(#dw-cut-s)"/></g>
-<g transform="translate(18 117)"><path transform="translate(306 214) rotate(-27) scale(6.4) translate(-30 -32)" d="M53.6 30.4L59.5 32L53.6 33.6C54.2 32.6 54.2 31.4 53.6 30.4Z" fill="#F2B705"/></g>
-</svg>

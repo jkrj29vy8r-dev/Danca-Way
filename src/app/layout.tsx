@@ -5,6 +5,7 @@ import "./globals.css";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { SmoothScroll } from "@/components/SmoothScroll";
+import { MotionController } from "@/components/MotionController";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { JsonLd } from "@/components/JsonLd";
 import { site } from "@/config/site";
@@ -40,6 +41,7 @@ export const metadata: Metadata = {
   openGraph: { type: "website", locale: site.locale, siteName: site.name },
   twitter: { card: "summary_large_image" },
   robots: { index: true, follow: true },
+  icons: { icon: [{ url: "/danca-way-simbol.svg", type: "image/svg+xml" }] },
 };
 
 export const viewport: Viewport = {
@@ -55,11 +57,20 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }} />
       </head>
       <body>
+        <div id="scroll-progress" className="scroll-progress" aria-hidden />
+        {/* Straturile fundalului care se schimbă lin între secțiuni (vezi MotionController) */}
+        <div className="bg-layers" aria-hidden>
+          <div data-bg-layer="night" className="bg-night" />
+          <div data-bg-layer="navy" className="bg-navy" />
+          <div data-bg-layer="light" className="bg-light" />
+          <div data-bg-layer="white" className="bg-white" />
+        </div>
         <Header />
         <main id="continut">{children}</main>
         <Footer />
         <WhatsAppButton />
         <SmoothScroll />
+        <MotionController />
         <JsonLd data={localBusinessJsonLd()} />
       </body>
     </html>

@@ -60,7 +60,7 @@ export const services: Service[] = [
     title: "Excursii",
     formLabel: "Excursie",
     href: "/excursii",
-    short: "Cheile Bicazului, Maramureș, Delta Dunării, târgurile de Crăciun din Brașov, Budapesta și Viena.",
+    short: "Ceahlău, Cheile Bicazului, Maramureș, Delta Dunării și târgurile de Crăciun din Brașov, Sibiu și Viena.",
   },
   {
     id: "pelerinaj",
@@ -129,7 +129,7 @@ export const mainServices: {
   },
   {
     title: "Excursii și pelerinaje",
-    text: "De la Cheile Bicazului și Voroneț într-o zi, până la Prislop, Maramureș sau Budapesta în 2–4 zile.",
+    text: "Ceahlău, Cheile Bicazului și Voroneț într-o zi; Prislop, Sâmbăta de Sus sau Maramureș în 2–3 zile.",
     href: "/excursii",
     image: {
       src: "/images/serviciu-excursii-pelerinaje.jpg",

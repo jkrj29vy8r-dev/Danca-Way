@@ -1,4 +1,8 @@
-/** Vedere comună peste excursii și pelerinaje, folosită de carduri și de paginile de detaliu. */
+/**
+ * Vedere comună peste excursii și pelerinaje, folosită de carduri și de paginile de detaliu.
+ * Doar pentru componente server (verifică existența fotografiilor pe disc).
+ */
+import { photoOrNull } from "@/lib/photo";
 import { trips, tripHref, tripImage, tripCategoryLabel, type Trip } from "./trips";
 import {
   pilgrimages,
@@ -21,7 +25,8 @@ export type CatalogItem = {
   when?: string;
   category: string;
   href: string;
-  image: string;
+  /** null dacă fotografia nu există încă în /public/images */
+  image: string | null;
   featured: boolean;
 };
 
@@ -35,7 +40,7 @@ export const fromTrip = (t: Trip): CatalogItem => ({
   when: t.season,
   category: tripCategoryLabel(t.category),
   href: tripHref(t),
-  image: tripImage(t),
+  image: photoOrNull(tripImage(t)),
   featured: !!t.featured,
 });
 
@@ -49,7 +54,7 @@ export const fromPilgrimage = (p: Pilgrimage): CatalogItem => ({
   when: p.date,
   category: pilgrimageCategoryLabel(p.category),
   href: pilgrimageHref(p),
-  image: pilgrimageImage(p),
+  image: photoOrNull(pilgrimageImage(p)),
   featured: !!p.featured,
 });
 

@@ -23,9 +23,9 @@ Alte comenzi: `npm run build`, `npm run lint`, `npm run typecheck`.
 | Excursii | `src/data/trips.ts` |
 | Pelerinaje | `src/data/pilgrimages.ts` |
 | Servicii (meniu, grilă, opțiuni formular) | `src/data/services.ts` |
-| Logo | `public/brand/danca-way-logo.svg`, `danca-way-logo-alb.svg`, `danca-way-simbol.svg` (+ `src/app/icon.svg` pentru favicon) |
+| Logo | `public/danca-way-logo.svg` (fundal deschis), `public/danca-way-logo-alb.svg` (fundal închis), `public/danca-way-simbol.svg` (favicon + apple-touch-icon) |
 
-Logo-urile actuale sunt **provizorii** — înlocuiește fișierele SVG păstrând aceleași nume.
+Logo-urile sunt vectorizate din logo-ul oficial. Pentru o versiune nouă, înlocuiește fișierele SVG păstrând aceleași nume.
 
 ## Formularul de ofertă
 
@@ -39,8 +39,25 @@ Variabile de mediu (setează-le și în Vercel → Settings → Environment Vari
 
 În dezvoltare, fără cheie, cererea este doar afișată în consolă.
 
-## Accesibilitate și animații
+## Fotografii
 
-- Tot conținutul este vizibil fără JavaScript; animațiile care ascund inițial elemente se activează doar când JS rulează (clasa `.js` pe `<html>`).
-- `prefers-reduced-motion` dezactivează Lenis, animațiile GSAP și tranzițiile.
-- GSAP și Lenis se încarcă după ce pagina devine interactivă (`requestIdleCallback`).
+Zonele de imagine apar **doar dacă fișierul există** în `public/images/` (verificare la build).
+Lista fișierelor și formatele: `public/images/README.md`.
+
+## Animații
+
+Toate sunt coordonate de `src/components/MotionController.tsx` (plus `SwallowTrail`, `RouteMap`,
+`SnapStrip`, `WordsReveal`), folosesc easing `expo.out` și animează doar `transform`, `opacity`
+și `clip-path` (excepție: desenarea liniilor SVG prin `stroke-dashoffset`).
+
+- logo-ul din hero apare cu un clip-path de la stânga la dreapta, apoi titlul, linie cu linie;
+- rândunica își desenează traseul punctat în zbor, cu parallax discret după mouse;
+- titlurile secțiunilor urcă linie cu linie din spatele unei margini invizibile (SplitText);
+- orele din orar se întorc cifră cu cifră, ca pe o tabelă de plecări;
+- harta: linia se desenează la scroll, fiecare oprire pulsează o dată în galben;
+- fotografiile: dezvăluire cu clip-path inset + parallax (~9% mai lent decât pagina);
+- bară aurie de progres, header care se ascunde la scroll în jos, fundal care trece lin între secțiuni;
+- excursiile: bandă orizontală fixată pe desktop, swipe pe mobil;
+- butoane magnetice, linkuri cu sublinierea desenată, numere care cresc o dată.
+
+`prefers-reduced-motion` dezactivează tot. Fără JavaScript, conținutul este complet vizibil.

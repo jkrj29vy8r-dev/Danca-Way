@@ -72,6 +72,9 @@ export function RouteMap({ path, trigger = "scroll", className = "", title }: Pr
     const line = svg.querySelector<SVGPathElement>(".route-line")!;
     const head = svg.querySelector<SVGCircleElement>(".route-head")!;
     const stopEls = Array.from(svg.querySelectorAll<SVGGElement>("[data-stop-index]"));
+    /** Opririle care au pulsat deja (fiecare pulsează o singură dată) */
+    const pulsed = new Set<Element>();
+    let pulse: (el: SVGGElement) => void = () => {};
 
     const render = (p: number) => {
       line.style.strokeDashoffset = String(geo.total * (1 - p));
@@ -90,8 +93,13 @@ export function RouteMap({ path, trigger = "scroll", className = "", title }: Pr
       head.style.opacity = p > 0.001 && p < 0.999 ? "1" : "0";
       stopEls.forEach((el) => {
         const f = geo.fractions[Number(el.dataset.stopIndex)];
-        if (p >= f - 0.002) el.setAttribute("data-lit", "");
-        else el.removeAttribute("data-lit");
+        if (p >= f - 0.002) {
+          el.setAttribute("data-lit", "");
+          if (p > 0 && !pulsed.has(el)) {
+            pulsed.add(el);
+            pulse(el);
+          }
+        } else el.removeAttribute("data-lit");
       });
     };
 
@@ -99,6 +107,16 @@ export function RouteMap({ path, trigger = "scroll", className = "", title }: Pr
     let cancelled = false;
     loadGsap().then(({ gsap }) => {
       if (cancelled) return;
+      // Un singur puls galben când linia ajunge la oprire: inelul crește și se stinge (transform + opacity).
+      pulse = (el) => {
+        const ring = el.querySelector(".pulse");
+        if (ring)
+          gsap.fromTo(
+            ring,
+            { scale: 1, opacity: 0.9 },
+            { scale: 3.2, opacity: 0, duration: 1.1, ease: "expo.out", transformOrigin: "50% 50%" },
+          );
+      };
       render(0);
       ctx = gsap.context(() => {
         const state = { p: 0 };
@@ -168,27 +186,43 @@ export function RouteMap({ path, trigger = "scroll", className = "", title }: Pr
             data-stop-index={active ? index : undefined}
             data-lit={active ? "" : undefined}
           >
-            {active && <circle className="halo" cx={x} cy={y} r="11" fill="rgb(242 183 5 / 0.18)" />}
-            <circle
-              className="dot"
-              cx={x}
-              cy={y}
-              r={active ? 5 : 3.5}
-              fill={active ? "var(--color-accent)" : "rgb(255 255 255 / 0.35)"}
-              stroke={active ? "var(--color-night)" : "none"}
-              strokeWidth="2"
-            />
+            {active && (
+              <>
+                <circle className="pulse" cx={x} cy={y} r="6" fill="none" stroke="var(--color-accent)" strokeWidth="2" opacity="0" />
+                <circle className="halo" cx={x} cy={y} r="11" fill="rgb(242 183 5 / 0.18)" />
+              </>
+            )}
+            {/* Punct de bază (stins) și punct aprins, comutate prin opacitate */}
+            <circle cx={x} cy={y} r={3.5} fill="rgb(255 255 255 / 0.35)" />
+            {active && (
+              <circle className="dot-lit" cx={x} cy={y} r={5} fill="var(--color-accent)" stroke="var(--color-night)" strokeWidth="2" />
+            )}
             <text
               x={side === "right" ? x + 14 : x - 14}
               y={y + 4.5}
               textAnchor={side === "right" ? "start" : "end"}
               fontSize="13"
-              fontWeight={active ? 600 : 500}
-              fill={active ? "#fff" : "rgb(255 255 255 / 0.45)"}
+              fontWeight={500}
+              fill="rgb(255 255 255 / 0.45)"
               style={{ fontFamily: "var(--font-sans)" }}
             >
               {label?.text ?? c.name}
             </text>
+            {active && (
+              <text
+                className="label-lit"
+                x={side === "right" ? x + 14 : x - 14}
+                y={y + 4.5}
+                textAnchor={side === "right" ? "start" : "end"}
+                fontSize="13"
+                fontWeight={600}
+                fill="#fff"
+                aria-hidden
+                style={{ fontFamily: "var(--font-sans)" }}
+              >
+                {label?.text ?? c.name}
+              </text>
+            )}
           </g>
         );
       })}

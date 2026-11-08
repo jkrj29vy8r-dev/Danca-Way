@@ -25,7 +25,7 @@ export function localBusinessJsonLd() {
     legalName: site.legalName,
     taxID: site.cui,
     url: site.url,
-    logo: `${site.url}/brand/danca-way-logo.svg`,
+    logo: `${site.url}/danca-way-logo.svg`,
     image: `${site.url}/opengraph-image`,
     description:
       "Curse regulate Târgu Neamț – București Obor (05:00, 09:00), București – Otopeni – Roman și Roman – Constanța; transfer privat 8+1, închiriere microbuz cu șofer, excursii și pelerinaje.",

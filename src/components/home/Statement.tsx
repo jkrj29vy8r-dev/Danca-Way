@@ -2,14 +2,14 @@ import { WordsReveal } from "../WordsReveal";
 
 export function Statement() {
   return (
-    <section className="section-y bg-white" aria-labelledby="statement-title" data-surface="light">
+    <section className="section-y bg-white" aria-labelledby="statement-title" data-bg="white">
       <div className="container-x">
         <h2 id="statement-title" className="eyebrow text-muted">
-          Ce mai facem
+          Neamț · București · Otopeni · Constanța
         </h2>
         <WordsReveal
           className="display-md mt-8 max-w-5xl text-ink"
-          text="Pe lângă cursele regulate, facem transferuri private cu microbuz 8+1, închiriem microbuze cu șofer la oră sau pe zi și ducem grupuri la Agapia, Voroneț, Prislop, Brașov și la târgul de Crăciun din Budapesta."
+          text="Legăm Neamțul de București, de Aeroportul Otopeni și de Constanța. Autocarul pleacă din Târgu Neamț la 05:00 și 09:00, de la Otopeni te luăm spre casă la 12:00 și 16:00, iar din Constanța la 15:30."
         />
       </div>
     </section>

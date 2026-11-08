@@ -5,11 +5,12 @@ import { RoutesPreview } from "@/components/home/RoutesPreview";
 import { ServicesList } from "@/components/home/ServicesList";
 import { TripsStrip } from "@/components/home/TripsStrip";
 import { WhyUs } from "@/components/home/WhyUs";
-import { ScaleImage } from "@/components/ScaleImage";
+import { Photo } from "@/components/Photo";
 import { QuoteSection } from "@/components/QuoteSection";
 import { JsonLd } from "@/components/JsonLd";
 import { photos } from "@/data/photos";
 import { busTripsJsonLd, pageMeta } from "@/lib/seo";
+import { hasPhoto } from "@/lib/photo";
 
 const title = "Danca Way — Transport persoane Neamț – București, Otopeni, Constanța";
 
@@ -28,7 +29,15 @@ export default function HomePage() {
     <>
       <Hero />
       <Statement />
-      <ScaleImage photo={photos.road} className="aspect-[4/3] md:aspect-[21/9]" />
+      {hasPhoto(photos.road.src) && (
+        <Photo
+          src={photos.road.src}
+          alt={photos.road.alt}
+          sizes="100vw"
+          scaleOnScroll
+          className="aspect-[4/3] w-full md:aspect-[21/9]"
+        />
+      )}
       <RoutesPreview />
       <ServicesList />
       <TripsStrip />

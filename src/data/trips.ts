@@ -42,6 +42,16 @@ export const trips: Trip[] = [
     featured: true,
   },
   {
+    slug: "ceahlau-durau",
+    title: "Ceahlău: Durău & Cascada Duruitoarea",
+    category: "o-zi",
+    duration: "1 zi",
+    places: ["Stațiunea Durău", "Mănăstirea Durău", "Cascada Duruitoarea"],
+    description:
+      "Drum pe malul lacului Izvorul Muntelui până la Durău, apoi traseul marcat până la Cascada Duruitoarea, la poalele Ceahlăului. Întoarcerea este seara, în aceeași zi.",
+    featured: true,
+  },
+  {
     slug: "cetatea-neamtului-humulesti",
     title: "Cetatea Neamțului & Humulești",
     category: "o-zi",
@@ -99,16 +109,6 @@ export const trips: Trip[] = [
       "Seara în Piața Sfatului din Brașov, a doua zi în Piața Mare din Sibiu, cu o noapte de cazare între ele.",
     season: "decembrie",
     featured: true,
-  },
-  {
-    slug: "craciun-budapesta",
-    title: "Târgul de Crăciun din Budapesta",
-    category: "craciun",
-    duration: "3 zile / 2 nopți",
-    places: ["Vörösmarty tér", "Bazilica Sf. Ștefan", "Parlamentul", "Dunărea"],
-    description:
-      "Două nopți în Budapesta, cu târgurile din Vörösmarty tér și din fața Bazilicii Sf. Ștefan, la 10 minute de mers pe jos unul de altul.",
-    season: "decembrie",
   },
   {
     slug: "craciun-viena",

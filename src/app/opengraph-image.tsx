@@ -7,7 +7,7 @@ export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
 export default function OpengraphImage() {
-  const logo = readFileSync(path.join(process.cwd(), "public", "brand", "danca-way-logo-alb.svg"));
+  const logo = readFileSync(path.join(process.cwd(), "public", "danca-way-logo-alb.svg"));
   const logoSrc = `data:image/svg+xml;base64,${logo.toString("base64")}`;
   return new ImageResponse(
     (
@@ -24,7 +24,7 @@ export default function OpengraphImage() {
           fontFamily: "sans-serif",
         }}
       >
-        <img src={logoSrc} alt="" height={64} width={281} />
+        <img src={logoSrc} alt="" height={72} width={321} />
         <div style={{ display: "flex", flexDirection: "column" }}>
           <div style={{ fontSize: 80, fontWeight: 800, lineHeight: 1.02, letterSpacing: -3 }}>Din Neamț la București.</div>
           <div style={{ fontSize: 80, fontWeight: 800, lineHeight: 1.02, letterSpacing: -3 }}>Din Otopeni, acasă.</div>

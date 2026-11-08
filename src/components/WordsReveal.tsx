@@ -5,7 +5,10 @@ import { loadGsap, prefersReducedMotion } from "@/lib/gsap";
 
 type Props = { text: string; className?: string; as?: "p" | "h2" };
 
-/** Paragraf ale cărui cuvinte se „aprind” pe rând, pe măsură ce derulezi. */
+/**
+ * Paragraf ale cărui cuvinte se „aprind” pe rând la scroll.
+ * Fiecare cuvânt are un strat de culoare plină (.w-ink) animat doar prin opacitate.
+ */
 export function WordsReveal({ text, className, as: Tag = "p" }: Props) {
   const ref = useRef<HTMLElement>(null);
 
@@ -17,8 +20,8 @@ export function WordsReveal({ text, className, as: Tag = "p" }: Props) {
     loadGsap().then(({ gsap }) => {
       if (cancelled) return;
       ctx = gsap.context(() => {
-        gsap.to(el.querySelectorAll(".w"), {
-          color: getComputedStyle(el).color,
+        gsap.to(el.querySelectorAll(".w-ink"), {
+          opacity: 1,
           ease: "none",
           stagger: 0.12,
           scrollTrigger: { trigger: el, start: "top 82%", end: "bottom 50%", scrub: 0.4 },
@@ -35,8 +38,13 @@ export function WordsReveal({ text, className, as: Tag = "p" }: Props) {
   return (
     <Tag ref={ref as React.Ref<HTMLParagraphElement & HTMLHeadingElement>} className={className} data-words="">
       {words.map((w, i) => (
-        <span key={i} className="w">
-          {w}
+        <span key={i}>
+          <span className="w">
+            {w}
+            <span className="w-ink" aria-hidden>
+              {w}
+            </span>
+          </span>
           {i < words.length - 1 ? " " : ""}
         </span>
       ))}

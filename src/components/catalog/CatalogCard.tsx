@@ -1,28 +1,34 @@
-import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "../icons";
+import { Photo } from "../Photo";
 import { QuoteLink } from "../QuoteLink";
 import type { CatalogItem } from "@/data/catalog";
 
-/** Card pentru paginile de listă: imagine 4:3, titlu, durată, locuri vizitate, „Cere ofertă”. */
+/**
+ * Card pentru paginile de listă: titlu, durată, locuri vizitate, „Cere ofertă”.
+ * Imaginea 4:3 apare doar dacă fotografia există.
+ */
 export function CatalogCard({ item }: { item: CatalogItem }) {
   return (
-    <article className="group flex h-full flex-col">
-      <Link href={item.href} tabIndex={-1} aria-hidden className="relative block aspect-[4/3] overflow-hidden rounded-2xl bg-navy">
-        <Image
-          src={item.image}
-          alt=""
-          fill
-          sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-          className="object-cover transition-transform duration-700 ease-[var(--ease-out-expo)] group-hover:scale-[1.03]"
-        />
-      </Link>
-      <p className="mt-5 text-sm font-medium text-muted">
+    <article className={`group flex h-full flex-col ${item.image ? "" : "rounded-2xl border border-line bg-white p-7"}`}>
+      {item.image && (
+        <Link href={item.href} tabIndex={-1} aria-hidden className="mb-5 block">
+          <Photo
+            src={item.image}
+            alt=""
+            sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+            radius={16}
+            hoverZoom
+            className="aspect-[4/3]"
+          />
+        </Link>
+      )}
+      <p className="text-sm font-medium text-muted">
         {item.duration}
         {item.when ? ` · ${item.when}` : ""}
       </p>
-      <h3 className="mt-1.5 font-display text-2xl leading-tight font-semibold tracking-tight">
-        <Link href={item.href} className="hover:underline hover:underline-offset-4">
+      <h3 className="mt-1.5 font-display text-2xl leading-tight font-semibold tracking-tight transition-transform duration-700 ease-[var(--ease-out-expo)] group-hover:-translate-y-1">
+        <Link href={item.href} className="link-u">
           {item.title}
         </Link>
       </h3>
@@ -34,7 +40,7 @@ export function CatalogCard({ item }: { item: CatalogItem }) {
         <QuoteLink service={item.kind} subject={item.title} className="btn btn-dark min-h-11 px-5 text-sm" aria-label={`Cere ofertă: ${item.title}`}>
           Cere ofertă <ArrowRight size={16} />
         </QuoteLink>
-        <Link href={item.href} className="link-arrow text-sm text-ink" aria-label={`Detalii: ${item.title}`}>
+        <Link href={item.href} className="link-arrow link-u text-sm text-ink" aria-label={`Detalii: ${item.title}`}>
           Detalii <ArrowRight size={16} />
         </Link>
       </div>

@@ -10,6 +10,8 @@ type Props = {
   /** Text precompletat în „Detalii” (ex. numele excursiei) */
   defaultSubject?: string;
   headingLevel?: "h1" | "h2";
+  /** Clase suplimentare pentru secțiune (ex. spațiu sub header pe pagina de contact) */
+  className?: string;
 };
 
 /** Secțiunea cu formularul de ofertă și datele de contact directe. */
@@ -19,13 +21,14 @@ export function QuoteSection({
   defaultService,
   defaultSubject,
   headingLevel: H = "h2",
+  className = "",
 }: Props) {
   return (
-    <section id="oferta" className="section-y scroll-mt-16 bg-light" aria-labelledby="oferta-title" data-surface="light">
+    <section id="oferta" className={`section-y scroll-mt-16 bg-light ${className}`} aria-labelledby="oferta-title" data-bg="light">
       <div className="container-x grid gap-14 lg:grid-cols-12 lg:gap-10">
         <div className="lg:col-span-5">
           <p className="eyebrow text-muted">Cere ofertă</p>
-          <H id="oferta-title" className="display-md mt-6">
+          <H id="oferta-title" className="display-md mt-6" data-reveal="lines">
             {title}
           </H>
           <p className="mt-6 max-w-md text-lg text-muted">{intro}</p>
@@ -40,12 +43,12 @@ export function QuoteSection({
                 <a
                   href={c.href}
                   {...(c.external ? { target: "_blank", rel: "noopener" } : {})}
-                  className="card-lift flex items-center gap-4 rounded-2xl border border-line bg-white p-4"
+                  className="group flex items-center gap-4 rounded-2xl border border-line bg-white p-4"
                 >
-                  <span className="grid size-11 shrink-0 place-items-center rounded-full bg-night text-white">{c.icon}</span>
+                  <span className="grid size-11 shrink-0 place-items-center rounded-full bg-night text-white transition-transform duration-700 ease-[var(--ease-out-expo)] group-hover:scale-105">{c.icon}</span>
                   <span>
                     <span className="block text-sm text-muted">{c.label}</span>
-                    <span className="block font-semibold">{c.value}</span>
+                    <span className="link-u block font-semibold">{c.value}</span>
                   </span>
                 </a>
               </li>

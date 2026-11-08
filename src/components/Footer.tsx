@@ -13,29 +13,29 @@ const legalLinks = [
 export function Footer() {
   const year = new Date().getFullYear();
   return (
-    <footer className="bg-night text-white" data-surface="dark">
+    <footer className="bg-night text-white" data-bg="night">
       <div className="container-x pt-20 pb-10 md:pt-28">
         <div className="grid gap-14 lg:grid-cols-12">
           <div className="lg:col-span-5">
-            <Logo variant="alb" height={40} />
+            <Logo variant="alb" className="h-10 w-auto" />
             <p className="mt-6 max-w-sm text-mist">
               Curse regulate Târgu Neamț – București, București – Otopeni – Roman și Roman – Constanța.
               Transfer privat 8+1, închiriere microbuz cu șofer, excursii și pelerinaje.
             </p>
             <ul className="mt-8 space-y-3 text-[0.95rem]">
               <li>
-                <a href={telHref} className="inline-flex items-center gap-3 hover:text-accent">
-                  <Phone size={18} className="text-mist" /> {site.contact.phoneDisplay}
+                <a href={telHref} className="group inline-flex items-center gap-3">
+                  <Phone size={18} className="text-mist" /> <span className="link-u">{site.contact.phoneDisplay}</span>
                 </a>
               </li>
               <li>
-                <a href={whatsappHref} className="inline-flex items-center gap-3 hover:text-accent" rel="noopener" target="_blank">
-                  <WhatsApp size={18} className="text-mist" /> WhatsApp
+                <a href={whatsappHref} className="group inline-flex items-center gap-3" rel="noopener" target="_blank">
+                  <WhatsApp size={18} className="text-mist" /> <span className="link-u">WhatsApp</span>
                 </a>
               </li>
               <li>
-                <a href={mailHref} className="inline-flex items-center gap-3 hover:text-accent">
-                  <Mail size={18} className="text-mist" /> {site.contact.email}
+                <a href={mailHref} className="group inline-flex items-center gap-3">
+                  <Mail size={18} className="text-mist" /> <span className="link-u">{site.contact.email}</span>
                 </a>
               </li>
             </ul>
@@ -48,7 +48,7 @@ export function Footer() {
                 .filter((s) => s.id !== "altele")
                 .map((s) => (
                   <li key={s.id}>
-                    <Link href={s.href} className="text-white/85 hover:text-white">
+                    <Link href={s.href} className="link-u text-white/85 hover:text-white">
                       {s.title}
                     </Link>
                   </li>
@@ -62,20 +62,20 @@ export function Footer() {
               href={site.ticketsUrl}
               target="_blank"
               rel="noopener"
-              className="link-arrow mt-5 text-white hover:text-accent"
+              className="link-arrow link-u mt-5 text-white"
             >
               Cumpără bilet online <ArrowUpRight size={16} />
             </a>
             <h2 className="eyebrow mt-10 text-mist">Informații</h2>
             <ul className="mt-5 space-y-3 text-[0.95rem]">
               <li>
-                <Link href="/contact" className="text-white/85 hover:text-white">
+                <Link href="/contact" className="link-u text-white/85 hover:text-white">
                   Contact
                 </Link>
               </li>
               {legalLinks.map((l) => (
                 <li key={l.href}>
-                  <Link href={l.href} className="text-white/85 hover:text-white">
+                  <Link href={l.href} className="link-u text-white/85 hover:text-white">
                     {l.label}
                   </Link>
                 </li>

@@ -22,6 +22,8 @@ const mainLinks = [
 export function Header() {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
+  /** Ascuns la scroll în jos, reapare la scroll în sus */
+  const [hidden, setHidden] = useState(false);
   /** Fundalul de sub header: „dark” → logo alb, „light” → logo bleumarin */
   const [surface, setSurface] = useState<"dark" | "light">("dark");
   const headerRef = useRef<HTMLElement>(null);
@@ -31,31 +33,54 @@ export function Header() {
   const servicesId = useId();
   const menuId = useId();
 
-  // Starea „scrolled” și tema headerului, după secțiunea aflată sub el (atributul data-surface).
+  // „scrolled” și ascunderea la scroll în jos (doar citiri de scrollY, fără măsurători de layout).
   useEffect(() => {
     let raf = 0;
+    let lastY = window.scrollY;
     const update = () => {
       raf = 0;
-      setScrolled(window.scrollY > 24);
-      const header = headerRef.current;
-      const y = header ? header.offsetHeight / 2 : 36;
-      const under = document
-        .elementsFromPoint(window.innerWidth / 2, y)
-        .find((el) => !header?.contains(el));
-      const s = under?.closest("[data-surface]")?.getAttribute("data-surface");
-      // Fără data-surface: fundalul paginii (alb) → temă deschisă.
-      setSurface(s === "dark" ? "dark" : "light");
+      const y = window.scrollY;
+      const delta = y - lastY;
+      lastY = y;
+      setScrolled(y > 24);
+      if (y < 160 || delta < -4) setHidden(false);
+      else if (delta > 4 && !headerRef.current?.contains(document.activeElement)) setHidden(true);
     };
     const onScroll = () => {
       if (!raf) raf = requestAnimationFrame(update);
     };
     update();
     window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
     return () => {
       cancelAnimationFrame(raf);
       window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
+    };
+  }, []);
+
+  // Tema: secțiunea (data-bg) care trece pe sub mijlocul headerului, urmărită cu un IntersectionObserver
+  // pe o linie de 1px — fără citiri de layout la fiecare cadru de scroll.
+  useEffect(() => {
+    let io: IntersectionObserver | undefined;
+    const setup = () => {
+      io?.disconnect();
+      const mid = Math.round((headerRef.current?.offsetHeight ?? 72) / 2);
+      io = new IntersectionObserver(
+        (entries) => {
+          for (const e of entries) {
+            if (!e.isIntersecting) continue;
+            const bg = (e.target as HTMLElement).dataset.bg;
+            setSurface(bg === "night" || bg === "navy" ? "dark" : "light");
+          }
+        },
+        { rootMargin: `-${mid}px 0px -${window.innerHeight - mid - 1}px 0px` },
+      );
+      document.querySelectorAll("[data-bg]").forEach((el) => io!.observe(el));
+    };
+    setup();
+    window.addEventListener("resize", setup);
+    return () => {
+      io?.disconnect();
+      window.removeEventListener("resize", setup);
     };
   }, [pathname]);
 
@@ -103,24 +128,27 @@ export function Header() {
       </a>
       <header
         ref={headerRef}
-        className="site-header group/hdr fixed inset-x-0 top-0 z-50 border-b border-transparent text-white data-[theme=light]:text-night"
+        className="site-header group/hdr fixed inset-x-0 top-0 z-50 text-white data-[theme=light]:text-night"
         data-scrolled={scrolled || menuOpen ? "true" : "false"}
         data-theme={menuOpen ? "dark" : surface}
+        data-hidden={hidden && !menuOpen && !servicesOpen ? "true" : undefined}
+        onFocus={() => setHidden(false)}
       >
-        <div className="container-x flex h-16 items-center justify-between gap-6 md:h-[4.5rem]">
+        {/* Sticlă mată: două straturi, schimbate doar prin opacitate */}
+        <span aria-hidden className="hdr-bg hdr-bg-dark" />
+        <span aria-hidden className="hdr-bg hdr-bg-light" />
+        <div className="container-x relative flex h-16 items-center justify-between gap-6 md:h-20">
           <Link href="/" className="relative -m-2 block shrink-0 rounded-lg p-2" aria-label="Danca Way — Acasă">
             <Logo
               variant="alb"
-              height={32}
               priority
               alt=""
-              className="transition-opacity duration-300 group-data-[theme=light]/hdr:opacity-0"
+              className="h-8 w-auto transition-opacity duration-300 group-data-[theme=light]/hdr:opacity-0 md:h-10"
             />
             <Logo
               variant="navy"
-              height={32}
               alt=""
-              className="absolute top-2 left-2 opacity-0 transition-opacity duration-300 group-data-[theme=light]/hdr:opacity-100"
+              className="absolute top-2 left-2 h-8 w-auto opacity-0 transition-opacity duration-300 group-data-[theme=light]/hdr:opacity-100 md:h-10"
             />
           </Link>
 
@@ -134,7 +162,7 @@ export function Header() {
               <li className="relative" ref={servicesRef}>
                 <button
                   type="button"
-                  className={`flex items-center gap-1 rounded-full px-3.5 py-2 transition-colors hover:opacity-100 ${
+                  className={`flex items-center gap-1 rounded-full px-3.5 py-2 transition-opacity hover:opacity-100 ${
                     serviceActive || servicesOpen ? "" : "opacity-75"
                   }`}
                   aria-expanded={servicesOpen}
@@ -156,7 +184,7 @@ export function Header() {
                       <li key={s.id}>
                         <Link
                           href={s.href}
-                          className="group block rounded-2xl p-4 transition-colors hover:bg-white/[0.06]"
+                          className="group block rounded-2xl p-4 hover:bg-white/[0.06]"
                         >
                           <span className="flex items-center justify-between font-display font-semibold text-white">
                             {s.title}
@@ -254,7 +282,7 @@ function NavLink({ href, active, children }: { href: string; active: boolean; ch
       aria-current={active ? "page" : undefined}
       className={`relative rounded-full px-3.5 py-2 transition-opacity hover:opacity-100 ${active ? "" : "opacity-75"}`}
     >
-      {children}
+      <span className="link-u">{children}</span>
       {active && <span className="absolute inset-x-3.5 -bottom-0.5 h-px bg-accent" aria-hidden />}
     </Link>
   );

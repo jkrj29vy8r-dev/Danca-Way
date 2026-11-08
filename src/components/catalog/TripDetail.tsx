@@ -1,6 +1,6 @@
-import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Phone } from "../icons";
+import { Photo } from "../Photo";
 import { QuoteLink } from "../QuoteLink";
 import { QuoteSection } from "../QuoteSection";
 import { SnapStrip } from "../SnapStrip";
@@ -23,18 +23,18 @@ export function TripDetail({ item, related }: Props) {
 
   return (
     <>
-      <section className="relative bg-night text-white" data-surface="dark">
+      <section className="relative bg-night text-white" data-bg="night">
         <div className="container-x pt-32 pb-12 md:pt-40 md:pb-16">
           <nav aria-label="Navigare ierarhică" className="text-sm text-mist">
             <ol className="flex flex-wrap items-center gap-2">
               <li>
-                <Link href="/" className="hover:text-white">
+                <Link href="/" className="link-u hover:text-white">
                   Acasă
                 </Link>
               </li>
               <li aria-hidden>/</li>
               <li>
-                <Link href={kindHref[item.kind]} className="hover:text-white">
+                <Link href={kindHref[item.kind]} className="link-u hover:text-white">
                   {kindLabel[item.kind]}
                 </Link>
               </li>
@@ -43,14 +43,22 @@ export function TripDetail({ item, related }: Props) {
           <p className="eyebrow mt-10 text-mist">
             {item.category} · {item.duration}
           </p>
-          <h1 className="display-lg mt-5 max-w-5xl">{item.title}</h1>
+          <h1 className="display-lg mt-5 max-w-5xl" data-reveal="lines">
+            {item.title}
+          </h1>
         </div>
-        <div className="relative aspect-[4/3] w-full bg-navy sm:aspect-[16/9] lg:aspect-[21/9]">
-          <Image src={item.image} alt={`${item.title}: ${item.places[0]}`} fill priority sizes="100vw" className="object-cover" />
-        </div>
+        {item.image && (
+          <Photo
+            src={item.image}
+            alt={`${item.title}: ${item.places[0]}`}
+            sizes="100vw"
+            priority
+            className="aspect-[4/3] w-full sm:aspect-[16/9] lg:aspect-[21/9]"
+          />
+        )}
       </section>
 
-      <section className="section-y bg-white" data-surface="light">
+      <section className="section-y bg-white" data-bg="white">
         <div className="container-x grid gap-14 lg:grid-cols-12 lg:gap-10">
           <div className="lg:col-span-7">
             <p className="display-md max-w-3xl text-ink">{item.description}</p>
@@ -100,12 +108,12 @@ export function TripDetail({ item, related }: Props) {
       />
 
       {related.length > 0 && (
-        <section className="section-y overflow-hidden bg-white" aria-labelledby="related-title" data-surface="light">
+        <section className="section-y overflow-hidden bg-white" aria-labelledby="related-title" data-bg="white">
           <div className="container-x flex items-end justify-between gap-6">
-            <h2 id="related-title" className="display-md">
+            <h2 id="related-title" className="display-md" data-reveal="lines">
               {item.kind === "pelerinaj" ? "Alte pelerinaje" : "Alte excursii"}
             </h2>
-            <Link href={kindHref[item.kind]} className="link-arrow hidden text-ink sm:inline-flex">
+            <Link href={kindHref[item.kind]} className="link-arrow link-u hidden text-ink sm:inline-flex">
               Vezi toate <ArrowRight />
             </Link>
           </div>
@@ -129,7 +137,7 @@ export function TripDetail({ item, related }: Props) {
             name: item.title,
             description: item.description,
             url: `${site.url}${item.href}`,
-            image: `${site.url}${item.image}`,
+            ...(item.image ? { image: `${site.url}${item.image}` } : {}),
             touristType: item.kind === "pelerinaj" ? "Pelerini" : "Turiști",
             provider: { "@id": `${site.url}/#firma` },
             itinerary: {

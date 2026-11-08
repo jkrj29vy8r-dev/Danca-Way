@@ -7,7 +7,7 @@ import { pageMeta } from "@/lib/seo";
 export const metadata: Metadata = pageMeta({
   title: "Excursii cu microbuzul din Neamț — o zi, weekend, Crăciun, city break, litoral",
   description:
-    "Excursii cu plecare din Neamț: Cheile Bicazului și Lacul Roșu, Maramureș, Delta Dunării, târgurile de Crăciun din Brașov, Sibiu, Budapesta și Viena, city break Budapesta, litoral.",
+    "Excursii cu plecare din Neamț: Ceahlău și Durău, Cheile Bicazului și Lacul Roșu, Maramureș, Delta Dunării, târgurile de Crăciun din Brașov, Sibiu și Viena, city break, litoral.",
   path: "/excursii",
 });
 
@@ -23,7 +23,7 @@ export default function ExcursiiPage() {
     <CatalogPage
       kind="excursie"
       title="Excursii cu plecare din Neamț"
-      intro="De la o zi la Cheile Bicazului până la patru zile la Viena, cu microbuz 8+1 sau autocar, în funcție de mărimea grupului."
+      intro="De la o zi la Ceahlău sau la Cheile Bicazului până la patru zile la Viena, cu microbuz 8+1 sau autocar, în funcție de mărimea grupului."
       groups={groups}
     />
   );

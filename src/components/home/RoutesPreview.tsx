@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowRight, ArrowUpRight } from "../icons";
 import { RouteMap } from "../RouteMap";
+import { FlapText } from "../FlapText";
 import { site } from "@/config/site";
 import {
   directions,
@@ -14,14 +15,12 @@ import {
 
 export function RoutesPreview() {
   return (
-    <section className="section-y bg-navy text-white" aria-labelledby="curse-title" data-surface="dark">
+    <section className="section-y bg-navy text-white" aria-labelledby="curse-title" data-bg="navy">
       <div className="container-x grid gap-16 lg:grid-cols-12 lg:gap-10">
         <div className="lg:col-span-7">
           <p className="eyebrow text-mist">Curse regulate</p>
-          <h2 id="curse-title" className="display-lg mt-6">
-            Șapte curse,
-            <br />
-            trei direcții.
+          <h2 id="curse-title" className="display-lg mt-6" data-reveal="lines">
+            Șapte curse, trei direcții.
           </h2>
           <p className="mt-6 max-w-xl text-lg text-mist">
             Două curse pleacă din Târgu Neamț spre București Obor, trei se întorc de la Obor spre Neamț și
@@ -39,8 +38,8 @@ export function RoutesPreview() {
                       const from = firstStop(r);
                       const to = lastStop(r);
                       return (
-                        <li key={r.code} className="grid grid-cols-[4.5rem_1fr_auto] items-center gap-4 py-4">
-                          <span className="font-display text-2xl font-semibold tabular-nums">{from.time}</span>
+                        <li key={r.code} className="grid grid-cols-[5.25rem_1fr_auto] items-center gap-4 py-4">
+                          <span className="font-display text-2xl font-semibold">{from.time && <FlapText value={from.time} />}</span>
                           <span className="min-w-0">
                             <span className="block truncate font-medium">
                               {stopName(from)} → {stopName(to)}

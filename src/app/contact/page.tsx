@@ -11,19 +11,20 @@ export const metadata: Metadata = pageMeta({
 
 export default function ContactPage() {
   return (
-    <div className="bg-light pt-16 md:pt-[4.5rem]" data-surface="light">
+    <>
       <QuoteSection
         headingLevel="h1"
         title="Contact"
+        className="pt-36! md:pt-44!"
         intro={`Sună la ${site.contact.phoneDisplay}, scrie pe WhatsApp sau trimite formularul cu plecarea, destinația, data și numărul de pasageri.`}
       />
-      <section className="bg-white" data-surface="light">
+      <section className="bg-white" data-bg="white">
         <div className="container-x py-12 text-sm text-muted">
           <p>
             {site.legalName} · CUI {site.cui} · {site.regCom}
           </p>
         </div>
       </section>
-    </div>
+    </>
   );
 }

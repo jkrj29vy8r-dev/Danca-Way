@@ -1,26 +1,45 @@
-/** Trei fapte, în tipografie mare. Partea evidențiată e albă, restul gri. */
-const facts: { strong: string; rest: string }[] = [
-  { strong: "Plecare 05:00", rest: " din Târgu Neamț" },
-  { strong: "Oprire la Terminal Plecări,", rest: " Otopeni" },
-  { strong: "4,6 din 5 pe Bileteria,", rest: " din peste 300 de recenzii" },
-];
+import { FlapText } from "../FlapText";
 
+/**
+ * Trei fapte, în tipografie mare. Partea evidențiată e albă, restul gri.
+ * „05:00” se întoarce ca pe o tabelă de plecări; 4,6 și 300 cresc o singură dată, când devin vizibile.
+ */
 export function WhyUs() {
   return (
-    <section className="section-y bg-navy text-white" aria-labelledby="dece-title" data-surface="dark">
+    <section className="section-y bg-navy text-white" aria-labelledby="dece-title" data-bg="navy">
       <div className="container-x">
         <h2 id="dece-title" className="eyebrow text-mist">
           De ce Danca Way
         </h2>
-        <ul className="mt-12 border-b border-white/15 md:mt-16">
-          {facts.map((f) => (
-            <li key={f.strong} className="border-t border-white/15 py-8 md:py-12">
-              <p className="display-lg">
-                {f.strong}
-                <span className="text-mist">{f.rest}</span>
-              </p>
-            </li>
-          ))}
+        <ul className="display-lg mt-12 border-b border-white/15 md:mt-16">
+          <li className="border-t border-white/15 py-8 md:py-12">
+            <p>
+              Plecare <FlapText value="05:00" />
+              <span className="text-mist"> din Târgu Neamț</span>
+            </p>
+          </li>
+          <li className="border-t border-white/15 py-8 md:py-12">
+            <p>
+              Oprire la Terminal Plecări,
+              <span className="text-mist"> Otopeni</span>
+            </p>
+          </li>
+          <li className="border-t border-white/15 py-8 md:py-12">
+            <p>
+              <span className="tabular-nums" data-count="4.6" data-decimals="1">
+                4,6
+              </span>{" "}
+              din 5 pe Bileteria,
+              <span className="text-mist">
+                {" "}
+                din peste{" "}
+                <span className="tabular-nums" data-count="300">
+                  300
+                </span>{" "}
+                de recenzii
+              </span>
+            </p>
+          </li>
         </ul>
       </div>
     </section>
