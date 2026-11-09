@@ -1,17 +1,14 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { Hero } from "@/components/home/Hero";
-import { Statement } from "@/components/home/Statement";
+import { Facts } from "@/components/home/Facts";
+import { Journey } from "@/components/home/Journey";
 import { Timetable } from "@/components/home/Timetable";
 import { ServicesList } from "@/components/home/ServicesList";
-import { TripsStrip } from "@/components/home/TripsStrip";
-import { WhyUs } from "@/components/home/WhyUs";
-import { Photo } from "@/components/Photo";
+import { TripsSection } from "@/components/home/TripsSection";
 import { QuoteSection } from "@/components/QuoteSection";
 import { JsonLd } from "@/components/JsonLd";
-import { photos } from "@/data/photos";
 import { busTripsJsonLd, pageMeta } from "@/lib/seo";
-import { hasPhoto } from "@/lib/photo";
 
 const title = "Danca Way — Transport persoane Neamț – București, Otopeni, Constanța";
 
@@ -25,29 +22,24 @@ export const metadata: Metadata = {
   title: { absolute: title },
 };
 
+/**
+ * O idee pe ecran: titlul și căutarea; cifrele; o cursă stație cu stație; orarul; serviciile;
+ * excursiile; cererea de ofertă.
+ */
 export default function HomePage() {
   return (
     <>
       <Hero />
-      <Statement />
-      {hasPhoto(photos.road.src) && (
-        <Photo
-          src={photos.road.src}
-          alt={photos.road.alt}
-          sizes="100vw"
-          scaleOnScroll
-          className="aspect-[4/3] w-full md:aspect-[21/9]"
-        />
-      )}
+      <Facts />
       {/* Granițe Suspense: React hidratează secțiunile pe rând, în sarcini mici, fără să blocheze pagina */}
+      <Suspense>
+        <Journey />
+      </Suspense>
       <Suspense>
         <Timetable />
       </Suspense>
       <ServicesList />
-      <Suspense>
-        <TripsStrip />
-      </Suspense>
-      <WhyUs />
+      <TripsSection />
       <Suspense>
         <QuoteSection />
       </Suspense>

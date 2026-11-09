@@ -6,21 +6,19 @@ import { whatsappHref } from "@/config/site";
 import { WhatsApp } from "./icons";
 
 /**
- * Buton WhatsApp fix, bleumarin. Pe mobil e mereu vizibil; pe desktop apare după ce treci de hero
- * (primul element <section> al paginii). Fără JavaScript rămâne vizibil peste tot.
+ * Buton WhatsApp fix, doar pe desktop (pe mobil e în bara de jos). Apare după ce treci de prima secțiune.
+ * Pastilă night cu linie de 1 px, fără umbră.
  */
 export function WhatsAppButton() {
   const pathname = usePathname();
   const [pastHero, setPastHero] = useState(false);
 
-  // Observă hero-ul: butonul apare când marginea lui de jos urcă peste 40% din înălțimea ecranului.
   useEffect(() => {
     const hero = document.querySelector("main section");
     if (!hero) return;
-    const io = new IntersectionObserver(
-      ([e]) => setPastHero(!e.isIntersecting && e.boundingClientRect.top < 0),
-      { rootMargin: "-40% 0px 0px 0px" },
-    );
+    const io = new IntersectionObserver(([e]) => setPastHero(!e.isIntersecting && e.boundingClientRect.top < 0), {
+      rootMargin: "-40% 0px 0px 0px",
+    });
     io.observe(hero);
     return () => io.disconnect();
   }, [pathname]);
@@ -30,11 +28,10 @@ export function WhatsAppButton() {
       href={whatsappHref}
       target="_blank"
       rel="noopener"
-      aria-label="Scrie-ne pe WhatsApp"
       data-visible={pastHero ? "" : undefined}
-      className="wa-fab press fixed right-6 bottom-6 z-30 hidden size-12 md:grid place-items-center rounded-full bg-navy text-white shadow-[0_8px_24px_-6px_rgb(11_20_38/0.5)] ring-1 ring-white/20 md:right-6 md:bottom-6"
+      className="wa-fab press on-dark t-14 fixed right-8 bottom-8 z-30 hidden min-h-12 items-center gap-2 rounded-full border border-line-dark-strong bg-night px-6 font-semibold text-white transition-colors hover:border-white md:inline-flex"
     >
-      <WhatsApp size={22} />
+      <WhatsApp size={18} /> WhatsApp
     </a>
   );
 }

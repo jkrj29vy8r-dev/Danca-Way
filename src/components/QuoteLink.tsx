@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import type { ServiceId } from "@/data/services";
+import { scrollToEl } from "@/lib/scroll";
 
 export type QuotePrefill = { service: ServiceId; subject?: string };
 export const PREFILL_EVENT = "quote:prefill";
@@ -30,8 +31,7 @@ export function QuoteLink({ service, subject, className, children, ...rest }: Pr
         if (!form) return;
         e.preventDefault();
         window.dispatchEvent(new CustomEvent<QuotePrefill>(PREFILL_EVENT, { detail: { service, subject } }));
-        if (window.__lenis) window.__lenis.scrollTo(form, { offset: -96 });
-        else form.scrollIntoView({ behavior: "smooth", block: "start" });
+        scrollToEl(form);
       }}
     >
       {children}

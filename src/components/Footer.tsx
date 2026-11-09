@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Logo } from "./Logo";
-import { ArrowUpRight, Mail, Phone, WhatsApp } from "./icons";
+import { ArrowUpRight } from "./icons";
 import { mailHref, site, telHref, whatsappHref } from "@/config/site";
 import { services } from "@/data/services";
 
@@ -10,45 +10,46 @@ const legalLinks = [
   { href: "/politica-cookie", label: "Politica de cookie-uri" },
 ];
 
+const linkCls = "link-u text-white/80 transition-colors duration-[600ms] ease-[var(--ease-out-expo)] hover:text-white";
+
 export function Footer() {
   const year = new Date().getFullYear();
   return (
     <footer className="bg-night text-white" data-bg="night">
-      <div className="container-x pt-20 pb-10 md:pt-28">
-        <div className="grid gap-14 lg:grid-cols-12">
-          <div className="lg:col-span-5">
+      <div className="container-x pt-24 pb-12 lg:pt-32">
+        <div className="grid-12 gap-y-16">
+          <div className="col-span-12 lg:col-span-4">
             <Logo variant="alb" className="h-10 w-auto" />
-            <p className="mt-6 max-w-sm text-mist">
-              Curse regulate Târgu Neamț – București, București – Otopeni – Roman și Roman – Constanța.
-              Transfer privat 8+1, închiriere microbuz cu șofer, excursii și pelerinaje.
+            <p className="measure mt-6 text-mist">
+              Curse regulate Târgu Neamț – București, București – Otopeni – Roman și Roman – Constanța. Transfer privat
+              8+1, închiriere microbuz cu șofer, excursii și pelerinaje.
             </p>
-            <ul className="mt-8 space-y-3 text-[0.95rem]">
-              <li>
-                <a href={telHref} className="group inline-flex items-center gap-3">
-                  <Phone size={18} className="text-mist" /> <span className="link-u">{site.contact.phoneDisplay}</span>
-                </a>
-              </li>
-              <li>
-                <a href={whatsappHref} className="group inline-flex items-center gap-3" rel="noopener" target="_blank">
-                  <WhatsApp size={18} className="text-mist" /> <span className="link-u">WhatsApp</span>
-                </a>
-              </li>
-              <li>
-                <a href={mailHref} className="group inline-flex items-center gap-3">
-                  <Mail size={18} className="text-mist" /> <span className="link-u">{site.contact.email}</span>
-                </a>
-              </li>
-            </ul>
+            <dl className="t-14 mt-8 border-b border-line-dark">
+              {[
+                { label: "Telefon", value: site.contact.phoneDisplay, href: telHref },
+                { label: "WhatsApp", value: site.contact.phoneDisplay, href: whatsappHref, external: true },
+                { label: "Email", value: site.contact.email, href: mailHref },
+              ].map((c) => (
+                <div key={c.label} className="flex items-baseline justify-between gap-4 border-t border-line-dark py-4">
+                  <dt className="label text-mist">{c.label}</dt>
+                  <dd>
+                    <a href={c.href} {...(c.external ? { target: "_blank", rel: "noopener" } : {})} className={linkCls}>
+                      {c.value}
+                    </a>
+                  </dd>
+                </div>
+              ))}
+            </dl>
           </div>
 
-          <nav aria-label="Servicii" className="lg:col-span-4">
-            <h2 className="eyebrow text-mist">Servicii</h2>
-            <ul className="mt-5 grid grid-cols-1 gap-x-6 gap-y-3 text-[0.95rem] sm:grid-cols-2">
+          <nav aria-label="Servicii" className="col-span-12 sm:col-span-6 lg:col-span-4 lg:col-start-6">
+            <h2 className="label text-mist">Servicii</h2>
+            <ul className="t-14 mt-6 grid gap-x-6 gap-y-4 sm:grid-cols-2">
               {services
                 .filter((s) => s.id !== "altele")
                 .map((s) => (
                   <li key={s.id}>
-                    <Link href={s.href} className="link-u text-white/85 hover:text-white">
+                    <Link href={s.href} className={linkCls}>
                       {s.title}
                     </Link>
                   </li>
@@ -56,26 +57,22 @@ export function Footer() {
             </ul>
           </nav>
 
-          <div className="lg:col-span-3">
-            <h2 className="eyebrow text-mist">Bilete</h2>
-            <a
-              href={site.ticketsUrl}
-              target="_blank"
-              rel="noopener"
-              className="link-arrow link-u mt-5 text-white"
-            >
-              Cumpără bilet online <ArrowUpRight size={16} />
-            </a>
-            <h2 className="eyebrow mt-10 text-mist">Informații</h2>
-            <ul className="mt-5 space-y-3 text-[0.95rem]">
+          <div className="col-span-12 sm:col-span-6 lg:col-span-2 lg:col-start-11">
+            <h2 className="label text-mist">Informații</h2>
+            <ul className="t-14 mt-6 grid gap-y-4">
               <li>
-                <Link href="/contact" className="link-u text-white/85 hover:text-white">
+                <a href={site.ticketsUrl} target="_blank" rel="noopener" className="link-arrow font-normal text-white/80 hover:text-white">
+                  <span className="link-u">Bilete online</span> <ArrowUpRight size={14} />
+                </a>
+              </li>
+              <li>
+                <Link href="/contact" className={linkCls}>
                   Contact
                 </Link>
               </li>
               {legalLinks.map((l) => (
                 <li key={l.href}>
-                  <Link href={l.href} className="link-u text-white/85 hover:text-white">
+                  <Link href={l.href} className={linkCls}>
                     {l.label}
                   </Link>
                 </li>
@@ -84,34 +81,30 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-16 flex flex-wrap items-center gap-3">
-          <a
-            href={site.legal.anpcSal}
-            target="_blank"
-            rel="noopener"
-            className="inline-flex h-12 items-center gap-3 rounded-xl border border-white/15 px-4 text-xs leading-tight text-white/85 hover:border-white/40"
-          >
-            <span className="font-display text-base font-bold text-white">ANPC</span>
-            <span>
-              Soluționarea alternativă
-              <br />a litigiilor (SAL)
-            </span>
-          </a>
-          <a
-            href={site.legal.anpcSol}
-            target="_blank"
-            rel="noopener"
-            className="inline-flex h-12 items-center gap-3 rounded-xl border border-white/15 px-4 text-xs leading-tight text-white/85 hover:border-white/40"
-          >
-            <span className="font-display text-base font-bold text-white">SOL</span>
-            <span>
-              Soluționarea online
-              <br />a litigiilor
-            </span>
-          </a>
+        {/* Pictogramele ANPC cerute de lege: dreptunghiuri cu linie de 1 px, fără colțuri rotunjite */}
+        <div className="mt-16 flex flex-wrap gap-2">
+          {[
+            { href: site.legal.anpcSal, short: "ANPC", text: ["Soluționarea alternativă", "a litigiilor (SAL)"] },
+            { href: site.legal.anpcSol, short: "SOL", text: ["Soluționarea online", "a litigiilor"] },
+          ].map((b) => (
+            <a
+              key={b.short}
+              href={b.href}
+              target="_blank"
+              rel="noopener"
+              className="press flex min-h-12 items-center gap-4 border border-line-dark px-4 py-2 text-white/80 transition-colors duration-[600ms] ease-[var(--ease-out-expo)] hover:border-white hover:text-white"
+            >
+              <span className="font-semibold text-white">{b.short}</span>
+              <span className="t-14">
+                {b.text[0]}
+                <br />
+                {b.text[1]}
+              </span>
+            </a>
+          ))}
         </div>
 
-        <div className="mt-10 flex flex-col gap-3 border-t border-white/10 pt-8 text-sm text-mist md:flex-row md:items-center md:justify-between">
+        <div className="t-14 mt-12 flex flex-col gap-2 border-t border-line-dark pt-8 text-mist md:flex-row md:items-center md:justify-between">
           <p>
             © {year} {site.legalName} · CUI {site.cui} · {site.regCom}
           </p>

@@ -39,20 +39,6 @@ const LINE_PTS: Record<Line, Pt[]> = {
   constanta: MAP_LINES.constanta.map((id) => pointOn("constanta", id)),
 };
 const LINE_LEN: Record<Line, number> = { bucuresti: lengthOf(LINE_PTS.bucuresti), constanta: lengthOf(LINE_PTS.constanta) };
-/** Fracțiunea din lungimea liniei la care se află fiecare oprire (pentru pulsul galben). */
-const STOP_FRACTIONS: Record<Line, { id: CityId; f: number }[]> = (["bucuresti", "constanta"] as Line[]).reduce(
-  (acc, line) => {
-    const pts = LINE_PTS[line];
-    let run = 0;
-    acc[line] = MAP_LINES[line].map((id, i) => {
-      if (i) run += Math.hypot(pts[i].x - pts[i - 1].x, pts[i].y - pts[i - 1].y);
-      return { id, f: run / LINE_LEN[line] };
-    });
-    return acc;
-  },
-  {} as Record<Line, { id: CityId; f: number }[]>,
-);
-
 /** Orașe afișate și poziția etichetei. */
 const STATIONS: { id: CityId; side: "left" | "right"; label?: string }[] = [
   { id: "targu-neamt", side: "right" },
@@ -89,8 +75,8 @@ export function RouteMap({ activeLine, highlight = null, className = "" }: Props
     return { d: polyline(pts), len: lengthOf(pts), ids: new Set(highlight.path) };
   }, [highlight]);
 
-  /** Desenează linia activă (1 s, expo.out), cu „autobuzul” în vârf și un puls galben la fiecare oprire. */
-  const drawLine = (line: Line) => {
+  /** Desenează linia activă (1,1 s, expo.out), cu „autobuzul” în vârf. `delay`: după tabela de plecări. */
+  const drawLine = (line: Line, delay = 0) => {
     const svg = root.current;
     const gsap = gsapRef.current;
     if (!svg || !gsap) return;
@@ -99,12 +85,12 @@ export function RouteMap({ activeLine, highlight = null, className = "" }: Props
     if (!path || !head) return;
     const len = LINE_LEN[line];
     const pts = LINE_PTS[line];
-    const pulsed = new Set<CityId>();
     const state = { p: 0 };
     gsap.killTweensOf(state);
     gsap.set(path, { strokeDasharray: len, strokeDashoffset: len });
     gsap.to(state, {
       p: 1,
+      delay,
       duration: 1.1,
       ease: "expo.out",
       onUpdate: () => {
@@ -122,19 +108,7 @@ export function RouteMap({ activeLine, highlight = null, className = "" }: Props
         const t = Math.min(dist / seg, 1);
         head.setAttribute("cx", String(a.x + (b.x - a.x) * t));
         head.setAttribute("cy", String(a.y + (b.y - a.y) * t));
-        head.style.opacity = state.p < 0.98 ? "1" : "0";
-        for (const s of STOP_FRACTIONS[line]) {
-          if (state.p >= s.f - 0.002 && !pulsed.has(s.id)) {
-            pulsed.add(s.id);
-            const ring = svg.querySelector(`[data-pulse="${line}-${s.id}"]`);
-            if (ring)
-              gsap.fromTo(
-                ring,
-                { scale: 1, opacity: 0.9 },
-                { scale: 3, opacity: 0, duration: 0.9, ease: "expo.out", transformOrigin: "50% 50%" },
-              );
-          }
-        }
+        head.style.opacity = state.p > 0 && state.p < 0.98 ? "1" : "0";
       },
     });
   };
@@ -159,7 +133,8 @@ export function RouteMap({ activeLine, highlight = null, className = "" }: Props
         onEnter: () => {
           seen.current = true;
           svg.setAttribute("data-drawn", "");
-          drawLine(activeLineRef.current);
+          // Un singur moment pe secțiune: întâi se întorc orele din tabel, apoi se desenează linia.
+          drawLine(activeLineRef.current, 0.6);
         },
       });
     });
@@ -202,8 +177,8 @@ export function RouteMap({ activeLine, highlight = null, className = "" }: Props
       <path
         d={polyline((["piatra-neamt", "buhusi", "bacau"] as CityId[]).map(base))}
         fill="none"
-        stroke="rgb(255 255 255 / 0.14)"
-        strokeWidth="1.5"
+        stroke="rgb(255 255 255 / 0.2)"
+        strokeWidth="1"
         strokeDasharray="2 6"
         strokeLinecap="round"
       />
@@ -215,7 +190,7 @@ export function RouteMap({ activeLine, highlight = null, className = "" }: Props
           d={polyline(LINE_PTS[line])}
           fill="none"
           stroke="rgb(255 255 255 / 0.16)"
-          strokeWidth="3"
+          strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
         />
@@ -230,7 +205,7 @@ export function RouteMap({ activeLine, highlight = null, className = "" }: Props
           d={polyline(LINE_PTS[line])}
           fill="none"
           stroke="var(--color-accent)"
-          strokeWidth="3"
+          strokeWidth="2.5"
           strokeLinecap="round"
           strokeLinejoin="round"
           strokeDasharray={LINE_LEN[line]}
@@ -245,13 +220,13 @@ export function RouteMap({ activeLine, highlight = null, className = "" }: Props
           d={hl.d}
           fill="none"
           stroke="#fff"
-          strokeWidth="4.5"
+          strokeWidth="3"
           strokeLinecap="round"
           strokeLinejoin="round"
           strokeDasharray={hl.len}
         />
       )}
-      <circle className="route-head" r="5.5" fill="#fff" opacity="0" />
+      <circle className="route-head" r="4" fill="#fff" opacity="0" />
 
       {/* Stații */}
       {STATIONS.map(({ id, side, label: text }) => {
@@ -266,28 +241,10 @@ export function RouteMap({ activeLine, highlight = null, className = "" }: Props
         const name = text ?? cities[id].name;
         return (
           <g key={id} className="route-stop" data-lit={lit ? "" : undefined} data-hot={hot ? "" : undefined}>
-            {(["bucuresti", "constanta"] as Line[])
-              .filter((l) => onLine(l, id))
-              .map((l) => {
-                const p = pointOn(l, id);
-                return (
-                  <circle
-                    key={l}
-                    data-pulse={`${l}-${id}`}
-                    cx={p.x}
-                    cy={p.y}
-                    r="6"
-                    fill="none"
-                    stroke="var(--color-accent)"
-                    strokeWidth="2"
-                    opacity="0"
-                  />
-                );
-              })}
             {both ? (
               <line x1={pB.x} y1={pB.y} x2={pC.x} y2={pC.y} className="stop-capsule" strokeLinecap="round" />
             ) : (
-              <circle cx={anchor.x} cy={anchor.y} r="5" className="stop-dot" />
+              <circle cx={anchor.x} cy={anchor.y} r="4" className="stop-dot" />
             )}
             <text
               x={side === "right" ? anchor.x + 13 : anchor.x - 13}

@@ -8,7 +8,7 @@ const base = (size = 20): SVGProps<SVGSVGElement> => ({
   viewBox: "0 0 24 24",
   fill: "none",
   stroke: "currentColor",
-  strokeWidth: 1.8,
+  strokeWidth: 1.5,
   strokeLinecap: "round",
   strokeLinejoin: "round",
   "aria-hidden": true,
@@ -23,10 +23,19 @@ export function ArrowRight({ size = 18, className = "arrow", ...p }: IconProps) 
   );
 }
 
-export function ArrowUpRight({ size = 18, className = "arrow", ...p }: IconProps) {
+export function ArrowUpRight({ size = 18, className = "arrow-up arrow", ...p }: IconProps) {
   return (
     <svg {...base(size)} className={className} {...p}>
       <path d="M7 17 17 7M8 7h9v9" />
+    </svg>
+  );
+}
+
+/** Chevron subțire pentru listele mari de linkuri */
+export function ChevronRight({ size = 24, className = "arrow", ...p }: IconProps) {
+  return (
+    <svg {...base(size)} strokeWidth={1.25} className={className} {...p}>
+      <path d="m9 5 7 7-7 7" />
     </svg>
   );
 }

@@ -29,9 +29,19 @@ export const quoteSchema = z.object({
 export type QuoteInput = z.infer<typeof quoteSchema>;
 export type QuoteField = keyof QuoteInput;
 
+/** Rezumatul cererii, afișat după trimitere */
+export type QuoteSummary = {
+  name: string;
+  service: string;
+  route: string;
+  date: string;
+  passengers: number;
+  phone: string;
+};
+
 export type QuoteState =
   | { status: "idle" }
-  | { status: "success"; name: string }
+  | { status: "success"; name: string; summary?: QuoteSummary }
   | {
       status: "error";
       message: string;

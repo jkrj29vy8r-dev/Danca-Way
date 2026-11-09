@@ -2,7 +2,7 @@
 
 import { Resend } from "resend";
 import { headers } from "next/headers";
-import { quoteSchema, type QuoteField, type QuoteState } from "@/lib/quote-schema";
+import { quoteSchema, type QuoteField, type QuoteState, type QuoteSummary } from "@/lib/quote-schema";
 import { serviceById } from "@/data/services";
 import { site } from "@/config/site";
 
@@ -66,11 +66,20 @@ export async function sendQuote(_prev: QuoteState, formData: FormData): Promise<
     ["Detalii", q.detalii || "—"],
   ];
 
+  const summary: QuoteSummary = {
+    name: q.nume,
+    service: serviceById(q.serviciu)?.title ?? serviceLabel,
+    route: `${q.plecare} → ${q.destinatie}`,
+    date: formatDate(q.data),
+    passengers: q.pasageri,
+    phone: q.telefon,
+  };
+
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) {
     if (process.env.NODE_ENV !== "production") {
       console.warn("[oferta] RESEND_API_KEY lipsește — cererea nu a fost trimisă:", Object.fromEntries(rows));
-      return { status: "success", name: q.nume };
+      return { status: "success", name: q.nume, summary };
     }
     console.error("[oferta] RESEND_API_KEY lipsește în producție.");
     return {
@@ -114,5 +123,5 @@ export async function sendQuote(_prev: QuoteState, formData: FormData): Promise<
     };
   }
 
-  return { status: "success", name: q.nume };
+  return { status: "success", name: q.nume, summary };
 }

@@ -14,14 +14,13 @@ const inView = (el: Element) => {
   return r.top < window.innerHeight && r.bottom > 0;
 };
 
-/** Easing și durate comune: lent, precis. */
 const EASE = "expo.out";
 
 /**
- * Orchestrează animațiile pe fiecare pagină (se reface la schimbarea rutei). Mișcare doar acolo unde are
- * un sens: titluri (linie cu linie), fotografii (clip-path), ore (tabelă de plecări), bara de progres.
- * Restul conținutului e deja acolo. Totul e dezactivat cu prefers-reduced-motion; fără JavaScript
- * conținutul rămâne static și vizibil. Animăm doar transform, opacity și clip-path.
+ * Animațiile de pe fiecare pagină (se refac la schimbarea rutei). Doar trei tipuri, fiecare cu un sens:
+ * titluri dezvăluite linie cu linie, fotografii dezvăluite cu clip-path, ore întoarse ca pe o tabelă de plecări.
+ * (Harta, rândunica și countdown-ul au componentele lor.) Totul e dezactivat cu prefers-reduced-motion;
+ * fără JavaScript conținutul rămâne static și vizibil. Durate 0,6–1,2 s, expo.out.
  */
 export function MotionController() {
   const pathname = usePathname();
@@ -40,7 +39,6 @@ export function MotionController() {
         disposers.push(revealLines(gsap, SplitText));
         revealPhotos(gsap);
         disposers.push(splitFlaps(gsap, ScrollTrigger));
-        scrollProgress(gsap);
       });
 
       // Recalculăm pozițiile după ce se încarcă fonturile (liniile se pot rupe altfel).
@@ -67,74 +65,35 @@ function revealLines(gsap: Gsap, SplitText: typeof import("gsap/SplitText").Spli
   const splits = Array.from(document.querySelectorAll<HTMLElement>('[data-reveal="lines"]'))
     .filter((el) => !inView(el))
     .map((el) =>
-    SplitText.create(el, {
-      type: "lines",
-      mask: "lines",
-      autoSplit: true,
-      // Doar linii (nu cuvinte/litere): textul rămâne citibil ca atare, fără aria-label pe <p>.
-      aria: "none",
-      onSplit(self) {
-        return gsap.from(self.lines, {
-          yPercent: 110,
-          duration: 1.1,
-          ease: EASE,
-          stagger: 0.09,
-          scrollTrigger: { trigger: el, start: "top 88%", once: true },
-        });
-      },
-    }),
-  );
+      SplitText.create(el, {
+        type: "lines",
+        mask: "lines",
+        autoSplit: true,
+        // Doar linii (nu cuvinte/litere): textul rămâne citibil ca atare, fără aria-label pe element.
+        aria: "none",
+        onSplit(self) {
+          return gsap.from(self.lines, {
+            yPercent: 110,
+            duration: 1.1,
+            ease: EASE,
+            stagger: 0.08,
+            scrollTrigger: { trigger: el, start: "top 88%", once: true },
+          });
+        },
+      }),
+    );
   return () => splits.forEach((s) => s.revert());
 }
 
-/* ───────── Fotografii: clip-path inset la intrare + parallax lent ───────── */
+/* ───────── Fotografii: clip-path inset la intrare (fără parallax, fără zoom) ───────── */
 function revealPhotos(gsap: Gsap) {
   document.querySelectorAll<HTMLElement>("[data-photo]").forEach((frame) => {
-    const layer = frame.querySelector<HTMLElement>("[data-photo-layer]");
-    if (!layer) return;
-    const visible = inView(frame);
-    const r = Number(frame.dataset.photoRadius || 0);
-    const trigger = { trigger: frame, start: "top 90%", once: true };
-
-    if (!visible)
-      gsap.fromTo(
-        frame,
-        { clipPath: `inset(10% 7% 10% 7% round ${r + 12}px)` },
-        { clipPath: `inset(0% 0% 0% 0% round ${r}px)`, duration: 1.2, ease: EASE, scrollTrigger: trigger },
-      );
-
-    // Stratul interior se mișcă ~9% mai încet decât pagina; marginea lui acoperă exact cursa.
-    const travel = () => 0.09 * (window.innerHeight + frame.offsetHeight);
-    const fitLayer = () => {
-      const m = travel() / 2 + 2;
-      layer.style.top = `${-m}px`;
-      layer.style.bottom = `${-m}px`;
-    };
-    fitLayer();
+    if (inView(frame)) return;
     gsap.fromTo(
-      layer,
-      { y: () => -travel() / 2 },
-      {
-        y: () => travel() / 2,
-        ease: "none",
-        scrollTrigger: {
-          trigger: frame,
-          start: "top bottom",
-          end: "bottom top",
-          scrub: true,
-          invalidateOnRefresh: true,
-          onRefresh: fitLayer,
-        },
-      },
+      frame,
+      { clipPath: "inset(8% 6% 8% 6%)" },
+      { clipPath: "inset(0% 0% 0% 0%)", duration: 1.2, ease: EASE, scrollTrigger: { trigger: frame, start: "top 90%", once: true } },
     );
-
-    if (frame.hasAttribute("data-photo-scale")) {
-      gsap.fromTo(
-        layer.querySelector("img"),
-        { scale: 1.12 },
-        { scale: 1, ease: "none", scrollTrigger: { trigger: frame, start: "top bottom", end: "bottom 40%", scrub: true } },
-      );
-    }
   });
 }
 
@@ -146,15 +105,4 @@ function splitFlaps(gsap: Gsap, ScrollTrigger: ST) {
   );
   // La ieșire, cifrele revin la valoarea corectă chiar dacă animația a fost întreruptă.
   return () => resetDigits(document);
-}
-
-/* ───────── Bara aurie de progres ───────── */
-function scrollProgress(gsap: Gsap) {
-  const bar = document.getElementById("scroll-progress");
-  if (!bar) return;
-  gsap.fromTo(
-    bar,
-    { scaleX: 0 },
-    { scaleX: 1, ease: "none", scrollTrigger: { start: 0, end: "max", scrub: 0.3 } },
-  );
 }

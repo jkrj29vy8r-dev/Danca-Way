@@ -3,8 +3,7 @@ import { ArrowRight, Phone } from "../icons";
 import { Photo } from "../Photo";
 import { QuoteLink } from "../QuoteLink";
 import { QuoteSection } from "../QuoteSection";
-import { SnapStrip } from "../SnapStrip";
-import { TripImageCard } from "../TripImageCard";
+import { TripGrid } from "../TripGrid";
 import { JsonLd } from "../JsonLd";
 import { site, telHref } from "@/config/site";
 import type { CatalogItem } from "@/data/catalog";
@@ -118,13 +117,7 @@ export function TripDetail({ item, related }: Props) {
             </Link>
           </div>
           <div className="mt-10">
-            <SnapStrip label={item.kind === "pelerinaj" ? "Alte pelerinaje" : "Alte excursii"} tone="light" variant="tall">
-              {related.map((r) => (
-                <li key={r.href}>
-                  <TripImageCard item={r} />
-                </li>
-              ))}
-            </SnapStrip>
+            <TripGrid items={related.slice(0, 3)} tone="white" />
           </div>
         </section>
       )}

@@ -1,89 +1,64 @@
 import Link from "next/link";
-import { ArrowRight } from "../icons";
+import { ChevronRight } from "../icons";
 import { Photo } from "../Photo";
-import { mainServices, serviceById, serviceRows } from "@/data/services";
+import { mainServices, serviceById, type ServiceId } from "@/data/services";
 import { hasPhoto } from "@/lib/photo";
 
-type Row = { key: string; title: string; text: string; href: string; extraLink?: { href: string; label: string } };
+const ORDER: ServiceId[] = ["transfer-privat", "transfer-aeroport", "inchiriere", "excursie", "pelerinaj", "grup", "eveniment", "firma"];
 
-function ServiceRow({ row, large }: { row: Row; large?: boolean }) {
+/** Un rând = un serviciu: titlul mare ca link, descrierea scurtă în gri, chevron subțire la dreapta. */
+export function ServiceLinkList({ ids, tone = "light" }: { ids: ServiceId[]; tone?: "light" | "dark" }) {
+  const line = tone === "dark" ? "border-line-dark" : "border-line";
+  const muted = tone === "dark" ? "text-mist" : "text-muted";
   return (
-    <li className="group relative border-t border-line">
-      <div className="grid gap-3 py-8 md:grid-cols-12 md:items-center md:gap-8 md:py-10">
-        <h3
-          className={`font-display font-semibold tracking-tight transition-transform duration-700 ease-[var(--ease-out-expo)] md:col-span-5 md:leading-none md:group-hover:translate-x-2 ${
-            large ? "text-4xl md:text-[3.5rem]" : "text-3xl md:text-[2.75rem]"
-          }`}
-        >
-          {row.title}
-        </h3>
-        <p className="leading-relaxed text-muted md:col-span-5">{row.text}</p>
-        <div className="flex gap-6 md:col-span-2 md:flex-col md:items-end md:gap-2">
-          <Link href={row.href} className="link-arrow link-u text-ink after:absolute after:inset-0 after:content-['']" aria-label={`Detalii: ${row.title}`}>
-            Detalii <ArrowRight size={16} />
-          </Link>
-          {row.extraLink && (
-            <Link href={row.extraLink.href} className="link-arrow link-u relative z-10 text-ink">
-              {row.extraLink.label} <ArrowRight size={16} />
+    <ul className={`border-b ${line}`}>
+      {ids.map((id) => {
+        const s = serviceById(id)!;
+        return (
+          <li key={id} className={`border-t ${line}`}>
+            <Link href={s.href} className="press group grid-12 items-center gap-y-2 py-6 lg:py-8">
+              <span className="t-32 col-span-11 font-semibold transition-transform duration-[600ms] ease-[var(--ease-out-expo)] group-hover:translate-x-2 lg:col-span-6">
+                {s.title}
+              </span>
+              <ChevronRight className={`arrow col-span-1 justify-self-end lg:order-last ${muted}`} />
+              <span className={`col-span-11 lg:col-span-5 ${muted}`}>{s.short}</span>
             </Link>
-          )}
-        </div>
-      </div>
-    </li>
+          </li>
+        );
+      })}
+    </ul>
   );
 }
 
 export function ServicesList() {
-  const rows: Row[] = serviceRows.map((id) => {
-    const s = serviceById(id)!;
-    return { key: s.id, title: s.title, text: s.short, href: s.href };
-  });
-  // Cele trei servicii principale apar cu imagine mare doar dacă toate trei au fotografie.
+  // Cele trei servicii principale apar cu imagine doar dacă toate trei au fotografie.
   const withImages = mainServices.every((s) => hasPhoto(s.image.src));
 
   return (
     <section className="section-y bg-white" aria-labelledby="servicii-title" data-bg="white">
       <div className="container-x">
-        <p className="eyebrow text-muted">Servicii</p>
-        <h2 id="servicii-title" className="display-lg mt-6 max-w-4xl" data-reveal="lines">
-          Microbuz 8+1 sau autocar, cu șofer.
+        <h2 id="servicii-title" className="t-48 max-w-[22ch]" data-reveal="lines">
+          Microbuz 8+1 sau autocar, cu șofer.{" "}
+          <span className="text-muted">Pentru transfer, închiriere, excursie, grup sau eveniment.</span>
         </h2>
 
-        {withImages ? (
-          <ul className="mt-14 grid gap-12 md:mt-20 md:grid-cols-3 md:gap-6">
+        {withImages && (
+          <ul className="grid-12 mt-16 gap-y-12 lg:mt-24">
             {mainServices.map((s) => (
-              <li key={s.href} className="group relative flex flex-col">
-                <Photo src={s.image.src} alt={s.image.alt} sizes="(min-width: 768px) 33vw, 100vw" radius={16} hoverZoom className="aspect-[4/3]" />
-                <h3 className="mt-6 font-display text-2xl font-semibold tracking-tight transition-transform duration-700 ease-[var(--ease-out-expo)] group-hover:-translate-y-1 md:text-[1.75rem]">
-                  {s.title}
-                </h3>
-                <p className="mt-2 max-w-md leading-relaxed text-muted">{s.text}</p>
-                <p className="mt-4 flex flex-wrap gap-x-6 gap-y-2">
-                  <Link href={s.href} className="link-arrow link-u text-ink" aria-label={`Detalii: ${s.title}`}>
-                    Detalii <ArrowRight size={16} />
-                  </Link>
-                  {s.extraLink && (
-                    <Link href={s.extraLink.href} className="link-arrow link-u text-ink">
-                      {s.extraLink.label} <ArrowRight size={16} />
-                    </Link>
-                  )}
-                </p>
+              <li key={s.href} className="col-span-12 md:col-span-4">
+                <Link href={s.href} className="group block">
+                  <Photo src={s.image.src} alt={s.image.alt} sizes="(min-width: 768px) 33vw, 100vw" className="aspect-[4/3]" />
+                  <span className="t-21 mt-4 block font-semibold">{s.title}</span>
+                  <span className="mt-2 block text-muted">{s.text}</span>
+                </Link>
               </li>
-            ))}
-          </ul>
-        ) : (
-          <ul className="mt-14 md:mt-20">
-            {mainServices.map((s) => (
-              <ServiceRow key={s.href} large row={{ key: s.href, title: s.title, text: s.text, href: s.href, extraLink: s.extraLink }} />
             ))}
           </ul>
         )}
 
-        <ul className={`border-b border-line ${withImages ? "mt-20 md:mt-28" : ""}`}>
-          {rows.map((r) => (
-            <ServiceRow key={r.key} row={r} />
-          ))}
-        </ul>
+        <div className={withImages ? "mt-16" : "mt-16 lg:mt-24"}>
+          <ServiceLinkList ids={ORDER} />
+        </div>
       </div>
     </section>
   );
