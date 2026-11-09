@@ -8,6 +8,12 @@ import { flipDigits, resetDigits } from "@/lib/flap";
 type Gsap = Awaited<ReturnType<typeof loadGsap>>["gsap"];
 type ST = Awaited<ReturnType<typeof loadGsap>>["ScrollTrigger"];
 
+/** Elementul e (măcar parțial) în ecran chiar acum. */
+const inView = (el: Element) => {
+  const r = el.getBoundingClientRect();
+  return r.top < window.innerHeight && r.bottom > 0;
+};
+
 /** Easing și durate comune: lent, precis. */
 const EASE = "expo.out";
 
@@ -57,7 +63,10 @@ export function MotionController() {
 
 /* ───────── Titluri: liniile urcă din spatele unei margini invizibile ───────── */
 function revealLines(gsap: Gsap, SplitText: typeof import("gsap/SplitText").SplitText) {
-  const splits = Array.from(document.querySelectorAll<HTMLElement>('[data-reveal="lines"]')).map((el) =>
+  // Ce e deja pe ecran când pornesc animațiile rămâne așa cum e: conținutul nu „reapare”.
+  const splits = Array.from(document.querySelectorAll<HTMLElement>('[data-reveal="lines"]'))
+    .filter((el) => !inView(el))
+    .map((el) =>
     SplitText.create(el, {
       type: "lines",
       mask: "lines",
@@ -83,14 +92,16 @@ function revealPhotos(gsap: Gsap) {
   document.querySelectorAll<HTMLElement>("[data-photo]").forEach((frame) => {
     const layer = frame.querySelector<HTMLElement>("[data-photo-layer]");
     if (!layer) return;
+    const visible = inView(frame);
     const r = Number(frame.dataset.photoRadius || 0);
     const trigger = { trigger: frame, start: "top 90%", once: true };
 
-    gsap.fromTo(
-      frame,
-      { clipPath: `inset(10% 7% 10% 7% round ${r + 12}px)` },
-      { clipPath: `inset(0% 0% 0% 0% round ${r}px)`, duration: 1.2, ease: EASE, scrollTrigger: trigger },
-    );
+    if (!visible)
+      gsap.fromTo(
+        frame,
+        { clipPath: `inset(10% 7% 10% 7% round ${r + 12}px)` },
+        { clipPath: `inset(0% 0% 0% 0% round ${r}px)`, duration: 1.2, ease: EASE, scrollTrigger: trigger },
+      );
 
     // Stratul interior se mișcă ~9% mai încet decât pagina; marginea lui acoperă exact cursa.
     const travel = () => 0.09 * (window.innerHeight + frame.offsetHeight);

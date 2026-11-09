@@ -74,7 +74,7 @@ export const services: Service[] = [
     title: "Grupuri",
     formLabel: "Transport grup (școală, pensionari, ski, festival, echipă)",
     href: "/grupuri",
-    short: "Microbuz sau autocar pentru clase de elevi, cluburi de pensionari, schiori, festivaluri și echipe sportive.",
+    short: "Transport pentru clase de elevi, cluburi de pensionari, schiori, festivaluri și echipe sportive.",
   },
   {
     id: "eveniment",

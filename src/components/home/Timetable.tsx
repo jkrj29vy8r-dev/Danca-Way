@@ -85,7 +85,8 @@ function FlipString({ value }: { value: string }) {
   );
 }
 
-export function Timetable() {
+/** `full`: pe pagina Curse regulate (fără linkul „Orarul complet”). */
+export function Timetable({ full = false }: { full?: boolean } = {}) {
   const uid = useId();
   const filter = parse(useSyncExternalStore(subscribe, snapshot, () => ""));
   const [tabState, setTabState] = useState<Direction>("spre-bucuresti");
@@ -355,9 +356,15 @@ export function Timetable() {
             <a href={site.ticketsUrl} target="_blank" rel="noopener" className="btn btn-primary">
               Cumpără bilet online <ArrowUpRight />
             </a>
-            <a href="/curse-regulate" className="btn btn-ghost-light">
-              Orarul complet <ArrowRight />
-            </a>
+            {full ? (
+              <a href="#opriri" className="btn btn-ghost-light">
+                Toate opririle și tarifele <ArrowRight />
+              </a>
+            ) : (
+              <a href="/curse-regulate" className="btn btn-ghost-light">
+                Orarul complet <ArrowRight />
+              </a>
+            )}
           </div>
         </div>
       </div>

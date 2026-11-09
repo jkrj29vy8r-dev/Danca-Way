@@ -26,9 +26,21 @@ Alte comenzi: `npm run build`, `npm run lint`, `npm run typecheck`.
 | Excursii | `src/data/trips.ts` |
 | Pelerinaje | `src/data/pilgrimages.ts` |
 | Servicii (meniu, grilă, opțiuni formular) | `src/data/services.ts` |
+| Textele paginilor de servicii (transfer privat, Otopeni, închiriere, grupuri, evenimente, firme) | `src/data/service-pages.ts` |
+| Pagini legale (termeni, confidențialitate, cookie-uri) | `src/app/termeni-si-conditii`, `src/app/politica-de-confidentialitate`, `src/app/politica-cookie` |
 | Logo | `public/danca-way-logo.svg` (fundal deschis), `public/danca-way-logo-alb.svg` (fundal închis), `public/danca-way-simbol.svg` (favicon + apple-touch-icon) |
 
 Logo-urile sunt vectorizate din logo-ul oficial. Pentru o versiune nouă, înlocuiește fișierele SVG păstrând aceleași nume.
+
+## Pagini
+
+Acasă · Curse regulate (orar, hartă, toate opririle, tarife, stații) · Transfer privat 8+1 · Transfer Aeroport Otopeni
+(orele de la Otopeni sunt calculate din orar) · Închiriere microbuz cu șofer · Excursii (+ pagină pe excursie) ·
+Pelerinaje (+ pagină pe pelerinaj) · Grupuri · Evenimente · Firme · Contact · Termeni și condiții ·
+Politica de confidențialitate · Politica de cookie-uri · 404.
+
+Paginile legale sunt un text de pornire redactat pe baza modului real în care funcționează site-ul;
+recomandăm o verificare de către un jurist. Site-ul nu setează cookie-uri (verificat), deci nu are banner de consimțământ.
 
 ## Formularul de ofertă
 
