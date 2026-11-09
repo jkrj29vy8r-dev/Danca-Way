@@ -11,3 +11,4 @@ npm-debug.log*
 
 # Visual references (local only, never deployed)
 /references
+/ads/references
