@@ -47,7 +47,7 @@ export function NextDeparture({ from, to }: { from: CityId; to: CityId }) {
             <p className="font-semibold">
               {cityName(from)} → {stopName(trip.arr)}
             </p>
-            <p className="t-14 text-mist">
+            <p className="t-14 min-h-[2lh] text-mist">
               {next ? (
                 <>
                   {next.day} · <span className="sr-only">pleacă în {formatCountdown(next.wait)}</span>

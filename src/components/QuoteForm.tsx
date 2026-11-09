@@ -311,7 +311,7 @@ export function QuoteForm({ defaultService, defaultSubject, labelledBy }: Props)
             />
             <span>
               Sunt de acord ca datele mele să fie folosite pentru a primi oferta, conform{" "}
-              <Link href="/politica-de-confidentialitate" className="text-ink underline underline-offset-4">
+              <Link href="/politica-de-confidentialitate" className="text-ink underline decoration-1 underline-offset-4 transition-opacity hover:opacity-64">
                 Politicii de confidențialitate
               </Link>
               .

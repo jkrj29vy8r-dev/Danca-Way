@@ -2,9 +2,9 @@
 
 Site-ul Danca Way (Danca Util Ideal SRL, CUI 41865158), transport persoane din județul Neamț.
 
-**Stack:** Next.js (App Router) · TypeScript · Tailwind CSS v4 · GSAP + ScrollTrigger · Lenis · Resend · Vercel
+**Stack:** Next.js (App Router) · TypeScript · Tailwind CSS v4 · GSAP + ScrollTrigger · Resend · Vercel
 
-**Fonturi:** Geist (titluri și text) și Geist Mono (ore și prețuri), prin `next/font`; tokenurile `--font-display`, `--font-sans`, `--font-mono` din `src/app/globals.css`.
+**Design:** sistemul (culori, scară tipografică, grilă, spațiere, colțuri, mișcare) și auditul versiunii anterioare sunt în `DESIGN.md`; tokenurile și utilitarele (`t-112` … `t-14`, `label`, `grid-12`, `section-y`, `btn-*`, `field`) în `src/app/globals.css`. Geist 400/600 pentru tot textul, Geist Mono pentru ore, prețuri și coduri de cursă, prin `next/font`.
 
 ## Pornire locală
 

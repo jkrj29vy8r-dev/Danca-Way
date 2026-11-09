@@ -1,5 +1,6 @@
-import { CatalogCard } from "./CatalogCard";
 import { QuoteSection } from "../QuoteSection";
+import { TripGrid } from "../TripGrid";
+import { PageHero } from "../pages/PageHero";
 import type { CatalogItem, CatalogKind } from "@/data/catalog";
 
 type Props = {
@@ -9,55 +10,53 @@ type Props = {
   groups: { id: string; label: string; items: CatalogItem[] }[];
 };
 
-/** Pagina de listă pentru excursii sau pelerinaje, grupate pe categorii. */
+/** Pagina de listă pentru excursii sau pelerinaje, grupate pe categorii, cu grile despărțite prin linii de 1 px. */
 export function CatalogPage({ kind, title, intro, groups }: Props) {
   return (
     <>
-      <section className="bg-night text-white" data-bg="night">
-        <div className="container-x pt-36 pb-16 md:pt-44 md:pb-24">
-          <p className="eyebrow text-mist">{kind === "pelerinaj" ? "Pelerinaje" : "Excursii"}</p>
-          <h1 className="display-lg mt-6 max-w-4xl" data-reveal="lines">
-            {title}
-          </h1>
-          <p className="mt-6 max-w-2xl text-lg leading-relaxed text-mist">{intro}</p>
-          <nav aria-label="Categorii" className="mt-10">
-            <ul className="flex flex-wrap gap-2">
-              {groups.map((g) => (
-                <li key={g.id}>
-                  <a href={`#${g.id}`} className="inline-flex rounded-full border border-white/25 px-4 py-2 text-sm font-medium">
-                    {g.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </nav>
-        </div>
-      </section>
+      <PageHero eyebrow={kind === "pelerinaj" ? "Pelerinaje" : "Excursii"} title={title} intro={<p>{intro}</p>}>
+        <nav aria-label="Categorii">
+          <ul className="flex flex-wrap gap-2">
+            {groups.map((g) => (
+              <li key={g.id}>
+                <a href={`#${g.id}`} className="btn btn-line-light min-h-10 px-4 font-normal">
+                  {g.label} <span className="font-mono text-mist">{g.items.length}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </PageHero>
 
-      {groups.map((g, i) => (
-        <section
-          key={g.id}
-          id={g.id}
-          className={`section-y scroll-mt-16 ${i % 2 ? "bg-light" : "bg-white"}`}
-          aria-labelledby={`${g.id}-title`}
-          data-bg={i % 2 ? "light" : "white"}
-        >
-          <div className="container-x">
-            <h2 id={`${g.id}-title`} className="display-md" data-reveal="lines">
-              {g.label}
-            </h2>
-            <ul className="mt-12 grid gap-x-6 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
-              {g.items.map((item) => (
-                <li key={item.slug}>
-                  <CatalogCard item={item} />
-                </li>
-              ))}
-            </ul>
-          </div>
-        </section>
-      ))}
+      {groups.map((g, i) => {
+        const tone = i % 2 ? "light" : "white";
+        return (
+          <section
+            key={g.id}
+            id={g.id}
+            className={`section-y scroll-mt-16 ${tone === "light" ? "bg-light" : "bg-white"}`}
+            aria-labelledby={`${g.id}-title`}
+            data-bg={tone}
+          >
+            <div className="container-x">
+              <h2 id={`${g.id}-title`} className="t-48" data-reveal="lines">
+                {g.label}
+              </h2>
+              <div className="mt-12 lg:mt-16">
+                <TripGrid items={g.items} tone={tone} showKind={false} />
+              </div>
+            </div>
+          </section>
+        );
+      })}
 
-      <QuoteSection defaultService={kind} />
+      <QuoteSection
+        title={kind === "pelerinaj" ? "Ofertă pentru un pelerinaj." : "Ofertă pentru o excursie."}
+        lead="Răspundem cu prețul total."
+        intro="Scrie destinația, data, orașul de plecare și câți pasageri sunteți."
+        defaultService={kind}
+        tone={groups.length % 2 ? "light" : "white"}
+      />
     </>
   );
 }

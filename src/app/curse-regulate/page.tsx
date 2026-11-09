@@ -4,7 +4,7 @@ import { PageHero } from "@/components/pages/PageHero";
 import { AllStops, FareTable, Stations } from "@/components/pages/RouteDetails";
 import { Timetable } from "@/components/home/Timetable";
 import { RouteFinder } from "@/components/home/RouteFinder";
-import { ArrowUpRight } from "@/components/icons";
+import { Facts } from "@/components/home/Facts";
 import { JsonLd } from "@/components/JsonLd";
 import { site } from "@/config/site";
 import { routes } from "@/data/routes";
@@ -25,26 +25,16 @@ export default function CurseRegulatePage() {
         title="Neamț – București, Otopeni și Constanța."
         intro={
           <p>
-            {routes.length} curse, cu plecări din Târgu Neamț la 05:00 și 09:00, oprire la Terminalul Plecări din Otopeni
-            și întoarcere de la București Obor la 11:30 și 15:30. Spre Constanța pleacă microbuzul din Roman, la 07:00.
+            {routes.length} curse pe zi: din Târgu Neamț la 05:00 și 09:00, cu oprire la Terminalul Plecări din Otopeni, înapoi
+            de la București Obor la 11:30 și 15:30, iar spre Constanța din Roman, la 07:00.
           </p>
         }
-        facts={[
-          { label: "Prima plecare", value: "05:00, Târgu Neamț" },
-          { label: "Oprire la aeroport", value: "Terminal Plecări" },
-          { label: "Roman → București", value: "120 lei" },
-          { label: "Roman → Constanța", value: "160 lei" },
-        ]}
       >
-        <div className="max-w-4xl">
-          <Suspense>
-            <RouteFinder />
-          </Suspense>
-          <a href={site.ticketsUrl} target="_blank" rel="noopener" className="link-arrow link-u mt-4 inline-flex text-sm text-white/85">
-            Cumpără biletul online, pe autogari.ro <ArrowUpRight size={15} />
-          </a>
-        </div>
+        <Suspense>
+          <RouteFinder />
+        </Suspense>
       </PageHero>
+      <Facts />
       <Suspense>
         <Timetable full />
       </Suspense>

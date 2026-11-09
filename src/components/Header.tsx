@@ -147,7 +147,7 @@ export function Header() {
         onFocus={() => setHidden(false)}
       >
         <div className="container-x flex h-16 items-center justify-between gap-6 lg:h-20">
-          <Link href="/" className="press relative -m-2 block shrink-0 p-2" aria-label="Danca Way — Acasă">
+          <Link href="/" className="press relative -m-2 block shrink-0 p-2 transition-opacity hover:opacity-80" aria-label="Danca Way — Acasă">
             <Logo variant="alb" priority alt="" className={`h-8 w-auto lg:h-10 ${dark ? "" : "invisible"}`} />
             <Logo variant="navy" alt="" className={`absolute top-2 left-2 h-8 w-auto lg:h-10 ${dark ? "invisible" : ""}`} />
           </Link>
@@ -162,7 +162,7 @@ export function Header() {
               <li className="relative" ref={servicesRef}>
                 <button
                   type="button"
-                  className={`press flex items-center gap-1 px-4 py-2 transition-opacity duration-[600ms] ease-[var(--ease-out-expo)] hover:opacity-100 ${
+                  className={`press flex items-center gap-2 px-4 py-2 transition-opacity duration-[600ms] ease-[var(--ease-out-expo)] hover:opacity-100 ${
                     serviceActive || servicesOpen ? "font-semibold" : "opacity-64"
                   }`}
                   aria-expanded={servicesOpen}
@@ -219,7 +219,7 @@ export function Header() {
             </Link>
             <button
               type="button"
-              className="press -mr-2 grid size-12 place-items-center lg:hidden"
+              className="press -mr-2 grid size-12 place-items-center transition-opacity hover:opacity-64 lg:hidden"
               aria-expanded={menuOpen}
               aria-controls={menuId}
               aria-label={menuOpen ? "Închide meniul" : "Deschide meniul"}

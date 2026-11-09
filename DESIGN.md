@@ -55,3 +55,28 @@ What looked generic or AI-generated, and the fix applied.
 - Allowed: split-flap departure times, route-map drawing, swallow flight (hero, once), countdown digits,
   line-by-line heading reveals, clip-path photo reveals.
 - Every interactive element has hover and press (scale 0.98) states. `prefers-reduced-motion` disables all of it.
+
+## Self-review (9 November 2026)
+
+Checked on all 36 sitemap pages plus the 404, at 1440 px and 390 px, with a computed-style audit in the
+browser (Playwright) and Lighthouse.
+
+| Rule | Result |
+|---|---|
+| Fonts | Only Geist and Geist Mono are rendered. |
+| Weights | Only 400 and 600 (the theme defines no other weight, so other classes generate nothing). |
+| Type scale | Every text element is at 112/72/48/32/21/17/14 px (48/40/32/24/19/17/14 on mobile) or a 12 px label. |
+| Tracking | −0.04em on every Geist heading of 40 px and above. |
+| Shadows, gradients, glow, blur | None (computed `box-shadow`, `background-image`, `filter`, `backdrop-filter`). |
+| Radius | 0 everywhere except 999 px (buttons, segmented control, 8 px timeline dots) and 12 px (inputs, selects). |
+| Accent | At most one yellow element per screen on every page and width, measured at every half-screen scroll step. |
+| Overflow | No horizontal scroll at 390 px or 1440 px. |
+| Mobile fold | Home: logo, headline, route finder, next departure; nothing else. |
+| Lighthouse | Home mobile 95/100/100/100, desktop 100/100/100/100; service, routes and contact pages 95–98 on mobile. CLS ≤ 0.002. |
+
+Interpretations to confirm:
+- The logo files keep their own yellow beak (brand asset, not an accent added by the layout).
+- Validation errors use a red (`#b42318`) — a functional status color, shown only on invalid fields.
+- A 4 px half-step is used only inside compact controls (segmented-control inset, checkbox alignment).
+- Timeline nodes (8 px) are circles, like the stops on the route map; all containers stay square.
+- Hover and color transitions use the same 0.6 s expo.out as the larger motion.

@@ -16,7 +16,7 @@ export function Footer() {
   const year = new Date().getFullYear();
   return (
     <footer className="bg-night text-white" data-bg="night">
-      <div className="container-x pt-24 pb-12 lg:pt-32">
+      <div className="container-x pt-24 pb-12 lg:pt-40">
         <div className="grid-12 gap-y-16">
           <div className="col-span-12 lg:col-span-4">
             <Logo variant="alb" className="h-10 w-auto" />

@@ -8,12 +8,28 @@ import type { CatalogItem } from "@/data/catalog";
  * Fiecare celulă are aceeași structură: eticheta, titlul, locurile, săgeata în același colț.
  * Fotografia (4:3) apare deasupra textului doar dacă fișierul există.
  */
-export function TripGrid({ items, tone = "light", columns = 3 }: { items: CatalogItem[]; tone?: "light" | "white"; columns?: 2 | 3 }) {
+export function TripGrid({
+  items,
+  tone = "light",
+  columns = 3,
+  showKind = true,
+}: {
+  items: CatalogItem[];
+  tone?: "light" | "white";
+  columns?: 2 | 3;
+  /** Pe paginile cu un singur tip, eticheta arată perioada în loc de tip */
+  showKind?: boolean;
+}) {
   const cell = tone === "light" ? "bg-light hover:bg-white" : "bg-white hover:bg-light";
   return (
-    <ul className={`grid gap-px border-y border-line bg-line sm:grid-cols-2 ${columns === 3 ? "lg:grid-cols-3" : ""}`}>
+    <ul className={`grid border-t border-line sm:grid-cols-2 ${columns === 3 ? "lg:grid-cols-3" : ""}`}>
       {items.map((item) => (
-        <li key={item.href} className="flex">
+        <li
+          key={item.href}
+          className={`flex border-b border-line sm:[&:nth-child(2n)]:border-l ${
+            columns === 3 ? "lg:[&:nth-child(2n)]:border-l-0 lg:[&:not(:nth-child(3n+1))]:border-l" : ""
+          }`}
+        >
           <Link
             href={item.href}
             className={`group flex w-full flex-col p-6 transition-colors duration-[600ms] ease-[var(--ease-out-expo)] lg:p-8 ${cell}`}
@@ -22,7 +38,7 @@ export function TripGrid({ items, tone = "light", columns = 3 }: { items: Catalo
               <Photo src={item.image} alt="" sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw" className="-mx-6 -mt-6 mb-6 aspect-[4/3] lg:-mx-8 lg:-mt-8 lg:mb-8" />
             )}
             <p className="label text-muted">
-              {item.kind === "pelerinaj" ? "Pelerinaj" : "Excursie"} · {item.duration}
+              {showKind ? `${item.kind === "pelerinaj" ? "Pelerinaj" : "Excursie"} · ${item.duration}` : [item.duration, item.when].filter(Boolean).join(" · ")}
             </p>
             <h3 className="t-32 mt-4 font-semibold">{item.title}</h3>
             <p className="t-14 mt-2 line-clamp-2 text-muted">

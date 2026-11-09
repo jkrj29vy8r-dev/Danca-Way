@@ -19,20 +19,20 @@ export default function OpengraphImage() {
           flexDirection: "column",
           justifyContent: "space-between",
           padding: "72px 80px",
-          background: "radial-gradient(circle at 85% 15%, #1c2d57 0%, #0B1426 60%)",
+          background: "#0B1426",
           color: "#fff",
           fontFamily: "sans-serif",
         }}
       >
         <img src={logoSrc} alt="" height={72} width={321} />
         <div style={{ display: "flex", flexDirection: "column" }}>
-          <div style={{ fontSize: 80, fontWeight: 800, lineHeight: 1.02, letterSpacing: -3 }}>Din Neamț la București.</div>
-          <div style={{ fontSize: 80, fontWeight: 800, lineHeight: 1.02, letterSpacing: -3 }}>Din Otopeni, acasă.</div>
-          <div style={{ marginTop: 32, fontSize: 30, color: "#AAB3C7" }}>
+          <div style={{ fontSize: 80, fontWeight: 600, lineHeight: 1, letterSpacing: -3 }}>Din Neamț la București.</div>
+          <div style={{ fontSize: 80, fontWeight: 600, lineHeight: 1, letterSpacing: -3, color: "rgba(255,255,255,0.64)" }}>Din Otopeni, acasă.</div>
+          <div style={{ marginTop: 32, fontSize: 30, color: "rgba(255,255,255,0.64)" }}>
             Târgu Neamț 05:00 și 09:00 · Otopeni 12:00 și 16:00 · Roman – Constanța 07:00
           </div>
         </div>
-        <div style={{ display: "flex", width: 160, height: 8, borderRadius: 4, background: "#F2B705" }} />
+        <div style={{ display: "flex", width: "100%", height: 1, background: "rgba(255,255,255,0.12)" }} />
       </div>
     ),
     size,

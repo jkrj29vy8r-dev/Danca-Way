@@ -24,7 +24,7 @@ export function flipDigits(gsap: typeof GsapType, root: Element) {
       .call(() => {
         c.textContent = final;
       })
-      .fromTo(c, { rotateX: -90 }, { rotateX: 0, duration: 0.55, ease: "expo.out" });
+      .fromTo(c, { rotateX: -90 }, { rotateX: 0, duration: 0.6, ease: "expo.out" });
     tl.add(sub, i * 0.06);
   });
   return tl;

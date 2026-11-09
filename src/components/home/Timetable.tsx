@@ -118,7 +118,7 @@ export function Timetable({ full = false }: { full?: boolean } = {}) {
       <div className="container-x">
         {/* Titlul la stânga, un singur link discret la dreapta, pe aceeași linie */}
         <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-6">
-          <h2 id="curse-title" className="t-48 max-w-[22ch]" data-reveal="lines">
+          <h2 id="curse-title" className="t-48 max-w-[22ch]">
             Opt curse, trei direcții. <span className="text-mist">Același preț pe toate cursele dintre două orașe.</span>
           </h2>
           {!full && (
@@ -223,11 +223,11 @@ export function Timetable({ full = false }: { full?: boolean } = {}) {
                       <div id={`${uid}-stops-${code}`} hidden={!isOpen} className="pb-8 sm:pl-[8.5rem]">
                         {isOpen && (
                           <ol className="relative">
-                            <span aria-hidden className="absolute top-3 bottom-3 left-[3.5px] w-px bg-line-dark" />
+                            <span aria-hidden className="absolute top-[18px] bottom-[18px] left-[3.5px] w-px bg-line-dark" />
                             {t.route.stops.map((s) => {
                               const inTrip = s === t.dep || s === t.arr;
                               return (
-                                <li key={s.city + s.time} className={`t-14 relative grid grid-cols-[8px_3.5rem_1fr] items-baseline gap-x-4 py-1 ${inTrip ? "text-white" : "text-mist"}`}>
+                                <li key={s.city + s.time} className={`t-14 relative grid grid-cols-[8px_3.5rem_1fr] items-baseline gap-x-4 py-2 ${inTrip ? "text-white" : "text-mist"}`}>
                                   <span aria-hidden className={`size-2 self-center rounded-full border ${inTrip ? "border-white bg-white" : "border-line-dark-strong bg-night"}`} />
                                   <span className="font-mono tabular-nums">{s.time}</span>
                                   <span>
