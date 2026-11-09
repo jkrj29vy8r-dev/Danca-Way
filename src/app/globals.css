@@ -19,6 +19,8 @@
 
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-display: var(--font-inter-tight), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  /* Ore de plecare și prețuri */
+  --font-mono: var(--font-geist-mono), ui-monospace, "SFMono-Regular", Menlo, monospace;
 
   /* expo.out — folosit de toate animațiile */
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
@@ -80,8 +82,18 @@
     background: var(--color-accent);
     color: var(--color-night);
   }
+  /* Inel de focus: galben pe fundal închis, bleumarin pe fundal deschis (contrast ≥ 3:1 în ambele cazuri) */
+  :root {
+    --focus: var(--color-night);
+  }
+  [data-bg="night"],
+  [data-bg="navy"],
+  .site-header[data-theme="dark"],
+  footer {
+    --focus: var(--color-accent);
+  }
   :focus-visible {
-    outline: 2px solid var(--color-accent);
+    outline: 2px solid var(--focus);
     outline-offset: 3px;
     border-radius: 6px;
   }
@@ -154,6 +166,16 @@
   }
   .btn:active::after {
     opacity: 0.14;
+  }
+  /* Apăsare: tot ce e interactiv se strânge ușor (0,98) */
+  .btn,
+  .press {
+    transition: transform 0.6s var(--ease-out-expo);
+  }
+  .btn:active,
+  .press:active {
+    transform: scale(0.98);
+    transition-duration: 0.12s;
   }
   .btn-primary {
     @apply bg-accent text-night;
@@ -246,8 +268,9 @@
   .snap-strip > * {
     scroll-snap-align: start;
   }
+  /* Carduri verticale: pe mobil un card întreg + o margine din următorul (fără text tăiat) */
   .snap-strip-tall {
-    grid-auto-columns: min(75%, 19rem);
+    grid-auto-columns: calc(100vw - 3.75rem);
   }
   @media (width >= 48rem) {
     .snap-strip {
@@ -257,12 +280,32 @@
       scroll-padding-inline: max(2.5rem, calc((100vw - 84rem) / 2 + 2.5rem));
     }
     .snap-strip-tall {
-      grid-auto-columns: 21rem;
+      grid-auto-columns: calc((100vw - 5rem - 1.25rem - 2.5rem) / 2);
     }
+  }
+  @media (width >= 64rem) {
+    .snap-strip-tall {
+      --k: 3;
+      grid-auto-columns: calc((min(100vw, 84rem) - 5rem - (var(--k) - 1) * 1.25rem) / var(--k));
+    }
+  }
+  @media (width >= 80rem) {
+    .snap-strip-tall {
+      --k: 4;
+    }
+  }
+  /* Desktop, fixat: banda stă în lățimea conținutului și arată exact k carduri întregi */
+  .strip-clip[data-pinned] {
+    width: min(100% - 5rem, 79rem);
+    margin-inline: auto;
+    overflow: hidden;
   }
   .snap-strip[data-pinned] {
     overflow: visible;
     scroll-snap-type: none;
+    padding-inline: 0;
+    padding-block: 0.5rem;
+    grid-auto-columns: calc((100% - (var(--k, 3) - 1) * 1.25rem) / var(--k, 3));
     will-change: transform;
   }
 
@@ -341,69 +384,6 @@
   pointer-events: none;
 }
 
-/* ───────────────────────── Fundal care se schimbă lin la scroll ─────────────────────────
-   Fără JS: fiecare secțiune își păstrează culoarea (tăieturi nete).
-   Cu JS (clasa .bg-morph): un fundal fix trece lin între culori, iar fiecare secțiune își
-   pictează culoarea doar în interior, cu margini estompate (120px) — textul rămâne mereu
-   pe fundalul lui, iar trecerile dintre secțiuni devin gradiente animate de scroll. */
-.bg-layers {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 100lvh;
-  z-index: -1;
-  display: none;
-  pointer-events: none;
-}
-.bg-layers > div {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  will-change: opacity;
-}
-.bg-morph .bg-layers {
-  display: block;
-}
-[data-bg="night"] {
-  --sec-bg: var(--color-night);
-}
-[data-bg="navy"] {
-  --sec-bg: var(--color-navy);
-}
-[data-bg="light"] {
-  --sec-bg: var(--color-light);
-}
-[data-bg="white"] {
-  --sec-bg: var(--color-white);
-}
-.bg-morph [data-bg] {
-  background-color: transparent !important;
-  position: relative;
-  isolation: isolate;
-  --feather: 64px;
-}
-@media (width >= 48rem) {
-  .bg-morph [data-bg] {
-    --feather: 120px;
-  }
-}
-.bg-morph [data-bg]::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -2;
-  /* Gradient de fundal (nu mask-image): aceeași margine estompată, mult mai ieftin la scroll */
-  background: linear-gradient(
-    to bottom,
-    transparent,
-    var(--sec-bg) var(--feather),
-    var(--sec-bg) calc(100% - var(--feather)),
-    transparent
-  );
-  pointer-events: none;
-}
-
 /* ───────────────────────── Hero: logo, apoi titlul, la încărcare ───────────────────────── */
 .reveal-line {
   display: block;
@@ -421,54 +401,73 @@
   }
   .reveal-line > span {
     animation: var(--animate-reveal-up);
-    animation-delay: calc(var(--i, 0) * 90ms + 80ms);
-  }
-  .reveal-fade {
-    animation: var(--animate-fade-in);
-    animation-delay: calc(var(--i, 0) * 90ms + 200ms);
-  }
-}
-
-/* ───────────────────────── Statement: cuvintele se aprind ─────────────────────────
-   Fiecare cuvânt are un strat de culoare plină deasupra, animat doar prin opacitate.
-   Fără JS sau cu mișcare redusă, textul este complet vizibil. */
-.w {
-  position: relative;
-}
-.w-ink {
-  display: none;
-}
-@media (prefers-reduced-motion: no-preference) {
-  /* Culoarea „stinsă” păstrează un contrast de 3.3:1 pe alb (text mare). */
-  .js [data-words] .w {
-    display: inline-block;
-    color: #868e9f;
-  }
-  .js [data-words] .w-ink {
-    display: inline;
-    position: absolute;
-    left: 0;
-    top: 0;
-    color: var(--color-ink);
-    opacity: 0;
-    white-space: nowrap;
+    animation-delay: calc(var(--i, 0) * 120ms + 500ms);
   }
 }
 
 /* ───────────────────────── Harta traseelor ───────────────────────── */
-.route-stop .dot-lit,
-.route-stop .halo,
-.route-stop .label-lit {
+.route-map .route-line {
+  opacity: 0;
   transition: opacity 0.6s var(--ease-out-expo);
 }
+.route-map .route-line[data-on] {
+  opacity: 1;
+}
+.route-map .stop-dot {
+  fill: rgb(255 255 255 / 0.35);
+  transition: fill 0.6s var(--ease-out-expo);
+}
+.route-map .stop-capsule {
+  stroke: rgb(255 255 255 / 0.35);
+  stroke-width: 10;
+  transition: stroke 0.6s var(--ease-out-expo);
+}
+.route-map .stop-label {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 500;
+  fill: rgb(255 255 255 / 0.45);
+  transition: fill 0.6s var(--ease-out-expo);
+}
+.route-map .route-stop[data-lit] .stop-dot {
+  fill: var(--color-accent);
+}
+.route-map .route-stop[data-lit] .stop-capsule {
+  stroke: var(--color-accent);
+}
+.route-map .route-stop[data-lit] .stop-label {
+  fill: #fff;
+}
+.route-map .route-stop[data-hot] .stop-dot {
+  fill: #fff;
+}
+.route-map .route-stop[data-hot] .stop-capsule {
+  stroke: #fff;
+}
+.route-map .route-stop[data-hot] .stop-label {
+  fill: #fff;
+  font-weight: 700;
+}
 @media (prefers-reduced-motion: no-preference) {
-  .js .route-map[data-animate] .route-stop:not([data-lit]) .dot-lit,
-  .js .route-map[data-animate] .route-stop:not([data-lit]) .halo,
-  .js .route-map[data-animate] .route-stop:not([data-lit]) .label-lit {
-    opacity: 0;
-  }
-  .js .route-map[data-animate] .route-line {
+  /* Până intră în ecran, linia activă nu e desenată */
+  .js .route-map[data-animate]:not([data-drawn]) .route-line {
     stroke-dashoffset: var(--len);
+  }
+}
+
+/* Cifrele countdown-ului se întorc când se schimbă */
+@keyframes flip-in {
+  from {
+    transform: perspective(300px) rotateX(-90deg);
+  }
+  to {
+    transform: perspective(300px) rotateX(0);
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .flip-in {
+    animation: flip-in 0.6s var(--ease-out-expo) both;
+    transform-origin: 50% 50%;
   }
 }
 

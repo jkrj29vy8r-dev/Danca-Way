@@ -1,10 +1,9 @@
 import { FlapText } from "../FlapText";
+import { ratingDisplay, site, withDe } from "@/config/site";
 
-/**
- * Trei fapte, în tipografie mare. Partea evidențiată e albă, restul gri.
- * „05:00” se întoarce ca pe o tabelă de plecări; 4,6 și 300 cresc o singură dată, când devin vizibile.
- */
+/** Trei fapte, în tipografie mare. „05:00” se întoarce ca pe o tabelă de plecări. */
 export function WhyUs() {
+  const { rating } = site;
   return (
     <section className="section-y bg-navy text-white" aria-labelledby="dece-title" data-bg="navy">
       <div className="container-x">
@@ -14,7 +13,7 @@ export function WhyUs() {
         <ul className="display-lg mt-12 border-b border-white/15 md:mt-16">
           <li className="border-t border-white/15 py-8 md:py-12">
             <p>
-              Plecare <FlapText value="05:00" />
+              Plecare <FlapText value="05:00" className="font-mono" />
               <span className="text-mist"> din Târgu Neamț</span>
             </p>
           </li>
@@ -26,18 +25,11 @@ export function WhyUs() {
           </li>
           <li className="border-t border-white/15 py-8 md:py-12">
             <p>
-              <span className="tabular-nums" data-count="4.6" data-decimals="1">
-                4,6
-              </span>{" "}
-              din 5 pe Bileteria,
-              <span className="text-mist">
-                {" "}
-                din peste{" "}
-                <span className="tabular-nums" data-count="300">
-                  300
-                </span>{" "}
-                de recenzii
-              </span>
+              {ratingDisplay} din {rating.best} pe{" "}
+              <a href={rating.sourceUrl} target="_blank" rel="noopener" className="link-u">
+                {rating.source}
+              </a>
+              ,<span className="text-mist"> din {withDe(rating.count, "recenzii")}</span>
             </p>
           </li>
         </ul>

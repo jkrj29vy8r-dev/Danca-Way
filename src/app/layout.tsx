@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Inter_Tight } from "next/font/google";
+import { Suspense } from "react";
+import { Geist_Mono, Inter, Inter_Tight } from "next/font/google";
 import "lenis/dist/lenis.css";
 import "./globals.css";
 import { Header } from "@/components/Header";
@@ -7,17 +8,17 @@ import { Footer } from "@/components/Footer";
 import { SmoothScroll } from "@/components/SmoothScroll";
 import { MotionController } from "@/components/MotionController";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
+import { MobileActionBar } from "@/components/MobileActionBar";
 import { JsonLd } from "@/components/JsonLd";
 import { site } from "@/config/site";
 import { localBusinessJsonLd } from "@/lib/seo";
 
-// Fontul de text nu se preîncarcă: fotografia din hero (LCP pe mobil) primește banda întâi.
-// next/font generează un font de rezervă cu aceleași metrici, deci schimbarea nu mișcă layout-ul.
+// Fonturile se servesc din același domeniu (next/font), cu font de rezervă cu aceleași metrici (fără CLS).
+// Se preîncarcă fontul de text și cel al titlurilor; cel pentru ore se încarcă la cerere.
 const inter = Inter({
   subsets: ["latin", "latin-ext"],
   variable: "--font-inter",
   display: "swap",
-  preload: false,
 });
 
 const interTight = Inter_Tight({
@@ -25,6 +26,15 @@ const interTight = Inter_Tight({
   variable: "--font-inter-tight",
   display: "swap",
   weight: ["500", "600", "700", "800"],
+});
+
+/** Orele de plecare și prețurile */
+const geistMono = Geist_Mono({
+  subsets: ["latin", "latin-ext"],
+  variable: "--font-geist-mono",
+  display: "swap",
+  weight: ["500", "600"],
+  preload: false,
 });
 
 export const metadata: Metadata = {
@@ -51,24 +61,21 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ro" className={`${inter.variable} ${interTight.variable}`} suppressHydrationWarning>
+    <html lang="ro" className={`${inter.variable} ${interTight.variable} ${geistMono.variable}`} suppressHydrationWarning>
       <head>
         {/* Marchează că JS rulează: animațiile care ascund inițial conținut se activează doar atunci. */}
         <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }} />
       </head>
-      <body>
+      {/* Pe mobil, spațiu sub conținut pentru bara fixă Sună · WhatsApp · Bilet */}
+      <body className="pb-[calc(4.25rem+env(safe-area-inset-bottom))] md:pb-0">
         <div id="scroll-progress" className="scroll-progress" aria-hidden />
-        {/* Straturile fundalului care se schimbă lin între secțiuni (vezi MotionController) */}
-        <div className="bg-layers" aria-hidden>
-          <div data-bg-layer="night" className="bg-night" />
-          <div data-bg-layer="navy" className="bg-navy" />
-          <div data-bg-layer="light" className="bg-light" />
-          <div data-bg-layer="white" className="bg-white" />
-        </div>
-        <Header />
+        <Suspense>
+          <Header />
+        </Suspense>
         <main id="continut">{children}</main>
         <Footer />
         <WhatsAppButton />
+        <MobileActionBar />
         <SmoothScroll />
         <MotionController />
         <JsonLd data={localBusinessJsonLd()} />

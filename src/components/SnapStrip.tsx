@@ -19,6 +19,7 @@ type Props = {
 /** Bandă orizontală cu scroll-snap și butoane anterior/următor. Funcționează și fără JS (scroll nativ). */
 export function SnapStrip({ children, label, tone = "dark", variant = "default", pinOnDesktop = false }: Props) {
   const ref = useRef<HTMLUListElement>(null);
+  const wrapRef = useRef<HTMLDivElement>(null);
   const [edges, setEdges] = useState({ start: true, end: false });
   const [pinned, setPinned] = useState(false);
 
@@ -51,13 +52,26 @@ export function SnapStrip({ children, label, tone = "dark", variant = "default",
       mm = media;
       media.add("(min-width: 1024px) and (prefers-reduced-motion: no-preference)", () => {
         const section = el.closest("section");
-        if (!section) return;
-        // Distanța = cât ar trebui derulată banda ca ultimul card să ajungă la marginea conținutului.
+        const wrap = wrapRef.current;
+        if (!section || !wrap) return;
+        // Banda intră în lățimea conținutului: se văd 3–4 carduri întregi, fără carduri tăiate la margini.
         el.scrollLeft = 0;
-        const distance = () => el.scrollWidth - el.clientWidth;
-        if (distance() <= 0) return;
+        wrap.setAttribute("data-pinned", "");
         el.setAttribute("data-pinned", "");
+        const distance = () => el.scrollWidth - el.clientWidth;
+        const card = () => el.firstElementChild as HTMLElement | null;
+        if (distance() <= 0) {
+          wrap.removeAttribute("data-pinned");
+          el.removeAttribute("data-pinned");
+          return;
+        }
         setPinned(true);
+        // Pasul de oprire: câte un card (scroll-ul se așază mereu pe un card întreg).
+        const steps = () => {
+          const w = card()?.offsetWidth ?? 1;
+          const gap = parseFloat(getComputedStyle(el).columnGap) || 0;
+          return Math.max(1, Math.round(distance() / (w + gap)));
+        };
         gsap.to(el, {
           x: () => -distance(),
           ease: "none",
@@ -66,11 +80,13 @@ export function SnapStrip({ children, label, tone = "dark", variant = "default",
             start: "top top",
             end: () => `+=${distance()}`,
             pin: true,
-            scrub: 1,
+            scrub: 0.6,
+            snap: { snapTo: (v: number) => Math.round(v * steps()) / steps(), duration: { min: 0.3, max: 0.8 }, ease: "expo.out" },
             invalidateOnRefresh: true,
           },
         });
         return () => {
+          wrap.removeAttribute("data-pinned");
           el.removeAttribute("data-pinned");
           setPinned(false);
         };
@@ -107,9 +123,11 @@ export function SnapStrip({ children, label, tone = "dark", variant = "default",
           </button>
         </div>
       )}
-      <ul ref={ref} className={`snap-strip ${variant === "tall" ? "snap-strip-tall" : ""}`} aria-label={label}>
-        {children}
-      </ul>
+      <div ref={wrapRef} className="strip-clip">
+        <ul ref={ref} className={`snap-strip ${variant === "tall" ? "snap-strip-tall" : ""}`} aria-label={label}>
+          {children}
+        </ul>
+      </div>
     </div>
   );
 }

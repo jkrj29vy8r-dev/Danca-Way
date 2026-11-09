@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { site } from "@/config/site";
-import { cities, routes, stopName, type Route } from "@/data/routes";
+import { cities, fare, routes, stopAt, stopName, type Route } from "@/data/routes";
 
 type PageMetaInput = { title: string; description: string; path: string };
 
@@ -45,33 +45,30 @@ export function localBusinessJsonLd() {
 }
 
 function busTrip(r: Route) {
-  const first = r.stops[0];
-  const last = r.stops[r.stops.length - 1];
+  const first = stopAt(r, r.from)!;
+  const last = stopAt(r, r.to)!;
+  const price = fare(r.from, r.to);
   return {
     "@type": "BusTrip",
     name: `${r.code}: ${stopName(first)} – ${stopName(last)}`,
     busNumber: r.code,
     busName: `${r.vehicle} ${site.name}`,
     provider: { "@id": `${site.url}/#firma` },
-    departureBusStop: { "@type": "BusStop", name: stopName(first), address: cities[first.city].name },
-    arrivalBusStop: { "@type": "BusStop", name: stopName(last), address: cities[last.city].name },
-    ...(first.time ? { departureTime: first.time } : {}),
-    ...(last.time ? { arrivalTime: last.time } : {}),
+    departureBusStop: { "@type": "BusStop", name: `${cities[first.city].name}, ${first.station}` },
+    arrivalBusStop: { "@type": "BusStop", name: `${cities[last.city].name}, ${last.station}` },
+    departureTime: first.time,
+    arrivalTime: last.time,
     itinerary: {
       "@type": "ItemList",
       itemListElement: r.stops.map((s, i) => ({
         "@type": "ListItem",
         position: i + 1,
-        item: { "@type": "BusStop", name: stopName(s) },
+        item: { "@type": "BusStop", name: `${cities[s.city].name}, ${s.station}` },
       })),
     },
-    offers: {
-      "@type": "AggregateOffer",
-      priceCurrency: "RON",
-      lowPrice: r.price.min,
-      highPrice: r.price.max,
-      url: site.ticketsUrl,
-    },
+    ...(price
+      ? { offers: { "@type": "Offer", price, priceCurrency: "RON", url: site.ticketsUrl } }
+      : {}),
   };
 }
 

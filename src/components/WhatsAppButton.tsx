@@ -32,7 +32,7 @@ export function WhatsAppButton() {
       rel="noopener"
       aria-label="Scrie-ne pe WhatsApp"
       data-visible={pastHero ? "" : undefined}
-      className="wa-fab fixed right-4 bottom-4 z-30 grid size-12 place-items-center rounded-full bg-navy text-white shadow-[0_8px_24px_-6px_rgb(11_20_38/0.5)] ring-1 ring-white/20 md:right-6 md:bottom-6"
+      className="wa-fab press fixed right-6 bottom-6 z-30 hidden size-12 md:grid place-items-center rounded-full bg-navy text-white shadow-[0_8px_24px_-6px_rgb(11_20_38/0.5)] ring-1 ring-white/20 md:right-6 md:bottom-6"
     >
       <WhatsApp size={22} />
     </a>

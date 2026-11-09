@@ -1,67 +1,145 @@
 "use client";
 
 import { useEffect, useMemo, useRef } from "react";
-import { cities, MAP_VIEWBOX, project, routes, type CityId } from "@/data/routes";
+import { cities, MAP_LINES, MAP_VIEWBOX, project, type CityId, type Route } from "@/data/routes";
 import { loadGsap, prefersReducedMotion } from "@/lib/gsap";
 
-/** Poziția etichetelor pe hartă, ca să nu se suprapună. */
-const labels: Partial<Record<CityId, { side: "left" | "right"; text?: string }>> = {
-  "piatra-neamt": { side: "left" },
-  buhusi: { side: "left" },
-  otopeni: { side: "left", text: "Otopeni" },
-  constanta: { side: "left" },
-};
-
-type Props = {
-  /** Orașele traseului evidențiat, în ordine */
-  path: CityId[];
-  /** „scroll”: linia se desenează la derulare; „mount”: se desenează imediat ce apare */
-  trigger?: "scroll" | "mount";
-  className?: string;
-  title?: string;
-};
-
+type Line = Route["line"];
 type Pt = { x: number; y: number };
 
-function polyline(points: Pt[]) {
-  return points.map((p, i) => `${i ? "L" : "M"}${p.x} ${p.y}`).join("");
+/** Distanța dintre cele două linii pe porțiunea comună (Roman – Bacău – Focșani). */
+const GAP = 7;
+
+const base = (id: CityId): Pt => project(cities[id]);
+
+/** Decalează o polilinie perpendicular pe direcția de mers (spre dreapta). */
+function offsetLine(ids: CityId[], d: number): Record<string, Pt> {
+  const pts = ids.map(base);
+  const out: Record<string, Pt> = {};
+  ids.forEach((id, i) => {
+    const a = pts[Math.max(0, i - 1)];
+    const b = pts[Math.min(pts.length - 1, i + 1)];
+    const dx = b.x - a.x;
+    const dy = b.y - a.y;
+    const len = Math.hypot(dx, dy) || 1;
+    out[id] = { x: pts[i].x + (dy / len) * d, y: pts[i].y - (dx / len) * d };
+  });
+  return out;
 }
+const CT_OFFSET = offsetLine(MAP_LINES.constanta, GAP);
 
-/** Toate segmentele unice din rețea (fundalul hărții). */
-const networkSegments = (() => {
-  const seen = new Set<string>();
-  const segs: [CityId, CityId][] = [];
-  for (const r of routes) {
-    for (let i = 1; i < r.mapPath.length; i++) {
-      const a = r.mapPath[i - 1];
-      const b = r.mapPath[i];
-      const key = [a, b].sort().join("|");
-      if (!seen.has(key)) {
-        seen.add(key);
-        segs.push([a, b]);
-      }
-    }
-  }
-  return segs;
-})();
+/** Punctul unui oraș pe o linie: ramura spre Constanța are propria geometrie, paralelă cu trunchiul. */
+const pointOn = (line: Line, id: CityId): Pt => (line === "constanta" && CT_OFFSET[id]) || base(id);
 
-const networkCities = Array.from(new Set(networkSegments.flat()));
+const polyline = (pts: Pt[]) => pts.map((p, i) => `${i ? "L" : "M"}${p.x.toFixed(1)} ${p.y.toFixed(1)}`).join("");
+const lengthOf = (pts: Pt[]) => pts.slice(1).reduce((acc, p, i) => acc + Math.hypot(p.x - pts[i].x, p.y - pts[i].y), 0);
 
-export function RouteMap({ path, trigger = "scroll", className = "", title }: Props) {
+const LINE_PTS: Record<Line, Pt[]> = {
+  bucuresti: MAP_LINES.bucuresti.map((id) => pointOn("bucuresti", id)),
+  constanta: MAP_LINES.constanta.map((id) => pointOn("constanta", id)),
+};
+const LINE_LEN: Record<Line, number> = { bucuresti: lengthOf(LINE_PTS.bucuresti), constanta: lengthOf(LINE_PTS.constanta) };
+/** Fracțiunea din lungimea liniei la care se află fiecare oprire (pentru pulsul galben). */
+const STOP_FRACTIONS: Record<Line, { id: CityId; f: number }[]> = (["bucuresti", "constanta"] as Line[]).reduce(
+  (acc, line) => {
+    const pts = LINE_PTS[line];
+    let run = 0;
+    acc[line] = MAP_LINES[line].map((id, i) => {
+      if (i) run += Math.hypot(pts[i].x - pts[i - 1].x, pts[i].y - pts[i - 1].y);
+      return { id, f: run / LINE_LEN[line] };
+    });
+    return acc;
+  },
+  {} as Record<Line, { id: CityId; f: number }[]>,
+);
+
+/** Orașe afișate și poziția etichetei. */
+const STATIONS: { id: CityId; side: "left" | "right"; label?: string }[] = [
+  { id: "targu-neamt", side: "right" },
+  { id: "piatra-neamt", side: "left" },
+  { id: "roman", side: "right" },
+  { id: "buhusi", side: "left" },
+  { id: "bacau", side: "right" },
+  { id: "focsani", side: "right" },
+  { id: "buzau", side: "left" },
+  { id: "braila", side: "right" },
+  { id: "otopeni", side: "left", label: "Otopeni" },
+  { id: "bucuresti", side: "right" },
+  { id: "constanta", side: "left" },
+];
+const onLine = (line: Line, id: CityId) => MAP_LINES[line].includes(id);
+
+type Props = {
+  /** Linia evidențiată în galben (tab-ul activ din orar) */
+  activeLine: Line;
+  /** Segmentul evidențiat (rândul de sub cursor / perechea căutată), ca listă de orașe */
+  highlight?: { line: Line; path: CityId[] } | null;
+  className?: string;
+};
+
+export function RouteMap({ activeLine, highlight = null, className = "" }: Props) {
   const root = useRef<SVGSVGElement>(null);
+  const gsapRef = useRef<Awaited<ReturnType<typeof loadGsap>>["gsap"] | null>(null);
+  const seen = useRef(false);
+  const activeLineRef = useRef(activeLine);
 
-  const geo = useMemo(() => {
-    const pts = path.map((id) => project(cities[id]));
-    const segLens = pts.slice(1).map((p, i) => Math.hypot(p.x - pts[i].x, p.y - pts[i].y));
-    const total = segLens.reduce((a, b) => a + b, 0);
-    const fractions = [0];
-    segLens.reduce((acc, l) => {
-      fractions.push((acc + l) / total);
-      return acc + l;
-    }, 0);
-    return { pts, segLens, total, fractions, d: polyline(pts) };
-  }, [path]);
+  const hl = useMemo(() => {
+    if (!highlight) return null;
+    const pts = highlight.path.filter((id) => cities[id].lat).map((id) => pointOn(highlight.line, id));
+    return { d: polyline(pts), len: lengthOf(pts), ids: new Set(highlight.path) };
+  }, [highlight]);
 
+  /** Desenează linia activă (1 s, expo.out), cu „autobuzul” în vârf și un puls galben la fiecare oprire. */
+  const drawLine = (line: Line) => {
+    const svg = root.current;
+    const gsap = gsapRef.current;
+    if (!svg || !gsap) return;
+    const path = svg.querySelector<SVGPathElement>(`.active-${line}`);
+    const head = svg.querySelector<SVGCircleElement>(".route-head");
+    if (!path || !head) return;
+    const len = LINE_LEN[line];
+    const pts = LINE_PTS[line];
+    const pulsed = new Set<CityId>();
+    const state = { p: 0 };
+    gsap.killTweensOf(state);
+    gsap.set(path, { strokeDasharray: len, strokeDashoffset: len });
+    gsap.to(state, {
+      p: 1,
+      duration: 1.1,
+      ease: "expo.out",
+      onUpdate: () => {
+        path.style.strokeDashoffset = String(len * (1 - state.p));
+        // poziția vehiculului pe linie
+        let dist = state.p * len;
+        let i = 0;
+        while (i < pts.length - 2 && dist > Math.hypot(pts[i + 1].x - pts[i].x, pts[i + 1].y - pts[i].y)) {
+          dist -= Math.hypot(pts[i + 1].x - pts[i].x, pts[i + 1].y - pts[i].y);
+          i++;
+        }
+        const a = pts[i];
+        const b = pts[i + 1] ?? a;
+        const seg = Math.hypot(b.x - a.x, b.y - a.y) || 1;
+        const t = Math.min(dist / seg, 1);
+        head.setAttribute("cx", String(a.x + (b.x - a.x) * t));
+        head.setAttribute("cy", String(a.y + (b.y - a.y) * t));
+        head.style.opacity = state.p < 0.98 ? "1" : "0";
+        for (const s of STOP_FRACTIONS[line]) {
+          if (state.p >= s.f - 0.002 && !pulsed.has(s.id)) {
+            pulsed.add(s.id);
+            const ring = svg.querySelector(`[data-pulse="${line}-${s.id}"]`);
+            if (ring)
+              gsap.fromTo(
+                ring,
+                { scale: 1, opacity: 0.9 },
+                { scale: 3, opacity: 0, duration: 0.9, ease: "expo.out", transformOrigin: "50% 50%" },
+              );
+          }
+        }
+      },
+    });
+  };
+
+  // Prima desenare: când harta intră în ecran.
   useEffect(() => {
     const svg = root.current;
     if (!svg) return;
@@ -69,75 +147,46 @@ export function RouteMap({ path, trigger = "scroll", className = "", title }: Pr
       svg.removeAttribute("data-animate");
       return;
     }
-    const line = svg.querySelector<SVGPathElement>(".route-line")!;
-    const head = svg.querySelector<SVGCircleElement>(".route-head")!;
-    const stopEls = Array.from(svg.querySelectorAll<SVGGElement>("[data-stop-index]"));
-    /** Opririle care au pulsat deja (fiecare pulsează o singură dată) */
-    const pulsed = new Set<Element>();
-    let pulse: (el: SVGGElement) => void = () => {};
-
-    const render = (p: number) => {
-      line.style.strokeDashoffset = String(geo.total * (1 - p));
-      // Poziția „vehiculului” pe linie
-      let dist = p * geo.total;
-      let i = 0;
-      while (i < geo.segLens.length - 1 && dist > geo.segLens[i]) {
-        dist -= geo.segLens[i];
-        i++;
-      }
-      const a = geo.pts[i];
-      const b = geo.pts[i + 1] ?? a;
-      const t = geo.segLens[i] ? Math.min(dist / geo.segLens[i], 1) : 0;
-      head.setAttribute("cx", String(a.x + (b.x - a.x) * t));
-      head.setAttribute("cy", String(a.y + (b.y - a.y) * t));
-      head.style.opacity = p > 0.001 && p < 0.999 ? "1" : "0";
-      stopEls.forEach((el) => {
-        const f = geo.fractions[Number(el.dataset.stopIndex)];
-        if (p >= f - 0.002) {
-          el.setAttribute("data-lit", "");
-          if (p > 0 && !pulsed.has(el)) {
-            pulsed.add(el);
-            pulse(el);
-          }
-        } else el.removeAttribute("data-lit");
-      });
-    };
-
-    let ctx: { revert: () => void } | undefined;
     let cancelled = false;
-    loadGsap().then(({ gsap }) => {
+    let st: { kill: () => void } | undefined;
+    loadGsap().then(({ gsap, ScrollTrigger }) => {
       if (cancelled) return;
-      // Un singur puls galben când linia ajunge la oprire: inelul crește și se stinge (transform + opacity).
-      pulse = (el) => {
-        const ring = el.querySelector(".pulse");
-        if (ring)
-          gsap.fromTo(
-            ring,
-            { scale: 1, opacity: 0.9 },
-            { scale: 3.2, opacity: 0, duration: 1.1, ease: "expo.out", transformOrigin: "50% 50%" },
-          );
-      };
-      render(0);
-      ctx = gsap.context(() => {
-        const state = { p: 0 };
-        const vars = { p: 1, ease: "none", onUpdate: () => render(state.p) };
-        if (trigger === "scroll") {
-          gsap.to(state, {
-            ...vars,
-            scrollTrigger: { trigger: svg, start: "top 80%", end: "bottom 45%", scrub: 0.5 },
-          });
-        } else {
-          gsap.to(state, { ...vars, duration: 1.8, ease: "power2.inOut" });
-        }
-      }, svg);
+      gsapRef.current = gsap;
+      st = ScrollTrigger.create({
+        trigger: svg,
+        start: "top 80%",
+        once: true,
+        onEnter: () => {
+          seen.current = true;
+          svg.setAttribute("data-drawn", "");
+          drawLine(activeLineRef.current);
+        },
+      });
     });
     return () => {
       cancelled = true;
-      ctx?.revert();
+      st?.kill();
     };
-  }, [geo, trigger]);
+  }, []);
 
-  const activeSet = new Set(path);
+  // Schimbarea tab-ului: linia nouă se desenează, cealaltă se estompează (CSS).
+  useEffect(() => {
+    if (activeLineRef.current === activeLine) return;
+    activeLineRef.current = activeLine;
+    if (seen.current) drawLine(activeLine);
+  }, [activeLine]);
+
+  // Segmentul evidențiat se desenează în 0,6 s.
+  useEffect(() => {
+    const svg = root.current;
+    const gsap = gsapRef.current;
+    if (!svg || !hl || !gsap || prefersReducedMotion()) return;
+    const path = svg.querySelector<SVGPathElement>(".highlight");
+    if (!path) return;
+    gsap.fromTo(path, { strokeDashoffset: hl.len }, { strokeDashoffset: 0, duration: 0.6, ease: "expo.out" });
+  }, [hl]);
+
+  const label = `Harta curselor: linia ${activeLine === "constanta" ? "Roman – Bacău – Focșani – Brăila – Constanța" : "Târgu Neamț – Piatra Neamț – Roman – Bacău – Focșani – Buzău – Otopeni – București"}`;
 
   return (
     <svg
@@ -145,84 +194,109 @@ export function RouteMap({ path, trigger = "scroll", className = "", title }: Pr
       viewBox={`0 0 ${MAP_VIEWBOX.width} ${MAP_VIEWBOX.height}`}
       className={`route-map h-auto w-full overflow-visible ${className}`}
       role="img"
-      aria-label={title ?? `Traseu: ${path.map((id) => cities[id].name).join(" – ")}`}
+      aria-label={label}
       data-animate=""
+      data-active={activeLine}
     >
-      {/* Rețeaua completă, discretă */}
-      <g stroke="rgb(255 255 255 / 0.14)" strokeWidth="1.5" strokeDasharray="2 6" strokeLinecap="round">
-        {networkSegments.map(([a, b]) => {
-          const p1 = project(cities[a]);
-          const p2 = project(cities[b]);
-          return <line key={`${a}-${b}`} x1={p1.x} y1={p1.y} x2={p2.x} y2={p2.y} />;
-        })}
-      </g>
-
-      {/* Traseul evidențiat */}
+      {/* Ramificație secundară (B3r prin Buhuși) */}
       <path
-        className="route-line"
-        d={geo.d}
+        d={polyline((["piatra-neamt", "buhusi", "bacau"] as CityId[]).map(base))}
         fill="none"
-        stroke="var(--color-accent)"
-        strokeWidth="3"
+        stroke="rgb(255 255 255 / 0.14)"
+        strokeWidth="1.5"
+        strokeDasharray="2 6"
         strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeDasharray={geo.total}
-        style={{ "--len": geo.total } as React.CSSProperties}
       />
-      <circle className="route-head" r="6" fill="#fff" opacity="0" style={{ filter: "drop-shadow(0 0 6px #F2B705)" }} />
 
-      {/* Orașe */}
-      {networkCities.map((id) => {
-        const c = cities[id];
-        const { x, y } = project(c);
-        const label = labels[id];
-        const side = label?.side ?? "right";
-        const index = path.indexOf(id);
-        const active = activeSet.has(id);
+      {/* Șinele ambelor linii (mereu vizibile, discrete) */}
+      {(["bucuresti", "constanta"] as Line[]).map((line) => (
+        <path
+          key={`track-${line}`}
+          d={polyline(LINE_PTS[line])}
+          fill="none"
+          stroke="rgb(255 255 255 / 0.16)"
+          strokeWidth="3"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      ))}
+
+      {/* Linia activă, în galben; cealaltă se estompează */}
+      {(["bucuresti", "constanta"] as Line[]).map((line) => (
+        <path
+          key={`active-${line}`}
+          className={`route-line active-${line}`}
+          data-on={activeLine === line ? "" : undefined}
+          d={polyline(LINE_PTS[line])}
+          fill="none"
+          stroke="var(--color-accent)"
+          strokeWidth="3"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeDasharray={LINE_LEN[line]}
+          style={{ "--len": LINE_LEN[line] } as React.CSSProperties}
+        />
+      ))}
+
+      {/* Segmentul evidențiat (rândul selectat din orar) */}
+      {hl && (
+        <path
+          className="highlight"
+          d={hl.d}
+          fill="none"
+          stroke="#fff"
+          strokeWidth="4.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeDasharray={hl.len}
+        />
+      )}
+      <circle className="route-head" r="5.5" fill="#fff" opacity="0" />
+
+      {/* Stații */}
+      {STATIONS.map(({ id, side, label: text }) => {
+        const inB = onLine("bucuresti", id);
+        const inC = onLine("constanta", id);
+        const pB = base(id);
+        const pC = inC ? pointOn("constanta", id) : pB;
+        const both = inB && inC;
+        const lit = onLine(activeLine, id);
+        const hot = hl?.ids.has(id) ?? false;
+        const anchor = both ? (side === "right" ? (pC.x > pB.x ? pC : pB) : pC.x < pB.x ? pC : pB) : inC ? pC : pB;
+        const name = text ?? cities[id].name;
         return (
-          <g
-            key={id}
-            className="route-stop"
-            data-stop-index={active ? index : undefined}
-            data-lit={active ? "" : undefined}
-          >
-            {active && (
-              <>
-                <circle className="pulse" cx={x} cy={y} r="6" fill="none" stroke="var(--color-accent)" strokeWidth="2" opacity="0" />
-                <circle className="halo" cx={x} cy={y} r="11" fill="rgb(242 183 5 / 0.18)" />
-              </>
-            )}
-            {/* Punct de bază (stins) și punct aprins, comutate prin opacitate */}
-            <circle cx={x} cy={y} r={3.5} fill="rgb(255 255 255 / 0.35)" />
-            {active && (
-              <circle className="dot-lit" cx={x} cy={y} r={5} fill="var(--color-accent)" stroke="var(--color-night)" strokeWidth="2" />
+          <g key={id} className="route-stop" data-lit={lit ? "" : undefined} data-hot={hot ? "" : undefined}>
+            {(["bucuresti", "constanta"] as Line[])
+              .filter((l) => onLine(l, id))
+              .map((l) => {
+                const p = pointOn(l, id);
+                return (
+                  <circle
+                    key={l}
+                    data-pulse={`${l}-${id}`}
+                    cx={p.x}
+                    cy={p.y}
+                    r="6"
+                    fill="none"
+                    stroke="var(--color-accent)"
+                    strokeWidth="2"
+                    opacity="0"
+                  />
+                );
+              })}
+            {both ? (
+              <line x1={pB.x} y1={pB.y} x2={pC.x} y2={pC.y} className="stop-capsule" strokeLinecap="round" />
+            ) : (
+              <circle cx={anchor.x} cy={anchor.y} r="5" className="stop-dot" />
             )}
             <text
-              x={side === "right" ? x + 14 : x - 14}
-              y={y + 4.5}
+              x={side === "right" ? anchor.x + 13 : anchor.x - 13}
+              y={anchor.y + 4.5}
               textAnchor={side === "right" ? "start" : "end"}
-              fontSize="13"
-              fontWeight={500}
-              fill="rgb(255 255 255 / 0.45)"
-              style={{ fontFamily: "var(--font-sans)" }}
+              className="stop-label"
             >
-              {label?.text ?? c.name}
+              {name}
             </text>
-            {active && (
-              <text
-                className="label-lit"
-                x={side === "right" ? x + 14 : x - 14}
-                y={y + 4.5}
-                textAnchor={side === "right" ? "start" : "end"}
-                fontSize="13"
-                fontWeight={600}
-                fill="#fff"
-                aria-hidden
-                style={{ fontFamily: "var(--font-sans)" }}
-              >
-                {label?.text ?? c.name}
-              </text>
-            )}
           </g>
         );
       })}

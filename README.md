@@ -19,7 +19,8 @@ Alte comenzi: `npm run build`, `npm run lint`, `npm run typecheck`.
 | Ce | Fișier |
 | --- | --- |
 | Telefon, WhatsApp, email, adresă, link bilete, date firmă | `src/config/site.ts` |
-| Curse regulate (orar, prețuri, traseu pe hartă) | `src/data/routes.ts` |
+| Curse regulate: opriri, ore, tarife, linii pe hartă (după orarul publicat pe danca-transport.autogari.ro/curse) | `src/data/routes.ts` |
+| Nota de pe Bileteria (o singură valoare pentru tot site-ul) | `src/config/site.ts` → `rating` |
 | Excursii | `src/data/trips.ts` |
 | Pelerinaje | `src/data/pilgrimages.ts` |
 | Servicii (meniu, grilă, opțiuni formular) | `src/data/services.ts` |
@@ -46,18 +47,18 @@ Lista fișierelor și formatele: `public/images/README.md`.
 
 ## Animații
 
-Toate sunt coordonate de `src/components/MotionController.tsx` (plus `SwallowTrail`, `RouteMap`,
-`SnapStrip`, `WordsReveal`), folosesc easing `expo.out` și animează doar `transform`, `opacity`
-și `clip-path` (excepție: desenarea liniilor SVG prin `stroke-dashoffset`).
-
-- logo-ul din hero apare cu un clip-path de la stânga la dreapta, apoi titlul, linie cu linie;
-- rândunica își desenează traseul punctat în zbor, cu parallax discret după mouse;
-- titlurile secțiunilor urcă linie cu linie din spatele unei margini invizibile (SplitText);
-- orele din orar se întorc cifră cu cifră, ca pe o tabelă de plecări;
-- harta: linia se desenează la scroll, fiecare oprire pulsează o dată în galben;
-- fotografiile: dezvăluire cu clip-path inset + parallax (~9% mai lent decât pagina);
-- bară aurie de progres, header care se ascunde la scroll în jos, fundal care trece lin între secțiuni;
-- excursiile: bandă orizontală fixată pe desktop, swipe pe mobil;
-- butoane magnetice, linkuri cu sublinierea desenată, numere care cresc o dată.
+Mișcare doar acolo unde are un sens legat de drum: orele se întorc ca pe o tabelă de plecări,
+traseul se desenează pe hartă (cu un puls galben la fiecare oprire), rândunica zboară,
+countdown-ul „Următoarea plecare” se actualizează. În rest: titluri dezvăluite linie cu linie,
+fotografii cu clip-path și parallax, bară de progres, header care se ascunde la scroll în jos.
+Durate 0,6–1,2 s, easing expo.out; doar transform, opacity și clip-path (plus desenarea liniilor SVG).
+GSAP se încarcă abia după prima interacțiune (sau după ~5 s), ca să nu întârzie pagina.
 
 `prefers-reduced-motion` dezactivează tot. Fără JavaScript, conținutul este complet vizibil.
+
+## Pagina temporară /fonturi
+
+`/fonturi` compară trei perechi de fonturi (A Archivo Expanded + Inter, B Instrument Sans, C Geist; orele în
+Geist Mono). Are `noindex` și nu apare în meniu sau sitemap. După alegere: fonturile se setează în
+`src/app/layout.tsx` și tokenurile `--font-display`, `--font-sans`, `--font-mono` din `src/app/globals.css`,
+apoi se șterge folderul `src/app/fonturi`.

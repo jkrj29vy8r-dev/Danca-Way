@@ -7,7 +7,7 @@ import { loadGsap, prefersReducedMotion } from "@/lib/gsap";
 /**
  * Două trasee pentru rândunică:
  * - `photo`: peste fotografia din hero (viewBox 1440×640), pornește de jos și se oprește în cerul din dreapta-sus;
- * - `text`: când nu există fotografie, zboară de la capătul logo-ului spre dreapta (viewBox 800×240), doar pe desktop.
+ * - `text`: când nu există fotografie, zboară de la capătul logo-ului spre dreapta (viewBox 800×200), doar pe desktop.
  */
 const VARIANTS = {
   photo: {
@@ -55,25 +55,24 @@ export function SwallowTrail({ variant }: { variant: keyof typeof VARIANTS }) {
         const bird = svg.querySelector<SVGGElement>(".swallow")!;
         const fly = svg.querySelector<SVGGElement>(".swallow-fly")!;
         const mouse = svg.querySelector<SVGGElement>(".swallow-mouse")!;
-        const float = svg.querySelector<SVGGElement>(".swallow-float")!;
         const len = trail.getTotalLength();
 
         ctx = gsap.context(() => {
           gsap.set(mask, { strokeDasharray: len, strokeDashoffset: len });
-          // Zborul începe după ce logo-ul s-a desenat; traseul punctat apare exact în urma rândunicii.
-          const tl = gsap.timeline({ delay: 0.6 });
+          // Zborul începe după ce logo-ul și titlul s-au așezat (cel mult două lucruri în mișcare deodată);
+          // traseul punctat apare exact în urma rândunicii, apoi ea rămâne pe loc.
+          const tl = gsap.timeline({ delay: 1.3 });
           tl.set(bird, { opacity: 1 })
-            .to(mask, { strokeDashoffset: 0, duration: 3.2, ease: "power2.inOut" }, 0)
+            .to(mask, { strokeDashoffset: 0, duration: 1.2, ease: "expo.out" }, 0)
             .to(
               bird,
               {
-                duration: 3.2,
-                ease: "power2.inOut",
+                duration: 1.2,
+                ease: "expo.out",
                 motionPath: { path: trail, align: trail, alignOrigin: [0.5, 0.5], autoRotate: true },
               },
               0,
-            )
-            .to(float, { y: -6, duration: 2, ease: "sine.inOut", repeat: -1, yoyo: true });
+            );
 
           // La scroll, rândunica își continuă zborul înainte.
           gsap.to(fly, {

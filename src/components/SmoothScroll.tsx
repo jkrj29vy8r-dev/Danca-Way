@@ -3,7 +3,7 @@
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 import type Lenis from "lenis";
-import { loadGsap, prefersReducedMotion, whenIdle } from "@/lib/gsap";
+import { loadGsap, prefersReducedMotion } from "@/lib/gsap";
 
 declare global {
   interface Window {
@@ -21,7 +21,6 @@ export function SmoothScroll() {
     let cleanup = () => {};
 
     (async () => {
-      await whenIdle(1500);
       const [{ default: LenisCtor }, { gsap, ScrollTrigger }] = await Promise.all([
         import("lenis"),
         loadGsap(),

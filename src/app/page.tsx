@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { Hero } from "@/components/home/Hero";
 import { Statement } from "@/components/home/Statement";
-import { RoutesPreview } from "@/components/home/RoutesPreview";
+import { Timetable } from "@/components/home/Timetable";
 import { ServicesList } from "@/components/home/ServicesList";
 import { TripsStrip } from "@/components/home/TripsStrip";
 import { WhyUs } from "@/components/home/WhyUs";
@@ -18,7 +19,7 @@ export const metadata: Metadata = {
   ...pageMeta({
     title,
     description:
-      "Transport persoane Piatra Neamț – București: autocar din Târgu Neamț la 05:00 și 09:00, preluare de la Aeroportul Otopeni la 12:00 și 16:00 spre Roman, Roman – Constanța la 07:00. Bilete de la 120 lei.",
+      "Transport persoane Piatra Neamț – București și Otopeni: autocar din Târgu Neamț la 05:00 și 09:00, microbuz Otopeni – Roman la 12:00 și 16:00, Roman – Constanța la 07:00. Roman – București 120 lei.",
     path: "/",
   }),
   title: { absolute: title },
@@ -38,11 +39,18 @@ export default function HomePage() {
           className="aspect-[4/3] w-full md:aspect-[21/9]"
         />
       )}
-      <RoutesPreview />
+      {/* Granițe Suspense: React hidratează secțiunile pe rând, în sarcini mici, fără să blocheze pagina */}
+      <Suspense>
+        <Timetable />
+      </Suspense>
       <ServicesList />
-      <TripsStrip />
+      <Suspense>
+        <TripsStrip />
+      </Suspense>
       <WhyUs />
-      <QuoteSection />
+      <Suspense>
+        <QuoteSection />
+      </Suspense>
       <JsonLd data={busTripsJsonLd()} />
     </>
   );

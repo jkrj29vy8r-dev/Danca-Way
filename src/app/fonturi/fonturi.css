@@ -1,0 +1,59 @@
+/* PAGINĂ TEMPORARĂ — tokenurile de font pentru fiecare variantă. Doar fonturile diferă. */
+.font-variant {
+  font-family: var(--font-sans);
+}
+
+/* A — Archivo Expanded (wdth 125) pentru titluri, Inter pentru text, Geist Mono pentru ore */
+.font-a {
+  --font-display: var(--font-archivo), sans-serif;
+  --font-sans: var(--font-inter), sans-serif;
+  --font-mono: var(--font-geist-mono), monospace;
+}
+.font-a .display-hero,
+.font-a .display-lg,
+.font-a .display-md,
+.font-a .font-display {
+  font-stretch: 125%;
+  font-variation-settings: "wdth" 125;
+}
+.font-a .display-hero {
+  font-weight: 800;
+  letter-spacing: -0.045em;
+  font-size: clamp(2.2rem, 0.6rem + 4.7vw, 5.75rem);
+}
+.font-a .display-lg {
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  font-size: clamp(2rem, 1rem + 3.8vw, 4.5rem);
+}
+
+/* B — Instrument Sans pentru tot (titluri 600; condensat la mărimile foarte mari), Geist Mono pentru ore */
+.font-b {
+  --font-display: var(--font-instrument), sans-serif;
+  --font-sans: var(--font-instrument), sans-serif;
+  --font-mono: var(--font-geist-mono), monospace;
+}
+.font-b .display-hero,
+.font-b .display-lg,
+.font-b .display-md,
+.font-b .font-display {
+  font-weight: 600;
+}
+.font-b .display-hero,
+.font-b .display-lg {
+  font-stretch: 85%;
+  font-variation-settings: "wdth" 85;
+  letter-spacing: -0.03em;
+}
+
+/* C — Geist pentru tot, Geist Mono pentru ore și prețuri */
+.font-c {
+  --font-display: var(--font-geist), sans-serif;
+  --font-sans: var(--font-geist), sans-serif;
+  --font-mono: var(--font-geist-mono), monospace;
+}
+.font-c .display-hero,
+.font-c .display-lg {
+  font-weight: 700;
+  letter-spacing: -0.045em;
+}
