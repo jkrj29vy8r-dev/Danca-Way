@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Suspense } from "react";
-import { Geist_Mono, Inter, Inter_Tight } from "next/font/google";
+import { Geist, Geist_Mono } from "next/font/google";
 import "lenis/dist/lenis.css";
 import "./globals.css";
 import { Header } from "@/components/Header";
@@ -13,19 +13,12 @@ import { JsonLd } from "@/components/JsonLd";
 import { site } from "@/config/site";
 import { localBusinessJsonLd } from "@/lib/seo";
 
-// Fonturile se servesc din același domeniu (next/font), cu font de rezervă cu aceleași metrici (fără CLS).
-// Se preîncarcă fontul de text și cel al titlurilor; cel pentru ore se încarcă la cerere.
-const inter = Inter({
+// Fonturile (varianta C): Geist pentru titluri și text, Geist Mono pentru ore și prețuri.
+// Servite din același domeniu prin next/font, preîncărcate, cu font de rezervă cu aceleași metrici (fără CLS).
+const geist = Geist({
   subsets: ["latin", "latin-ext"],
-  variable: "--font-inter",
+  variable: "--font-geist",
   display: "swap",
-});
-
-const interTight = Inter_Tight({
-  subsets: ["latin", "latin-ext"],
-  variable: "--font-inter-tight",
-  display: "swap",
-  weight: ["500", "600", "700", "800"],
 });
 
 /** Orele de plecare și prețurile */
@@ -34,7 +27,6 @@ const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   display: "swap",
   weight: ["500", "600"],
-  preload: false,
 });
 
 export const metadata: Metadata = {
@@ -61,7 +53,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ro" className={`${inter.variable} ${interTight.variable} ${geistMono.variable}`} suppressHydrationWarning>
+    <html lang="ro" className={`${geist.variable} ${geistMono.variable}`} suppressHydrationWarning>
       <head>
         {/* Marchează că JS rulează: animațiile care ascund inițial conținut se activează doar atunci. */}
         <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }} />

@@ -82,7 +82,7 @@ export async function sendQuote(_prev: QuoteState, formData: FormData): Promise<
 
   const resend = new Resend(apiKey);
   const html = `
-    <div style="font-family:Inter,Arial,sans-serif;color:#0B1426;max-width:560px">
+    <div style="font-family:-apple-system,Segoe UI,Arial,sans-serif;color:#0B1426;max-width:560px">
       <h2 style="margin:0 0 16px">Cerere de ofertă nouă</h2>
       <table style="border-collapse:collapse;width:100%">
         ${rows

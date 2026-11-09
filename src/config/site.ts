@@ -13,12 +13,12 @@ export const site = {
   locale: "ro_RO",
 
   contact: {
-    /** PLACEHOLDER — telefonul afișat (ex. "0725 819 224") */
-    phoneDisplay: "07XX XXX XXX",
-    /** PLACEHOLDER — același telefon, format internațional fără spații (ex. "+40725819224") */
-    phoneE164: "+40700000000",
-    /** PLACEHOLDER — număr WhatsApp, doar cifre, cu prefixul țării (ex. "40725819224") */
-    whatsapp: "40700000000",
+    /** Telefonul afișat (rezervări și informații, ca pe danca-transport.autogari.ro/contact) */
+    phoneDisplay: "0725 819 224",
+    /** Același telefon, format internațional fără spații (link-ul tel:) */
+    phoneE164: "+40725819224",
+    /** Număr WhatsApp, doar cifre, cu prefixul țării — același număr; schimbă-l dacă WhatsApp e pe alt număr */
+    whatsapp: "40725819224",
     whatsappMessage: "Bună ziua! Aș dori o ofertă de transport.",
     /** PLACEHOLDER — adresa de email */
     email: "contact@firma.ro",

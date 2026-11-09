@@ -17,8 +17,9 @@
   --color-line: #e3e6ec;
   --color-line-dark: #24314f;
 
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-display: var(--font-inter-tight), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  /* Varianta C: Geist pentru titluri și text */
+  --font-sans: var(--font-geist), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: var(--font-geist), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   /* Ore de plecare și prețuri */
   --font-mono: var(--font-geist-mono), ui-monospace, "SFMono-Regular", Menlo, monospace;
 
@@ -66,7 +67,6 @@
   }
   body {
     @apply bg-white font-sans text-ink;
-    font-feature-settings: "cv11", "ss01";
   }
   h1,
   h2,
@@ -105,14 +105,14 @@
   font-weight: 700;
   font-size: clamp(2.6rem, 0.9rem + 5.4vw, 6.75rem);
   line-height: 0.98;
-  letter-spacing: -0.042em;
+  letter-spacing: -0.045em;
 }
 @utility display-lg {
   font-family: var(--font-display);
   font-weight: 700;
   font-size: clamp(2.25rem, 1.2rem + 4.4vw, 5.25rem);
   line-height: 0.98;
-  letter-spacing: -0.04em;
+  letter-spacing: -0.045em;
 }
 @utility display-md {
   font-family: var(--font-display);

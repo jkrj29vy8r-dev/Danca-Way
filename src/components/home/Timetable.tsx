@@ -174,11 +174,11 @@ export function Timetable() {
         <div className="lg:col-span-7 lg:row-start-1">
           <p className="eyebrow text-mist">Curse regulate</p>
           <h2 id="curse-title" className="display-lg mt-6" data-reveal="lines">
-            Șapte curse, trei direcții.
+            Opt curse, trei direcții.
           </h2>
           <p className="mt-6 max-w-xl text-lg text-mist">
-            Două curse pleacă din Târgu Neamț spre București Obor, trei se întorc de la Obor spre Neamț și Roman,
-            iar două leagă Roman de Constanța Autogara Sud.
+            Trei curse pleacă din Neamț spre București Obor, trei se întorc de la Obor spre Neamț și Roman, iar
+            două leagă Roman de Constanța Autogara Sud.
           </p>
         </div>
 

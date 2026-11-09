@@ -4,6 +4,8 @@ Site-ul Danca Way (Danca Util Ideal SRL, CUI 41865158), transport persoane din j
 
 **Stack:** Next.js (App Router) · TypeScript · Tailwind CSS v4 · GSAP + ScrollTrigger · Lenis · Resend · Vercel
 
+**Fonturi:** Geist (titluri și text) și Geist Mono (ore și prețuri), prin `next/font`; tokenurile `--font-display`, `--font-sans`, `--font-mono` din `src/app/globals.css`.
+
 ## Pornire locală
 
 ```bash
@@ -56,9 +58,3 @@ GSAP se încarcă abia după prima interacțiune (sau după ~5 s), ca să nu în
 
 `prefers-reduced-motion` dezactivează tot. Fără JavaScript, conținutul este complet vizibil.
 
-## Pagina temporară /fonturi
-
-`/fonturi` compară trei perechi de fonturi (A Archivo Expanded + Inter, B Instrument Sans, C Geist; orele în
-Geist Mono). Are `noindex` și nu apare în meniu sau sitemap. După alegere: fonturile se setează în
-`src/app/layout.tsx` și tokenurile `--font-display`, `--font-sans`, `--font-mono` din `src/app/globals.css`,
-apoi se șterge folderul `src/app/fonturi`.
