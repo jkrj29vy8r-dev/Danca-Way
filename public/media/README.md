@@ -94,12 +94,25 @@ Lățimi 2400, 1200, 800 (înălțimi 2979–3000, 1490–1500, 993–1000).
 - Ce e generat: detaliile fine din interiorul farului (reflectoarele) și cromul siglei sunt desenate de model; în hero
   aveau doar ~150–220 px. Formele (farul, capacul, oglinzile, sigla) urmează decupajul.
 
-## 5. Buclă de noapte (încă nefăcută)
+## 5. Buclă de noapte (fundal pentru orar)
 
-Draftul (Kling 3.0 std, job `ffa3c484-6925-4b0a-829a-e18dafb26054`) nu a trecut verificarea: în depărtare apar faruri de
-mașini și indicatoare rutiere. Nu e în acest folder. Varianta propusă pentru final: un cadru fix cu Nano Banana Pro, verificat,
-apoi Kling 3.0 pro cu același cadru la început și la sfârșit (buclă fără cusătură).
+| Fișiere | Ce sunt |
+| --- | --- |
+| `noapte-sosea-bucla-16x9.{mp4,webm}` + `-poster.jpg` | 1920 × 1080, 8,00 s, 24 fps, fără sunet, buclă fără cusătură. MP4 0,8 MB, WebM 0,7 MB |
+
+Șosea de munte noaptea, din unghi jos, cu dâre de lumină; fără vehicul, fără autocar, fără text.
+
+- **Cadrul**: Nano Banana Pro 2K din text, job `0085af50-77fb-4960-bbfb-7024cbb98d0e`. Retușat local: am scos un indicator
+  galben mic, doi stâlpi cu panouri și două puncte luminoase de la capătul curbei (puteau fi citite ca faruri), iar
+  marcajele galbene (de tip american) au devenit albe, ca pe drumurile din România.
+- **Mișcarea e făcută local, nu generată**: pulsuri de lumină curg de-a lungul dârelor (de la curbă spre cameră) și câteva
+  stele sclipesc. Funcția e periodică, deci ultimul cadru se leagă exact de primul (diferență 0,04 din 255).
+- Încercări respinse: draft Kling 3.0 std din text, job `ffa3c484-6925-4b0a-829a-e18dafb26054` (faruri de mașini în
+  depărtare, indicatoare rutiere); Kling 3.0 pro cu același cadru la început și la sfârșit, job
+  `08a89961-a8ca-425c-98ca-54d2fdb1d7d6` (a ieșit practic static: diferență medie între cadre 0,1 din 255).
+- Ce se vede generat: copacii și munții sunt generați (nu e o fotografie reală a unui drum anume); dârele „respiră” ca într-o
+  fotografie cu expunere lungă, nu ca mașini care trec.
 
 ---
 
-Credite folosite: 103 (2961,5 → 2858,5).
+Credite folosite: 119 (2961,5 → 2842,5).
