@@ -4,14 +4,26 @@ import Link from "next/link";
 import type { ServiceId } from "@/data/services";
 import { scrollToEl } from "@/lib/scroll";
 
-export type QuotePrefill = { service: ServiceId; subject?: string };
+export type QuotePrefill = {
+  service: ServiceId;
+  subject?: string;
+  /** Câmpurile cererii, completate din bara de rezervare */
+  plecare?: string;
+  destinatie?: string;
+  data?: string;
+  pasageri?: number;
+};
 export const PREFILL_EVENT = "quote:prefill";
 
 type Props = QuotePrefill & { className?: string; children: React.ReactNode; "aria-label"?: string };
 
-export function quoteHref({ service, subject }: QuotePrefill) {
+export function quoteHref({ service, subject, plecare, destinatie, data, pasageri }: QuotePrefill) {
   const q = new URLSearchParams({ serviciu: service });
   if (subject) q.set("subiect", subject);
+  if (plecare) q.set("plecare", plecare);
+  if (destinatie) q.set("destinatie", destinatie);
+  if (data) q.set("data", data);
+  if (pasageri) q.set("pasageri", String(pasageri));
   return `/contact?${q.toString()}#formular`;
 }
 
@@ -37,4 +49,15 @@ export function QuoteLink({ service, subject, className, children, ...rest }: Pr
       {children}
     </Link>
   );
+}
+
+/**
+ * Completează formularul de pe pagină (dacă există) și derulează la el; altfel duce la pagina de contact,
+ * cu aceleași valori în URL.
+ */
+export function openQuote(prefill: QuotePrefill, navigate: (href: string) => void) {
+  const form = document.getElementById("formular");
+  if (!form) return navigate(quoteHref(prefill));
+  window.dispatchEvent(new CustomEvent<QuotePrefill>(PREFILL_EVENT, { detail: prefill }));
+  scrollToEl(form);
 }

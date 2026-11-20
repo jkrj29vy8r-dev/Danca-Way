@@ -23,6 +23,7 @@ export default function CurseRegulatePage() {
       <PageHero
         eyebrow="Curse regulate"
         title="Neamț – București, Otopeni și Constanța."
+        image={{ src: "/images/setra-lateral-strada.jpg", mobileSrc: "/images/setra-fata-vertical.jpg", alt: "Autocarul Setra al Danca Way, din lateral, parcat pe o stradă cu clădiri vechi", position: "50% 88%" }}
         intro={
           <p>
             {routes.length} curse pe zi: din Târgu Neamț la 05:00 și 09:00, cu oprire la Terminalul Plecări din Otopeni, înapoi

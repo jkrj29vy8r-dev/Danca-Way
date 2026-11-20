@@ -6,6 +6,7 @@ import { pilgrimageItems, tripItems } from "@/data/catalog";
 export const sitePages: { path: string; priority: number }[] = [
   { path: "/", priority: 1 },
   { path: "/curse-regulate", priority: 0.9 },
+  { path: "/flota", priority: 0.6 },
   { path: "/transfer-privat", priority: 0.8 },
   { path: "/transfer-aeroport-otopeni", priority: 0.9 },
   { path: "/inchiriere-microbuz-cu-sofer", priority: 0.8 },

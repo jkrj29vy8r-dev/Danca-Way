@@ -14,6 +14,7 @@ const serviceLinks = services.filter((s) =>
 
 const mainLinks = [
   { href: "/curse-regulate", label: "Curse regulate" },
+  { href: "/flota", label: "Flota" },
   { href: "/excursii", label: "Excursii" },
   { href: "/pelerinaje", label: "Pelerinaje" },
   { href: "/contact", label: "Contact" },
@@ -144,6 +145,7 @@ export function Header() {
         } ${scrolled || menuOpen ? (dark ? "border-line-dark" : "border-line") : "border-transparent"}`}
         data-theme={theme}
         data-hidden={isHidden ? "true" : undefined}
+        style={{ viewTransitionName: "site-header" }}
         onFocus={() => setHidden(false)}
       >
         <div className="container-x flex h-16 items-center justify-between gap-6 lg:h-20">

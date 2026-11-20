@@ -1,5 +1,4 @@
 import { FlapText } from "../FlapText";
-import { ratingDisplay, site, withDe } from "@/config/site";
 import { fare, routes, stopAt } from "@/data/routes";
 
 /** Prima sosire la Terminalul Plecări (cea mai devreme cursă spre București care oprește la Otopeni). */
@@ -25,9 +24,7 @@ export function Facts() {
       <div className="container-x">
         <h2 id="fapte-title" className="t-32 max-w-[36ch] font-semibold">
           Opt curse pe zi, șase dintre ele prin Otopeni.{" "}
-          <span className="text-muted">
-            {ratingDisplay} din {site.rating.best} pe {site.rating.source}, din {withDe(site.rating.count, "recenzii")}.
-          </span>
+          <span className="text-muted">Din Târgu Neamț, Piatra Neamț și Roman, spre București, Otopeni și Constanța.</span>
         </h2>
 
         <dl className="grid-12 mt-16 gap-y-8 lg:mt-24">
@@ -38,13 +35,6 @@ export function Facts() {
             </div>
           ))}
         </dl>
-        <p className="t-14 mt-8 text-muted">
-          Nota de pe{" "}
-          <a href={site.rating.sourceUrl} target="_blank" rel="noopener" className="link-u text-ink">
-            {site.rating.source}
-          </a>{" "}
-          a fost verificată pe {new Date(site.rating.checkedOn).toLocaleDateString("ro-RO", { day: "numeric", month: "long", year: "numeric" })}.
-        </p>
       </div>
     </section>
   );

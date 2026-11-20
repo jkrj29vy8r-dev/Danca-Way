@@ -66,6 +66,11 @@ export function Footer() {
                 </a>
               </li>
               <li>
+                <Link href="/flota" className={linkCls}>
+                  Flota
+                </Link>
+              </li>
+              <li>
                 <Link href="/contact" className={linkCls}>
                   Contact
                 </Link>

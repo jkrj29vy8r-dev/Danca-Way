@@ -80,3 +80,17 @@ Interpretations to confirm:
 - A 4 px half-step is used only inside compact controls (segmented-control inset, checkbox alignment).
 - Timeline nodes (8 px) are circles, like the stops on the route map; all containers stay square.
 - Hover and color transitions use the same 0.6 s expo.out as the larger motion.
+
+## Round 2 (20 November 2026): corporate-site details
+References and what each one gave us: `references/NOTES.md`, section "Round 2" (local only).
+
+| Piece | Where | Rule |
+|---|---|---|
+| Scroll-scrubbed hero | `components/home/ScrollHero.tsx`, `public/hero/f001–f121.webp` | Desktop with motion only: 121 frames (1600×900 WebP, ~5 MB), canvas, section 320svh. Frame 1 preloaded, frames 2–12 after hydration, the rest after `load` + idle. The headline appears in the last third (`--p` in CSS). Phone and reduced motion: the poster (`hero-autocar-piata*.jpg`), never the frames. |
+| Booking bar | `components/home/BookingBar.tsx` | Three tabs (Curse regulate / Transfer privat / Grup), one row of fields, one yellow action. After it scrolls away: compact bar under the header (`--bar` = its height, used by sticky panels and `scroll-padding-top`). On phone it opens a full-screen `<dialog>`. Privat and Grup prefill the quote form (`openQuote`, URL fallback to /contact). |
+| Trust band | `components/home/TrustBand.tsx` | Only values from `src/config/site.ts` (`company`, `license`, `payments`, `rating`), each with its source. `null` = not shown. |
+| Flota | `app/flota/page.tsx`, `src/config/fleet.ts` | Spec column like a model page. Values only from `fleet.ts`; `null` hidden in production, marked "de completat" in `next dev` or with `NEXT_PUBLIC_SHOW_PLACEHOLDERS=1`. |
+| Photos | `components/ArtPhoto.tsx`, `src/data/images.ts` | `<picture>` with a phone crop (`mobileSrc`), srcset from `getImageProps`, frame reserves the space (no CLS). Clip-path reveal on entry; `parallax` = image 112%, ±5% scrub. |
+| Page transitions | `app/template.tsx`, `globals.css` (View Transitions) | Old page out in 160 ms, new page in 420 ms (12 px up). The header stays put. `transitionName="fleet-coach"` morphs the coach photo from the home card into the Flota hero. No support: instant navigation. No root `loading.tsx` (a fallback breaks the morph); slow navigations show a thin progress line (`NavProgress`). |
+| States | `not-found.tsx`, `Timetable` (no direct trip), `QuoteForm` (success + what happens next), `BookingBar` (pre-hydration: first departure of the day) | Every state says what happened and what to do next. |
+| Icons | `app/favicon.ico`, `app/icon.svg`, `app/apple-icon.tsx`, `app/opengraph-image.tsx` | From the logo mark; OG = real coach photo + night band with the logo. |

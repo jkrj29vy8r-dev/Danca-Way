@@ -6,8 +6,8 @@ export const site = {
   name: "Danca Way",
   legalName: "Danca Util Ideal SRL",
   cui: "41865158",
-  /** PLACEHOLDER — nr. de înregistrare la Registrul Comerțului (ex. J27/123/2019) */
-  regCom: "J27/XXXX/20XX",
+  /** Nr. de înregistrare la Registrul Comerțului (ANAF, verificat pe 20 noiembrie 2026) */
+  regCom: "J27/1229/2019",
   tagline: "Transport persoane din Neamț",
   url: (process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.dancaway.ro").replace(/\/$/, ""),
   locale: "ro_RO",
@@ -27,7 +27,7 @@ export const site = {
       street: "Str. Brândușelor nr. 92, sat Adjudeni",
       locality: "Tămășeni",
       region: "Neamț",
-      postalCode: "",
+      postalCode: "617466",
       country: "RO",
     },
     /** PLACEHOLDER — programul de lucru; gol = nu se afișează. Ex.: "Luni–Duminică, 07:00–22:00" */
@@ -48,6 +48,34 @@ export const site = {
     source: "Bileteria",
     sourceUrl: "https://bileteria.ro/Transport/Roman-Constanta",
     checkedOn: "2026-11-08",
+  },
+
+  /**
+   * Faptele din banda de încredere (pagina principală). Doar valori verificate; `null` = nu se afișează.
+   */
+  company: {
+    /** Data înregistrării firmei — registrul public ANAF (webservicesp.anaf.ro), verificat pe 20 noiembrie 2026 */
+    registeredOn: "2019-11-06",
+    /** Codul CAEN principal, tot din ANAF: 4939 — Alte transporturi terestre de călători */
+    caen: "4939",
+    checkedOn: "2026-11-20",
+  },
+  /** Licența de transport persoane */
+  license: {
+    authority: "ARR",
+    /** PLACEHOLDER — numărul licenței ARR (ex. „LC 123456”). `null` = se afișează doar „operator licențiat”. */
+    number: null as string | null,
+  },
+  /** Cum se plătește */
+  payments: {
+    /**
+     * Biletele online, pe platforma autogari.ro (sigle afișate în subsolul autogari.ro, verificat pe 20 noiembrie 2026).
+     */
+    online: ["Visa", "Mastercard"],
+    /** PLACEHOLDER — plata la urcare, dacă există (ex. „numerar la șofer”). `null` = nu se afișează. */
+    onboard: null as string | null,
+    /** PLACEHOLDER — plata pentru transferuri și închirieri (ex. „transfer bancar, cu factură”). `null` = nu se afișează. */
+    services: null as string | null,
   },
 
   /** Zona deservită — folosită în JSON-LD */

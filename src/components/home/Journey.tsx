@@ -48,7 +48,7 @@ export function Journey({ code = "B3" }: { code?: string }) {
           {/* Panoul fixat: oglindește rândul activ din listă (ascuns pentru cititoarele de ecran) */}
           <div
             aria-hidden
-            className="sticky top-[var(--hdr)] z-10 col-span-12 -mx-6 self-start border-b border-line bg-light px-6 py-4 transition-[top] duration-[600ms] ease-[var(--ease-out-expo)] md:-mx-12 md:px-12 lg:top-40 lg:col-span-5 lg:mx-0 lg:border-0 lg:p-0"
+            className="sticky top-[calc(var(--hdr)+var(--bar,0px))] z-10 col-span-12 -mx-6 self-start border-b border-line bg-light px-6 py-4 transition-[top] duration-[600ms] ease-[var(--ease-out-expo)] md:-mx-12 md:px-12 lg:top-[calc(10rem+var(--bar,0px))] lg:col-span-5 lg:mx-0 lg:border-0 lg:p-0"
           >
             <p className="label hidden text-muted lg:block">
               <span className="font-mono">{route.code}</span> · {cityName(route.from)} → {stopName(stops[last])}

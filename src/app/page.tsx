@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { Hero } from "@/components/home/Hero";
+import { BookingBar } from "@/components/home/BookingBar";
+import { TrustBand } from "@/components/home/TrustBand";
+import { FleetTeaser } from "@/components/home/FleetTeaser";
 import { Facts } from "@/components/home/Facts";
 import { Journey } from "@/components/home/Journey";
 import { Timetable } from "@/components/home/Timetable";
@@ -23,13 +26,15 @@ export const metadata: Metadata = {
 };
 
 /**
- * O idee pe ecran: titlul și căutarea; cifrele; o cursă stație cu stație; orarul; serviciile;
- * excursiile; cererea de ofertă.
+ * O idee pe ecran: hero-ul (de la rândunică la autocar); bara de rezervare; faptele verificabile; cifrele;
+ * o cursă stație cu stație; orarul; autocarul; serviciile; excursiile; cererea de ofertă.
  */
 export default function HomePage() {
   return (
     <>
       <Hero />
+      <BookingBar />
+      <TrustBand />
       <Facts />
       {/* Granițe Suspense: React hidratează secțiunile pe rând, în sarcini mici, fără să blocheze pagina */}
       <Suspense>
@@ -38,6 +43,7 @@ export default function HomePage() {
       <Suspense>
         <Timetable />
       </Suspense>
+      <FleetTeaser />
       <ServicesList />
       <TripsSection />
       <Suspense>

@@ -17,8 +17,8 @@ const inView = (el: Element) => {
 const EASE = "expo.out";
 
 /**
- * Animațiile de pe fiecare pagină (se refac la schimbarea rutei). Doar trei tipuri, fiecare cu un sens:
- * titluri dezvăluite linie cu linie, fotografii dezvăluite cu clip-path, ore întoarse ca pe o tabelă de plecări.
+ * Animațiile de pe fiecare pagină (se refac la schimbarea rutei). Patru tipuri, fiecare cu un sens:
+ * titluri dezvăluite linie cu linie, fotografii dezvăluite cu clip-path și cu paralaxă lentă, ore întoarse ca pe o tabelă de plecări.
  * (Harta, rândunica și countdown-ul au componentele lor.) Totul e dezactivat cu prefers-reduced-motion;
  * fără JavaScript conținutul rămâne static și vizibil. Durate 0,6–1,2 s, expo.out.
  */
@@ -38,6 +38,7 @@ export function MotionController() {
       const ctx = gsap.context(() => {
         disposers.push(revealLines(gsap, SplitText));
         revealPhotos(gsap);
+        parallax(gsap);
         disposers.push(splitFlaps(gsap, ScrollTrigger));
       });
 
@@ -85,7 +86,7 @@ function revealLines(gsap: Gsap, SplitText: typeof import("gsap/SplitText").Spli
   return () => splits.forEach((s) => s.revert());
 }
 
-/* ───────── Fotografii: clip-path inset la intrare (fără parallax, fără zoom) ───────── */
+/* ───────── Fotografii: clip-path inset la intrare ───────── */
 function revealPhotos(gsap: Gsap) {
   document.querySelectorAll<HTMLElement>("[data-photo]").forEach((frame) => {
     if (inView(frame)) return;
@@ -93,6 +94,18 @@ function revealPhotos(gsap: Gsap) {
       frame,
       { clipPath: "inset(8% 6% 8% 6%)" },
       { clipPath: "inset(0% 0% 0% 0%)", duration: 1.2, ease: EASE, scrollTrigger: { trigger: frame, start: "top 90%", once: true } },
+    );
+  });
+}
+
+/* ───────── Paralaxă lentă: fotografia (cu 12% mai mare decât cadrul) alunecă ±5% cât traversează ecranul ───────── */
+function parallax(gsap: Gsap) {
+  document.querySelectorAll<HTMLElement>("[data-parallax]").forEach((img) => {
+    const frame = img.closest<HTMLElement>("[data-photo]") ?? img.parentElement!;
+    gsap.fromTo(
+      img,
+      { yPercent: -5 },
+      { yPercent: 5, ease: "none", scrollTrigger: { trigger: frame, start: "top bottom", end: "bottom top", scrub: 0.6 } },
     );
   });
 }

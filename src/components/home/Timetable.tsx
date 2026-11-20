@@ -9,6 +9,7 @@ import { site } from "@/config/site";
 import {
   cities,
   cityName,
+  destinationsFrom,
   directionFor,
   directions,
   formatDuration,
@@ -170,13 +171,42 @@ export function Timetable({ full = false }: { full?: boolean } = {}) {
                 </div>
               )}
 
+              {filter && rows.length === 0 && (
+                <div className="border-y border-line-dark py-8">
+                  <p className="t-21 font-semibold">
+                    Nu avem o cursă directă {cityName(filter.from)} → {cityName(filter.to)}.
+                  </p>
+                  {destinationsFrom(filter.from).length > 0 && (
+                    <>
+                      <p className="t-14 mt-4 text-mist">Din {cityName(filter.from)} plecăm spre:</p>
+                      <ul className="mt-3 flex flex-wrap gap-2">
+                        {destinationsFrom(filter.from).map((c) => (
+                          <li key={c}>
+                            <button type="button" onClick={() => setFilter({ from: filter.from, to: c })} className="btn btn-line-light min-h-10 px-4">
+                              {cityName(c)}
+                            </button>
+                          </li>
+                        ))}
+                      </ul>
+                    </>
+                  )}
+                  <p className="t-14 mt-6 text-mist">
+                    Pentru alt traseu, cu microbuzul doar pentru voi:{" "}
+                    <Link href="/transfer-privat" className="link-u font-semibold text-white">
+                      transfer privat 8+1
+                    </Link>
+                    .
+                  </p>
+                </div>
+              )}
+
               {/* Capul tabelului */}
-              <div aria-hidden className="label grid grid-cols-[5rem_1fr_auto] gap-x-4 pb-4 text-mist sm:grid-cols-[7rem_1fr_6rem_1.5rem] sm:gap-x-6">
+              <div aria-hidden hidden={rows.length === 0} className="label grid grid-cols-[5rem_1fr_auto] gap-x-4 pb-4 text-mist sm:grid-cols-[7rem_1fr_6rem_1.5rem] sm:gap-x-6">
                 <span>Plecare</span>
                 <span>Traseu</span>
                 <span className="text-right">Preț</span>
               </div>
-              <ul ref={listRef} className="border-y border-line-dark">
+              <ul ref={listRef} hidden={rows.length === 0} className="border-y border-line-dark">
                 {rows.map((t) => {
                   const code = t.route.code;
                   const key = code + t.dep.time;

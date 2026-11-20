@@ -66,14 +66,36 @@ export function QuoteForm({ defaultService, defaultSubject, labelledBy }: Props)
 
   // Preselectare din URL (?serviciu=…&subiect=…) și din butoanele „Cere ofertă” de pe pagină.
   useEffect(() => {
-    const apply = ({ service: s, subject }: Partial<QuotePrefill>) => {
+    const apply = ({ service: s, subject, ...fields }: Partial<QuotePrefill>) => {
       if (s && serviceById(s)) setService(s);
       if (subject) setDetails((d) => (d.includes(subject) ? d : subjectLine(subject) + d));
+      // Câmpurile necontrolate primesc valorile direct; erorile lor vechi dispar.
+      const form = formRef.current;
+      const filled: QuoteField[] = [];
+      for (const [k, v] of Object.entries(fields)) {
+        const el = form?.elements.namedItem(k) as HTMLInputElement | null;
+        if (!el || v === undefined || v === "") continue;
+        el.value = String(v);
+        filled.push(k as QuoteField);
+      }
+      if (filled.length) {
+        setLocal((l) => Object.fromEntries(Object.entries(l).filter(([k]) => !filled.includes(k as QuoteField))));
+        // Focus pe primul câmp obligatoriu rămas gol (fără să sară pagina; derularea o face cine a cerut)
+        const empty = (["plecare", "destinatie", "data", "pasageri", "nume", "telefon"] as const)
+          .map((f) => form?.elements.namedItem(f) as HTMLInputElement | null)
+          .find((el) => el && !el.value);
+        window.setTimeout(() => empty?.focus({ preventScroll: true }), 700);
+      }
     };
     const params = new URLSearchParams(window.location.search);
+    const num = Number(params.get("pasageri"));
     apply({
       service: (params.get("serviciu") ?? undefined) as ServiceId | undefined,
       subject: params.get("subiect") ?? undefined,
+      plecare: params.get("plecare") ?? undefined,
+      destinatie: params.get("destinatie") ?? undefined,
+      data: params.get("data") ?? undefined,
+      pasageri: Number.isInteger(num) && num > 0 ? num : undefined,
     });
     const onPrefill = (e: Event) => apply((e as CustomEvent<QuotePrefill>).detail);
     window.addEventListener(PREFILL_EVENT, onPrefill);

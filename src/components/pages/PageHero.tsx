@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Photo } from "../Photo";
+import { ArtPhoto } from "../ArtPhoto";
 import { hasPhoto } from "@/lib/photo";
 
 type Props = {
@@ -13,7 +13,8 @@ type Props = {
   children?: React.ReactNode;
   /** Date tehnice: valoare + etichetă, ca pe o fișă de model */
   facts?: { label: string; value: string }[];
-  image?: { src: string; alt: string };
+  /** Fotografia de sub titlu; `mobileSrc` = încadrarea pentru telefon, `transitionName` = se mută din cardul care a deschis pagina */
+  image?: { src: string; mobileSrc?: string; alt: string; transitionName?: string; position?: string };
   /** Titlu mai mic pentru paginile lungi (ex. cele legale) */
   compact?: boolean;
 };
@@ -69,7 +70,19 @@ export function PageHero({ eyebrow, title, intro, trail = [], children, facts, i
           </dl>
         )}
       </div>
-      {withPhoto && <Photo src={image.src} alt={image.alt} sizes="100vw" priority className="aspect-[4/3] w-full sm:aspect-[16/9] lg:aspect-[21/9]" />}
+      {withPhoto && (
+        <ArtPhoto
+          src={image.src}
+          mobileSrc={image.mobileSrc}
+          alt={image.alt}
+          sizes="100vw"
+          priority
+          reveal={false}
+          transitionName={image.transitionName}
+          position={image.position}
+          className={`w-full ${image.mobileSrc ? "aspect-[3/4]" : "aspect-[4/3]"} sm:aspect-[16/10] lg:aspect-[21/9]`}
+        />
+      )}
     </section>
   );
 }

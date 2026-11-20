@@ -39,3 +39,29 @@ export function useNextDeparture(from: CityId, to: CityId) {
   const next = useMemo(() => (now === null ? null : nextDepartureAt(from, to, now)), [from, to, now]);
   return { now, next, first };
 }
+
+/** Ora României în secunde de la miezul nopții, la fiecare secundă (doar în browser, doar cât `active`). */
+export function useBucharestClock(active = true) {
+  const [now, setNow] = useState<number | null>(null);
+  useEffect(() => {
+    if (!active) return;
+    let timer: ReturnType<typeof setTimeout>;
+    const tick = () => {
+      const { minutes, seconds } = bucharestNow();
+      setNow(minutes * 60 + seconds);
+      timer = setTimeout(tick, 1000 - (Date.now() % 1000) + 20);
+    };
+    timer = setTimeout(tick, 0);
+    return () => clearTimeout(timer);
+  }, [active]);
+  return now;
+}
+
+/** „02:14:37” — timpul rămas, pentru afișajul de tip tabelă de plecări. */
+export function formatClock(totalSeconds: number) {
+  const s = Math.max(0, Math.floor(totalSeconds));
+  const h = Math.floor(s / 3600);
+  const m = Math.floor((s % 3600) / 60);
+  const sec = s % 60;
+  return [h, m, sec].map((v) => String(v).padStart(2, "0")).join(":");
+}

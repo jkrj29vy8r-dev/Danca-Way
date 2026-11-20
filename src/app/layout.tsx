@@ -5,6 +5,7 @@ import "./globals.css";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { MotionController } from "@/components/MotionController";
+import { NavProgress } from "@/components/NavProgress";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { MobileActionBar } from "@/components/MobileActionBar";
 import { JsonLd } from "@/components/JsonLd";
@@ -41,7 +42,7 @@ export const metadata: Metadata = {
   openGraph: { type: "website", locale: site.locale, siteName: site.name },
   twitter: { card: "summary_large_image" },
   robots: { index: true, follow: true },
-  icons: { icon: [{ url: "/danca-way-simbol.svg", type: "image/svg+xml" }] },
+  // Favicon: src/app/favicon.ico și icon.svg (din simbolul logo-ului); apple-icon.tsx pentru iOS.
 };
 
 export const viewport: Viewport = {
@@ -58,6 +59,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       {/* Pe mobil, spațiu sub conținut pentru bara fixă Sună · WhatsApp · Bilet */}
       <body className="pb-[calc(4rem+env(safe-area-inset-bottom))] md:pb-0">
+        <Suspense>
+          <NavProgress />
+        </Suspense>
         <Suspense>
           <Header />
         </Suspense>
