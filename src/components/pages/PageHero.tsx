@@ -81,6 +81,7 @@ export function PageHero({ eyebrow, title, intro, trail = [], children, facts, i
           transitionName={image.transitionName}
           position={image.position}
           mobilePosition={image.mobilePosition}
+          grain
           className={`w-full ${image.mobileSrc ? "aspect-[3/4]" : "aspect-[4/3]"} sm:aspect-[16/10] lg:aspect-[21/9]`}
         />
       )}

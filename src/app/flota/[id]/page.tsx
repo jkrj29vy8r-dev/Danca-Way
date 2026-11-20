@@ -181,7 +181,7 @@ export default async function VehiclePage(props: Params) {
         <section className="bg-night py-2 text-white" data-bg="night" aria-label={`Fotografii cu ${v.name}`}>
           <div className="grid gap-2 sm:grid-cols-3">
             {gallery.map((g) => (
-              <ArtPhoto key={g.src} src={g.src} alt={g.alt} sizes="(min-width: 640px) 33vw, 100vw" parallax className="aspect-[3/4] w-full" />
+              <ArtPhoto key={g.src} src={g.src} alt={g.alt} sizes="(min-width: 640px) 33vw, 100vw" parallax grain className="aspect-[3/4] w-full" />
             ))}
           </div>
         </section>

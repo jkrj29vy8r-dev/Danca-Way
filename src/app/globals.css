@@ -566,6 +566,30 @@
   pointer-events: none;
   background: radial-gradient(70% 55% at 12% 18%, rgb(11 20 38 / 0.55), rgb(11 20 38 / 0) 72%);
 }
+/* ───────────── Granulație de film: doar pe imaginile de la margine la margine ───────────── */
+/* Zgomot SVG static (fără animație, sub 0,5 KB): gri opac centrat pe 50% (media zgomotului fractal e ~0,62, de aici
+   -0,864), amestecat „overlay” la 14%: ~4 niveluri din 255, fără să schimbe luminozitatea medie. */
+:root {
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='.733 .733 .733 0 -.864 .733 .733 .733 0 -.864 .733 .733 .733 0 -.864 0 0 0 0 1'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+}
+.grain::after,
+.hero-launch-grain {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: var(--grain);
+  background-size: 200px 200px;
+  mix-blend-mode: overlay;
+  opacity: 0.14;
+}
+.grain::after {
+  z-index: 1;
+}
+.hero-launch-grain {
+  z-index: -1;
+}
+
 .hero-launch-copy {
   padding-top: calc(var(--hdr) + 2.5rem);
 }

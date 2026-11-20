@@ -22,13 +22,15 @@ type Props = {
   position?: string;
   /** Altă poziție pe telefon (sub 768 px), ex. pentru fotografia verticală */
   mobilePosition?: string;
+  /** Granulație de film: doar pentru imaginile de la margine la margine */
+  grain?: boolean;
 };
 
 /**
  * Fotografie responsivă: <picture> cu sursă separată pentru telefon (art direction), srcset generat de next/image,
  * spațiul rezervat de cadru (fără layout shift). Fără JavaScript sau cu „reduced motion”: imagine statică.
  */
-export function ArtPhoto({ src, mobileSrc, alt, sizes, className = "", priority, parallax, reveal = true, transitionName, position, mobilePosition }: Props) {
+export function ArtPhoto({ src, mobileSrc, alt, sizes, className = "", priority, parallax, reveal = true, transitionName, position, mobilePosition, grain }: Props) {
   const common = { alt, sizes, quality: 75 };
   const desk = getImageProps({ ...common, src, ...sizeOf(src), ...(priority ? { fetchPriority: "high" as const, loading: "eager" as const } : {}) }).props;
   const mob = mobileSrc ? getImageProps({ ...common, src: mobileSrc, ...sizeOf(mobileSrc) }).props : null;
@@ -36,7 +38,7 @@ export function ArtPhoto({ src, mobileSrc, alt, sizes, className = "", priority,
   const { srcSet: deskSet, ...img } = desk;
 
   const frame = (
-    <div data-photo={reveal ? "" : undefined} className={`relative overflow-hidden bg-night ${className}`}>
+    <div data-photo={reveal ? "" : undefined} className={`relative overflow-hidden bg-night ${grain ? "grain" : ""} ${className}`}>
       <picture>
         {mob && <source media="(max-width: 47.99rem)" srcSet={mob.srcSet} sizes={sizes} />}
         {mob && <source media="(min-width: 48rem)" srcSet={deskSet} sizes={sizes} />}

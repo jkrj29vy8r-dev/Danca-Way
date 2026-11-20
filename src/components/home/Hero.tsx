@@ -36,6 +36,7 @@ export function Hero() {
         </picture>
       </HeroMotion>
       <div aria-hidden className="hero-launch-scrim" />
+      <div aria-hidden className="hero-launch-grain" />
       <div className="hero-launch-copy container-x">
         <h1 id="hero-title" className="t-112 max-w-[13ch] lg:t-72 lg:max-w-none">
           <span className="reveal-line">

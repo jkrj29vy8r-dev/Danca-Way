@@ -36,6 +36,7 @@ export function QuoteSection({
   return (
     <section
       id="oferta"
+      data-contact-zone
       className={`section-y scroll-mt-16 ${tone === "light" ? "bg-light" : "bg-white"} ${className}`}
       aria-labelledby="oferta-title"
       data-bg={tone}

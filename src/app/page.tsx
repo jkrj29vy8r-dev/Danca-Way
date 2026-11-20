@@ -5,7 +5,6 @@ import { BookingBar } from "@/components/home/BookingBar";
 import { TrustBand } from "@/components/home/TrustBand";
 import { Fleet360 } from "@/components/home/Fleet360";
 import { Facts } from "@/components/home/Facts";
-import { Journey } from "@/components/home/Journey";
 import { Timetable } from "@/components/home/Timetable";
 import { ServicesList } from "@/components/home/ServicesList";
 import { TripsSection } from "@/components/home/TripsSection";
@@ -26,8 +25,8 @@ export const metadata: Metadata = {
 };
 
 /**
- * O idee pe ecran: hero-ul (de la rândunică la autocar); bara de rezervare; faptele verificabile; cifrele;
- * o cursă stație cu stație; orarul; autocarul; serviciile; excursiile; cererea de ofertă.
+ * O idee pe ecran: hero-ul (autocarul în studio); bara de rezervare; faptele verificabile; cifrele; orarul cu harta;
+ * autocarul din toate unghiurile; serviciile; excursiile; cererea de ofertă. Toate opririle sunt pe /curse-regulate.
  */
 export default function HomePage() {
   return (
@@ -37,9 +36,6 @@ export default function HomePage() {
       <TrustBand />
       <Facts />
       {/* Granițe Suspense: React hidratează secțiunile pe rând, în sarcini mici, fără să blocheze pagina */}
-      <Suspense>
-        <Journey />
-      </Suspense>
       <Suspense>
         <Timetable />
       </Suspense>

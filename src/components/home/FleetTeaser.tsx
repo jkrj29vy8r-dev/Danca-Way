@@ -22,6 +22,7 @@ export function FleetTeaser() {
           alt={photo.alt}
           sizes="100vw"
           parallax
+          grain
           position="50% 70%"
           className="aspect-[3/4] w-full sm:aspect-[16/10] lg:aspect-[21/9]"
         />

@@ -15,7 +15,7 @@ const linkCls = "link-u text-white/80 transition-colors duration-[600ms] ease-[v
 export function Footer() {
   const year = new Date().getFullYear();
   return (
-    <footer className="bg-night text-white" data-bg="night">
+    <footer className="bg-night text-white" data-bg="night" data-contact-zone>
       <div className="container-x pt-24 pb-12 lg:pt-40">
         <div className="grid-12 gap-y-16">
           <div className="col-span-12 lg:col-span-4">
