@@ -9,20 +9,19 @@ const coachRoutes = routes.filter((r) => r.vehicle === "Autocar").map((r) => r.c
 
 /**
  * Flota, pe un ecran: fotografia reală a autocarului pe toată lățimea (paralaxă lentă), numele modelului și un link
- * spre fișa tehnică. Fotografia are același nume de tranziție ca hero-ul paginii /flota, deci se mută în ea.
+ * spre fișa tehnică a autocarului (/flota/<id>).
  */
 export function FleetTeaser() {
   const photo = coach.photos[0];
   return (
     <section className="bg-night text-white" data-bg="night" aria-labelledby="flota-title">
-      <Link href="/flota" className="group block" aria-describedby="flota-more">
+      <Link href={`/flota/${coach.id}`} className="group block" aria-describedby="flota-more">
         <ArtPhoto
           src={photo.src}
           mobileSrc={photo.mobileSrc}
           alt={photo.alt}
           sizes="100vw"
           parallax
-          transitionName="fleet-coach"
           position="50% 70%"
           className="aspect-[3/4] w-full sm:aspect-[16/10] lg:aspect-[21/9]"
         />

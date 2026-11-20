@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { site } from "@/config/site";
+import { fleet } from "@/config/fleet";
 import { pilgrimageItems, tripItems } from "@/data/catalog";
 
 /** Toate paginile publice. Adaugă aici orice pagină nouă. */
@@ -25,6 +26,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const lastModified = new Date();
   const pages = [
     ...sitePages,
+    ...fleet.map((v) => ({ path: `/flota/${v.id}`, priority: 0.5 })),
     ...[...tripItems, ...pilgrimageItems].map((i) => ({ path: i.href, priority: 0.6 })),
   ];
   return pages.map(({ path, priority }) => ({

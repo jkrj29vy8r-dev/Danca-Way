@@ -3,9 +3,10 @@ import { HeroMotion } from "./HeroMotion";
 import { coach } from "@/config/fleet";
 import { sizeOf } from "@/data/images";
 
-const DESK = "/images/hero-setra-studio.jpg";
-const PHONE = "/images/hero-setra-studio-portrait.jpg";
-const ALT = `Autocarul ${coach.name} al Danca Way, din față-lateral, într-un studio întunecat`;
+const cover = coach.cover!;
+const DESK = cover.src;
+const PHONE = cover.mobileSrc ?? cover.src;
+const ALT = cover.alt;
 
 /**
  * Hero ca la o lansare de model: fotografia autocarului pe tot ecranul, titlul pe fundalul închis de deasupra lui.

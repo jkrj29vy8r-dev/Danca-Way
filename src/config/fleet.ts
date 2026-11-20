@@ -37,8 +37,13 @@ export type Vehicle = {
   euro: string | null;
   /** Fotografii reale ale vehiculului (fișiere din /public). Prima e cea principală. */
   photos: FleetPhoto[];
-  /** Modelul 3D (iconița „clay”) și imaginea PNG de rezervă, din /public */
-  model3d?: { glb: string; poster: string };
+  /** Fotografia de studio (pornită de la o fotografie reală): hero-ul paginii principale și capul fișei tehnice */
+  cover?: FleetPhoto;
+  /**
+   * Modelul 3D (iconița „clay”) și imaginea PNG de rezervă, din /public. `orbit`: unghiul de pornire, același ca în PNG
+   * („azimut elevație”); `scale`: scara modelului pentru distanța camerei (vezi components/fleet/VehicleModel.tsx).
+   */
+  model3d?: { glb: string; poster: string; orbit?: string; scale?: number };
   /**
    * Vederea 360°: cadrele stau în /public/360/<id>/{800,1600}/000.webp … 071.webp, plus manifest.json.
    * Secțiunea apare doar dacă manifest.json există. `hotspots`: punctele de pe autocar, la cadrul în care se văd
@@ -80,7 +85,12 @@ export const fleet: Vehicle[] = [
       { src: "/images/setra-fata-vertical.jpg", alt: "Autocarul Setra al Danca Way, din față, într-o parcare, ziua" },
       { src: "/images/setra-autogara-vertical.jpg", alt: "Autocarul Setra al Danca Way, într-o parcare largă, sub cerul senin" },
     ],
-    model3d: { glb: "/3d/setra-s517hd_clay.glb", poster: "/3d/setra-s517hd_clay.png" },
+    cover: {
+      src: "/images/hero-setra-studio.jpg",
+      mobileSrc: "/images/hero-setra-studio-portrait.jpg",
+      alt: "Autocarul Setra S 517 HD al Danca Way, din față-lateral, într-un studio întunecat",
+    },
+    model3d: { glb: "/3d/setra-s517hd_clay.glb", poster: "/3d/setra-s517hd_clay.png", orbit: "35deg 76deg", scale: 1 },
     // Pozițiile se potrivesc pe cadrele finale (din clipul filmat în jurul autocarului); verifică-le când le pui.
     view360: {
       hotspots: [

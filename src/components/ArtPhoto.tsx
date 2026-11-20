@@ -20,13 +20,15 @@ type Props = {
   transitionName?: string;
   /** Unde stă subiectul în cadru (object-position), ex. "60% 50%" */
   position?: string;
+  /** Altă poziție pe telefon (sub 768 px), ex. pentru fotografia verticală */
+  mobilePosition?: string;
 };
 
 /**
  * Fotografie responsivă: <picture> cu sursă separată pentru telefon (art direction), srcset generat de next/image,
  * spațiul rezervat de cadru (fără layout shift). Fără JavaScript sau cu „reduced motion”: imagine statică.
  */
-export function ArtPhoto({ src, mobileSrc, alt, sizes, className = "", priority, parallax, reveal = true, transitionName, position }: Props) {
+export function ArtPhoto({ src, mobileSrc, alt, sizes, className = "", priority, parallax, reveal = true, transitionName, position, mobilePosition }: Props) {
   const common = { alt, sizes, quality: 75 };
   const desk = getImageProps({ ...common, src, ...sizeOf(src), ...(priority ? { fetchPriority: "high" as const, loading: "eager" as const } : {}) }).props;
   const mob = mobileSrc ? getImageProps({ ...common, src: mobileSrc, ...sizeOf(mobileSrc) }).props : null;
@@ -43,8 +45,8 @@ export function ArtPhoto({ src, mobileSrc, alt, sizes, className = "", priority,
           {...img}
           srcSet={mob ? undefined : deskSet}
           data-parallax={parallax ? "" : undefined}
-          className={`absolute inset-0 size-full object-cover ${parallax ? "scale-[1.12] will-change-transform" : ""}`}
-          style={position ? { objectPosition: position } : undefined}
+          className={`absolute inset-0 size-full object-cover ${parallax ? "scale-[1.12] will-change-transform" : ""} ${mobilePosition ? "[object-position:var(--pos-m)] md:[object-position:var(--pos,50%_50%)]" : ""}`}
+          style={mobilePosition ? ({ "--pos-m": mobilePosition, "--pos": position } as React.CSSProperties) : position ? { objectPosition: position } : undefined}
         />
       </picture>
     </div>

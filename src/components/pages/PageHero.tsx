@@ -14,7 +14,7 @@ type Props = {
   /** Date tehnice: valoare + etichetă, ca pe o fișă de model */
   facts?: { label: string; value: string }[];
   /** Fotografia de sub titlu; `mobileSrc` = încadrarea pentru telefon, `transitionName` = se mută din cardul care a deschis pagina */
-  image?: { src: string; mobileSrc?: string; alt: string; transitionName?: string; position?: string };
+  image?: { src: string; mobileSrc?: string; alt: string; transitionName?: string; position?: string; mobilePosition?: string };
   /** Titlu mai mic pentru paginile lungi (ex. cele legale) */
   compact?: boolean;
 };
@@ -27,7 +27,7 @@ export function PageHero({ eyebrow, title, intro, trail = [], children, facts, i
   const withPhoto = image && hasPhoto(image.src);
   return (
     <section className="bg-night text-white" data-bg="night">
-      <div className={`container-x ${compact ? "pt-32 pb-16 lg:pt-48 lg:pb-24" : "pt-32 pb-16 lg:pt-48 lg:pb-24"}`}>
+      <div className={`container-x ${compact ? "pt-28 pb-12 lg:pt-36 lg:pb-16" : "pt-32 pb-16 lg:pt-48 lg:pb-24"}`}>
         <nav aria-label="Navigare ierarhică" className="t-14 text-mist">
           <ol className="flex flex-wrap items-center gap-2">
             <li>
@@ -80,6 +80,7 @@ export function PageHero({ eyebrow, title, intro, trail = [], children, facts, i
           reveal={false}
           transitionName={image.transitionName}
           position={image.position}
+          mobilePosition={image.mobilePosition}
           className={`w-full ${image.mobileSrc ? "aspect-[3/4]" : "aspect-[4/3]"} sm:aspect-[16/10] lg:aspect-[21/9]`}
         />
       )}
