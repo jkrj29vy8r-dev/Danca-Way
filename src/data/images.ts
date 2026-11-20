@@ -3,9 +3,8 @@
  * fără layout shift). Adaugă aici orice fotografie nouă.
  */
 export const imageSizes: Record<string, { width: number; height: number }> = {
-  "/images/hero-autocar-piata.jpg": { width: 2400, height: 1357 },
-  "/images/hero-autocar-piata-4x3.jpg": { width: 2027, height: 1520 },
-  "/images/hero-rindunica-panou.jpg": { width: 2400, height: 1357 },
+  "/images/hero-setra-studio.jpg": { width: 3200, height: 3584 },
+  "/images/hero-setra-studio-portrait.jpg": { width: 1500, height: 2775 },
   "/images/setra-fata-strada.jpg": { width: 1600, height: 1200 },
   "/images/setra-lateral-strada.jpg": { width: 1600, height: 1200 },
   "/images/setra-fata-apus-vertical.jpg": { width: 900, height: 1600 },

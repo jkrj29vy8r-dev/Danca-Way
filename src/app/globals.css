@@ -513,130 +513,65 @@
   opacity: 0.64;
 }
 
-/* ───────────────────────── Hero: secvența de cadre condusă de scroll ─────────────────────────
-   Telefon și „reduced motion”: titlul, apoi posterul. Desktop cu mișcare (și JS): secțiunea are 320svh,
-   scena e fixată, canvas-ul desenează cadrele, iar titlul apare în ultima treime. `--p` vine din ScrollHero. */
-.hero {
-  --p: 1;
+/* ───────────────────────── Hero: lansare de model ─────────────────────────
+   Fotografia pe tot ecranul (100svh), titlul pe fundalul închis de deasupra autocarului. Gradientul fin stă
+   doar în spatele titlului. Zoom-out 4% la încărcare și paralaxă la scroll (HeroMotion): `scale` + `translate`. */
+.hero-launch {
   position: relative;
-}
-.hero-stage {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-}
-.hero-media {
-  position: relative;
-  order: 2;
-  aspect-ratio: 4 / 3;
+  isolation: isolate;
+  height: 100svh;
+  min-height: 36rem;
   overflow: hidden;
-  background: var(--color-night);
 }
-.hero-canvas,
-.hero-cue {
-  display: none;
-}
-.hero-scrim {
-  opacity: 0;
-  pointer-events: none;
-}
-.hero-copy {
-  order: 1;
-  padding-top: 7.5rem;
-  padding-bottom: 2.5rem;
-}
-@media (width >= 48rem) {
-  .hero-media {
-    order: 0;
-    aspect-ratio: auto;
-    height: min(100svh, 56.25vw);
-    min-height: 32rem;
-  }
-  .hero-copy {
-    position: absolute;
-    inset: auto 0 0 0;
-    padding-top: 0;
-    padding-bottom: clamp(3rem, 8vh, 6rem);
-  }
-  .hero-scrim {
-    opacity: 0.44;
-  }
-}
-@media (width >= 48rem) and (prefers-reduced-motion: no-preference) {
-  .js .hero {
-    --p: 0;
-    height: 320svh;
-  }
-  .js .hero-stage {
-    position: sticky;
-    top: 0;
-    height: 100svh;
-    overflow: hidden;
-  }
-  .js .hero-media {
-    position: absolute;
-    inset: 0;
-    height: auto;
-    min-height: 0;
-  }
-  .js .hero-canvas {
-    display: block;
-  }
-  .js .hero-scrim {
-    opacity: clamp(0, calc((var(--p) - 0.6) * 2.4), 0.36);
-  }
-  /* La final, imaginea urcă 12%: titlul ajunge pe o bandă calmă, sub autocar */
-  .js .hero-media {
-    --u: clamp(0, calc((var(--p) - 0.66) * 4.2), 1);
-    transform: translateY(calc(var(--u) * -12%));
-  }
-  .js .hero-line {
-    --t: clamp(0, calc((var(--p) - 0.66 - var(--d, 0)) * 5), 1);
-    opacity: var(--t);
-    transform: translateY(calc((1 - var(--t)) * 2.5rem));
-  }
-  .js .hero-cue {
-    position: absolute;
-    left: 50%;
-    bottom: 2rem;
-    translate: -50% 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.75rem;
-    color: var(--color-mist);
-    opacity: clamp(0, calc(1 - var(--p) * 14), 1);
-  }
-}
-.hero-cue-line {
-  position: relative;
-  width: 1px;
-  height: 3rem;
-  overflow: hidden;
-  background: rgb(255 255 255 / 0.24);
-}
-.hero-cue-line::after {
-  content: "";
+.hero-launch-media {
   position: absolute;
   inset: 0;
-  background: var(--color-white);
-  animation: cue 2.4s var(--ease-out-expo) infinite;
+  z-index: -2;
 }
-@keyframes cue {
-  0% {
-    transform: scaleY(0);
-    transform-origin: top;
+.hero-launch-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 28% 100%;
+  translate: 0 var(--hero-y, 0px);
+  will-change: translate, scale;
+}
+/* Desktop: fundalul de deasupra autocarului e prelungit în fișier; cadrul pune acoperișul la ~37% din înălțime */
+@media (width >= 48rem) {
+  .hero-launch-img {
+    object-position: 50% 66%;
   }
-  50% {
-    transform: scaleY(1);
-    transform-origin: top;
+}
+@media (width >= 48rem) and (max-aspect-ratio: 3/2) {
+  .hero-launch-img {
+    object-position: 50% 74%;
   }
-  50.1% {
-    transform-origin: bottom;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .js .hero-launch-img {
+    scale: 1.04;
   }
-  100% {
-    transform: scaleY(0);
-    transform-origin: bottom;
+  .js .hero-launch-media[data-loaded] .hero-launch-img {
+    scale: 1;
+    transition: scale 2.8s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+}
+/* Gradient foarte fin, doar în colțul cu titlul */
+.hero-launch-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(70% 55% at 12% 18%, rgb(11 20 38 / 0.55), rgb(11 20 38 / 0) 72%);
+}
+.hero-launch-copy {
+  padding-top: calc(var(--hdr) + 2.5rem);
+}
+@media (width >= 64rem) {
+  .hero-launch-copy {
+    padding-top: calc(5rem + 7vh);
   }
 }
 

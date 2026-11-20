@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 import { ImageResponse } from "next/og";
 
-export const alt = "Danca Way — autocarul într-o piață, la răsărit; curse Neamț – București, Otopeni, Constanța";
+export const alt = "Danca Way — autocarul Setra S 517 HD în studio; curse Neamț – București, Otopeni, Constanța";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
