@@ -162,9 +162,11 @@ export function Timetable({ full = false }: { full?: boolean } = {}) {
             <div id={`${uid}-panel`} role="tabpanel" aria-labelledby={`${uid}-tab-${tab}`} className="mt-8">
               {filter && (
                 <div className="t-14 mb-4 flex flex-wrap items-center gap-4">
-                  <span className="text-mist">
-                    {rows.length} {rows.length === 1 ? "cursă" : "curse"} {cityName(filter.from)} → {cityName(filter.to)}
-                  </span>
+                  {rows.length > 0 && (
+                    <span className="text-mist">
+                      {rows.length} {rows.length === 1 ? "cursă" : "curse"} {cityName(filter.from)} → {cityName(filter.to)}
+                    </span>
+                  )}
                   <button type="button" onClick={() => setFilter(null)} className="press link-u font-semibold text-white">
                     Arată toate cursele
                   </button>
