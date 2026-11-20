@@ -901,3 +901,60 @@ input.bseg-input {
     transform 8s cubic-bezier(0.1, 0.8, 0.2, 1),
     opacity 0.2s;
 }
+
+/* ───────────────────────── Vedere 360° ───────────────────────── */
+.v360 {
+  cursor: grab;
+  outline-offset: -2px;
+}
+.v360:active {
+  cursor: grabbing;
+}
+.v360-hint {
+  transition: opacity 0.6s var(--ease-out-expo);
+}
+.v360-hint[data-hidden] {
+  opacity: 0;
+}
+.v360-spot {
+  translate: -50% -50%;
+  transition: opacity 0.3s var(--ease-out-expo);
+}
+.v360-dot {
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: var(--radius-full);
+  background: var(--color-white);
+  color: var(--color-night);
+  font-weight: 600;
+  font-size: 1.125rem;
+  line-height: 1;
+  box-shadow: 0 0 0 6px rgb(255 255 255 / 0.18);
+  transition:
+    box-shadow 0.6s var(--ease-out-expo),
+    transform 0.6s var(--ease-out-expo);
+}
+.v360-dot:hover {
+  box-shadow: 0 0 0 10px rgb(255 255 255 / 0.22);
+}
+.v360-dot:active {
+  transform: scale(0.94);
+}
+.v360-dot[aria-expanded="true"] span {
+  display: inline-block;
+  rotate: 45deg;
+}
+.v360-note {
+  position: absolute;
+  left: 50%;
+  top: calc(100% + 0.75rem);
+  translate: -50% 0;
+  width: max-content;
+  max-width: 16rem;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-field);
+  background: var(--color-white);
+  color: var(--color-ink);
+}

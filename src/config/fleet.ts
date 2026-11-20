@@ -37,6 +37,25 @@ export type Vehicle = {
   euro: string | null;
   /** Fotografii reale ale vehiculului (fișiere din /public). Prima e cea principală. */
   photos: FleetPhoto[];
+  /** Modelul 3D (iconița „clay”) și imaginea PNG de rezervă, din /public */
+  model3d?: { glb: string; poster: string };
+  /**
+   * Vederea 360°: cadrele stau în /public/360/<id>/{800,1600}/000.webp … 071.webp, plus manifest.json.
+   * Secțiunea apare doar dacă manifest.json există. `hotspots`: punctele de pe autocar, la cadrul în care se văd
+   * (0–71, 5° pe cadru) și la poziția lor în imagine (x, y între 0 și 1). Valoarea arătată vine din câmpul `spec`.
+   */
+  view360?: { hotspots: Hotspot[] };
+};
+
+export type Hotspot = {
+  id: string;
+  title: string;
+  /** Cadrul (0–71) în care punctul e cel mai bine vizibil */
+  frame: number;
+  x: number;
+  y: number;
+  /** Ce valoare din fișa tehnică arată eticheta */
+  spec: "seats" | "luggage" | "comfort";
 };
 
 export const fleet: Vehicle[] = [
@@ -61,6 +80,15 @@ export const fleet: Vehicle[] = [
       { src: "/images/setra-fata-vertical.jpg", alt: "Autocarul Setra al Danca Way, din față, într-o parcare, ziua" },
       { src: "/images/setra-autogara-vertical.jpg", alt: "Autocarul Setra al Danca Way, într-o parcare largă, sub cerul senin" },
     ],
+    model3d: { glb: "/3d/setra-s517hd_clay.glb", poster: "/3d/setra-s517hd_clay.png" },
+    // Pozițiile se potrivesc pe cadrele finale (din clipul filmat în jurul autocarului); verifică-le când le pui.
+    view360: {
+      hotspots: [
+        { id: "usa", title: "Ușa de urcare", frame: 12, x: 0.36, y: 0.55, spec: "seats" },
+        { id: "cala", title: "Cala de bagaje", frame: 18, x: 0.55, y: 0.7, spec: "luggage" },
+        { id: "geamuri", title: "Geamurile panoramice", frame: 54, x: 0.5, y: 0.4, spec: "comfort" },
+      ],
+    },
   },
 ];
 
