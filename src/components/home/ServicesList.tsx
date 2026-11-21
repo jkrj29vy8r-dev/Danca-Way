@@ -35,7 +35,7 @@ export function ServicesList() {
   const withImages = mainServices.every((s) => hasPhoto(s.image.src));
 
   return (
-    <section className="section-y bg-white" aria-labelledby="servicii-title" data-bg="white">
+    <section className="section-y bg-light" aria-labelledby="servicii-title" data-bg="light">
       <div className="container-x">
         <h2 id="servicii-title" className="t-48 max-w-[22ch]" data-reveal="lines">
           Microbuz 8+1 sau autocar, cu șofer.{" "}

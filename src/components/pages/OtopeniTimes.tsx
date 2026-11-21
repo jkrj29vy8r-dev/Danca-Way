@@ -16,18 +16,18 @@ export function OtopeniTimes() {
     const ordered = dir === "to" ? stops : stops.sort((a, b) => a.time.localeCompare(b.time));
     return (
       <li className="grid grid-cols-[5rem_1fr] items-baseline gap-x-4 border-t border-line-dark py-6 sm:grid-cols-[7rem_1fr] sm:gap-x-6">
-        <span className="t-32 font-mono tabular-nums">
+        <span className="t-32 tabular-nums">
           <CountUp value={at(r)!.time} />
         </span>
         <div>
           <p className="t-21 font-semibold">{dir === "to" ? "Sosire la Terminalul Plecări" : "Plecare de la Terminalul Plecări"}</p>
           <p className="t-14 mt-2 text-mist">
-            <span className="font-mono">{r.code}</span> · {r.vehicle}
+            <span className="tabular-nums">{r.code}</span> · {r.vehicle}
             {ordered.map((s) => (
               <span key={s.city}>
                 {" · "}
-                {cityName(s.city)} <span className="font-mono text-white">{s.time}</span>
-                {fare(s.city, "otopeni") ? <span className="font-mono"> ({fare(s.city, "otopeni")} lei)</span> : null}
+                {cityName(s.city)} <span className="tabular-nums text-white">{s.time}</span>
+                {fare(s.city, "otopeni") ? <span className="tabular-nums"> ({fare(s.city, "otopeni")} lei)</span> : null}
               </span>
             ))}
           </p>
@@ -64,7 +64,7 @@ export function OtopeniTimes() {
           {TIMETABLE_DISCLAIMER}. Prețurile din paranteză sunt pentru biletul întreg între oraș și Otopeni.
         </p>
         <a href={site.ticketsUrl} target="_blank" rel="noopener" className="btn btn-lg btn-light mt-8">
-          Cumpără bilet până la Otopeni <ArrowUpRight />
+          Rezervă locul până la Otopeni <ArrowUpRight />
         </a>
       </div>
     </section>

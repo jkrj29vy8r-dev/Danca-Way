@@ -39,7 +39,7 @@ export function NextDeparture({ from, to }: { from: CityId; to: CityId }) {
       </p>
       {trip ? (
         <div className="mt-4 flex items-baseline gap-6">
-          <p className="t-48 font-mono tabular-nums">
+          <p className="t-48 tabular-nums">
             <span className="sr-only">{trip.dep.time}</span>
             <FlipString value={trip.dep.time} />
           </p>
@@ -59,11 +59,11 @@ export function NextDeparture({ from, to }: { from: CityId; to: CityId }) {
                 "zilnic"
               )}
               {" · "}
-              <span className="font-mono">{trip.route.code}</span>
+              <span className="tabular-nums">{trip.route.code}</span>
               {trip.price ? (
                 <>
                   {" · "}
-                  <span className="font-mono">{trip.price} lei</span>
+                  <span className="tabular-nums">{trip.price} lei</span>
                 </>
               ) : null}
             </p>

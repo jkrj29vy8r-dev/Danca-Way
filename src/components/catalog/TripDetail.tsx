@@ -30,7 +30,7 @@ export function TripDetail({ item, related }: Props) {
         image={item.image ? { src: item.image, alt: `${item.title}: ${item.places[0]}` } : undefined}
       />
 
-      <section className="section-y bg-white" aria-labelledby="program-title" data-bg="white">
+      <section className="section-y bg-light" aria-labelledby="program-title" data-bg="light">
         <div className="container-x grid-12 gap-y-16">
           {/* Locurile vizitate, ca o cronologie verticală */}
           <div className="col-span-12 lg:col-span-7">
@@ -85,7 +85,7 @@ export function TripDetail({ item, related }: Props) {
       />
 
       {related.length > 0 && (
-        <section className="section-y bg-white" aria-labelledby="related-title" data-bg="white">
+        <section className="section-y bg-light" aria-labelledby="related-title" data-bg="light">
           <div className="container-x">
             <div className="flex flex-wrap items-end justify-between gap-6">
               <h2 id="related-title" className="t-32 font-semibold">

@@ -30,7 +30,8 @@
   --color-error: #b42318;
 
   --font-sans: var(--font-geist), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-mono: var(--font-geist-mono), ui-monospace, "SFMono-Regular", Menlo, monospace;
+  /* Fără font monospațiat: orele, prețurile și codurile folosesc Geist cu cifre tabulare (clasa tabular-nums) */
+  --font-mono: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
 
   /* Doar două grosimi pe tot site-ul */
   --font-weight-*: initial;
@@ -39,7 +40,9 @@
 
   /* Colțuri: butoane și câmpuri. Restul rămâne drept. */
   --radius-*: initial;
-  --radius-field: 12px;
+  /* Colțuri: 16 px pentru câmpuri, carduri și imaginile din carduri; pastilă pentru butoane */
+  --radius-field: 16px;
+  --radius-card: 16px;
   --radius-full: 9999px;
 
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
@@ -316,12 +319,15 @@
     transform-origin: left center;
   }
 
-  /* Câmpuri: 56 px, colțuri de 12 px, contur de 1 px. Focus = contur bleumarin. */
+  /* Câmpuri: 56 px, colțuri de 16 px, contur de 1 px. Focus = contur bleumarin; eroare = contur roșu, lin. */
   .field {
     @apply block min-h-14 w-full rounded-field border border-line-strong bg-white px-4 py-4 text-ink placeholder:text-muted;
     font-size: 1.0625rem;
     line-height: 1.5;
-    transition: border-color 0.6s var(--ease-out-expo);
+    transition:
+      border-color 0.3s var(--ease-reveal),
+      outline-color 0.3s var(--ease-reveal),
+      background-color 0.3s var(--ease-reveal);
   }
   .field:hover {
     @apply border-night;
@@ -334,6 +340,10 @@
   .field[aria-invalid="true"] {
     @apply border-error;
     outline-color: var(--color-error);
+  }
+  /* Mesajul de eroare apare lin, sub câmp (validare la ieșirea din câmp) */
+  .field-error {
+    animation: field-error-in 0.32s var(--ease-reveal) both;
   }
   .field-label {
     @apply mb-2 block font-semibold text-ink;
@@ -959,12 +969,11 @@ html[data-ora="zi"] {
   background: radial-gradient(70% 55% at 12% 18%, rgb(11 20 38 / 0.55), rgb(11 20 38 / 0) 72%);
 }
 /* ───────────── Granulație de film: doar pe imaginile de la margine la margine ───────────── */
-/* Zgomot SVG static (fără animație, sub 0,5 KB): gri opac centrat pe 50% (media zgomotului fractal e ~0,62, de aici
-   -0,864), amestecat „overlay” la 14%: ~4 niveluri din 255, fără să schimbe luminozitatea medie. */
+/* Plăci de granulație reală (gri mediu, 256 px, se repetă fără cusătură), amestecate „overlay”: luminozitatea medie
+   rămâne aceeași. */
 :root {
   /* Singura umbră a site-ului: elementele care plutesc (confirmarea, bara compactă, meniul deschis) */
   --shadow-float: 0 24px 48px -16px rgb(11 20 38 / 0.38), 0 2px 8px -2px rgb(11 20 38 / 0.16);
-  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='.733 .733 .733 0 -.864 .733 .733 .733 0 -.864 .733 .733 .733 0 -.864 0 0 0 0 1'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
 }
 .grain::after,
 .hero-launch-grain {
@@ -972,10 +981,44 @@ html[data-ora="zi"] {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background-image: var(--grain);
-  background-size: 200px 200px;
+  background-image: url("/media/live/granulatie-0.webp");
+  background-size: 256px 256px;
   mix-blend-mode: overlay;
-  opacity: 0.14;
+  opacity: 0.16;
+}
+/* Granulație de film reală (plăcile din public/media/live), care „fierbe” ușor: 8 poziții pe secundă, doar
+   background-position. Doar pe desktop; pe telefon și cu „reduced motion” rămâne fixă. */
+@media (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .grain::after,
+  .hero-launch-grain {
+    animation: grain-boil 1s steps(1) infinite;
+  }
+}
+@keyframes grain-boil {
+  0% {
+    background-position: 0 0;
+  }
+  12.5% {
+    background-position: -91px 37px;
+  }
+  25% {
+    background-position: 53px -118px;
+  }
+  37.5% {
+    background-position: -142px -64px;
+  }
+  50% {
+    background-position: 117px 89px;
+  }
+  62.5% {
+    background-position: -23px 141px;
+  }
+  75% {
+    background-position: 76px -31px;
+  }
+  87.5% {
+    background-position: -109px 112px;
+  }
 }
 .grain::after {
   z-index: 1;
@@ -1853,4 +1896,47 @@ main .details-row li > div,
 main h2.t-48,
 main h2.t-72 {
   transform-origin: 50% 50%;
+}
+
+/* Două secțiuni deschise una după alta: o linie de 1 px între ele, nu două nuanțe de fundal */
+section[data-bg="light"] + section[data-bg="light"] {
+  border-top: 1px solid var(--color-line);
+}
+
+/* ───────────────────────── Antetul paginilor interioare: atmosfera momentului zilei ───────────────────────── */
+.page-atmo {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: url("/media/live/atmosfera-noapte-9x16-poster.jpg") right top / cover no-repeat;
+  mix-blend-mode: screen;
+  opacity: 0.55;
+}
+html[data-ora="zori"] .page-atmo {
+  background-image: url("/media/live/atmosfera-zori-9x16-poster.jpg");
+  opacity: 0.42;
+}
+html[data-ora="zi"] .page-atmo {
+  background-image: url("/media/live/atmosfera-zi-9x16-poster.jpg");
+  opacity: 0.26;
+}
+@media (width >= 48rem) {
+  .page-atmo {
+    background-image: url("/media/live/atmosfera-noapte-16x9-poster.jpg");
+    background-position: center top;
+  }
+  html[data-ora="zori"] .page-atmo {
+    background-image: url("/media/live/atmosfera-zori-16x9-poster.jpg");
+  }
+  html[data-ora="zi"] .page-atmo {
+    background-image: url("/media/live/atmosfera-zi-16x9-poster.jpg");
+  }
+}
+
+@keyframes field-error-in {
+  from {
+    opacity: 0;
+    translate: 0 -4px;
+  }
 }

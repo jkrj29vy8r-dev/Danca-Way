@@ -4,7 +4,7 @@ import { PageHero } from "@/components/pages/PageHero";
 import { AllStops, FareTable, Stations } from "@/components/pages/RouteDetails";
 import { Timetable } from "@/components/home/Timetable";
 import { RouteFinder } from "@/components/home/RouteFinder";
-import { Facts } from "@/components/home/Facts";
+import { Departures } from "@/components/home/Departures";
 import { JsonLd } from "@/components/JsonLd";
 import { site } from "@/config/site";
 import { routes } from "@/data/routes";
@@ -23,7 +23,6 @@ export default function CurseRegulatePage() {
       <PageHero
         eyebrow="Curse regulate"
         title="Neamț – București, Otopeni și Constanța."
-        image={{ src: "/images/setra-lateral-strada.jpg", alt: "Autocarul Setra al Danca Way, din lateral, parcat pe o stradă cu clădiri vechi", position: "50% 88%" }}
         intro={
           <p>
             {routes.length} curse pe zi: din Târgu Neamț la 05:00 și 09:00, cu oprire la Terminalul Plecări din Otopeni, înapoi
@@ -35,7 +34,7 @@ export default function CurseRegulatePage() {
           <RouteFinder />
         </Suspense>
       </PageHero>
-      <Facts />
+      <Departures />
       <Suspense>
         <Timetable full />
       </Suspense>

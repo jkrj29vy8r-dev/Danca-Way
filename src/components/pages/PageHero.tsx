@@ -19,15 +19,17 @@ type Props = {
   compact?: boolean;
 };
 
-/** Valorile cu ore sau prețuri se scriu cu Geist Mono */
+/** Valorile cu ore sau prețuri se scriu cu cifre tabulare */
 const isData = (v: string) => /\d{2}:\d{2}|\d+\s?lei/.test(v);
 
 /** Hero-ul paginilor interioare: fundal night plin, un titlu, introducerea, fotografie doar dacă există. */
 export function PageHero({ eyebrow, title, intro, trail = [], children, facts, image, compact }: Props) {
   const withPhoto = image && hasPhoto(image.src);
   return (
-    <section className="bg-night text-white" data-bg="night">
-      <div className={`container-x ${compact ? "pt-28 pb-12 lg:pt-36 lg:pb-16" : "pt-32 pb-16 lg:pt-48 lg:pb-24"}`}>
+    <section className="page-hero relative isolate overflow-hidden bg-night text-white" data-bg="night">
+      {/* Aceeași atmosferă ca pe prima pagină, după momentul zilei din Neamț (imagine statică, fără video) */}
+      <div aria-hidden className="page-atmo" />
+      <div className="container-x pt-32 pb-16 lg:pt-44 lg:pb-24">
         <nav aria-label="Navigare ierarhică" className="t-14 text-mist">
           <ol className="flex flex-wrap items-center gap-2">
             <li>
@@ -64,7 +66,7 @@ export function PageHero({ eyebrow, title, intro, trail = [], children, facts, i
             {facts.map((f) => (
               <div key={f.label} className="col-span-12 flex flex-col border-t border-line-dark pt-6 sm:col-span-6 lg:col-span-3">
                 <dt className="t-14 mt-2 text-mist">{f.label}</dt>
-                <dd className={`t-21 order-first font-semibold ${isData(f.value) ? "font-mono" : ""}`}>{f.value}</dd>
+                <dd className={`t-21 order-first font-semibold ${isData(f.value) ? "tabular-nums" : ""}`}>{f.value}</dd>
               </div>
             ))}
           </dl>

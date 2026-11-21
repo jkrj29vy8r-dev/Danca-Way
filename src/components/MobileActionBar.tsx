@@ -7,7 +7,7 @@ import { site, telHref, whatsappHref } from "@/config/site";
 import { useContactZone } from "@/lib/useContactZone";
 
 /**
- * Bară fixă, doar pe mobil: Sună · WhatsApp · Bilet. Monocromă (accentul galben rămâne pentru
+ * Bară fixă, doar pe mobil: Sună · WhatsApp · Rezervă. Monocromă (accentul galben rămâne pentru
  * acțiunea principală a fiecărui ecran), cu linie de 1 px deasupra și 16 px de margine laterală (plus zonele sigure).
  * Apare abia după ce ai trecut de prima secțiune (hero-ul); coboară din ecran deasupra formularului de ofertă și a
  * subsolului (au aceleași contacte) și cât timp scrii. Locul ei e rezervat sub subsol, ca să nu acopere nimic.
@@ -50,7 +50,7 @@ export function MobileActionBar() {
         </li>
         <li className="flex flex-1">
           <a href={site.ticketsUrl} target="_blank" rel="noopener" className={`${item} bg-white text-night`}>
-            Bilet <ArrowUpRight size={16} />
+            Rezervă <ArrowUpRight size={16} />
           </a>
         </li>
       </ul>

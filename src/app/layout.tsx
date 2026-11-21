@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Suspense } from "react";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
@@ -17,21 +17,15 @@ import { JsonLd } from "@/components/JsonLd";
 import { site } from "@/config/site";
 import { localBusinessJsonLd } from "@/lib/seo";
 
-// Geist pentru tot textul (400 și 600), Geist Mono pentru ore, prețuri și coduri de cursă (400 și 600).
-// Servite din același domeniu prin next/font, preîncărcate, cu font de rezervă cu aceleași metrici (fără CLS).
+// Un singur font, Geist (400 și 600), pentru tot textul; orele și prețurile folosesc cifrele lui tabulare
+// (aceeași lățime pentru fiecare cifră), nu un font monospațiat. Servit din același domeniu prin next/font,
+// preîncărcat, cu font de rezervă cu aceleași metrici (fără CLS).
 const geist = Geist({
   subsets: ["latin", "latin-ext"],
   variable: "--font-geist",
   display: "swap",
 });
 
-/** Orele de plecare, prețurile și codurile de cursă */
-const geistMono = Geist_Mono({
-  subsets: ["latin", "latin-ext"],
-  variable: "--font-geist-mono",
-  display: "swap",
-  weight: ["400", "600"],
-});
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
@@ -57,7 +51,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ro" className={`${geist.variable} ${geistMono.variable}`} suppressHydrationWarning>
+    <html lang="ro" className={geist.variable} suppressHydrationWarning>
       <head>
         {/* Marchează că JS rulează: animațiile care ascund inițial conținut se activează doar atunci.
             `intro`: prima vizită din sesiune pe pagina principală, fără „reduced motion” → hero-ul pornește cu clipul

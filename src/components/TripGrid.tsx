@@ -10,17 +10,18 @@ import type { CatalogItem } from "@/data/catalog";
  */
 export function TripGrid({
   items,
-  tone = "light",
   columns = 3,
   showKind = true,
 }: {
   items: CatalogItem[];
+  /** Păstrat pentru compatibilitate: celulele au același fundal pe toate paginile */
   tone?: "light" | "white";
   columns?: 2 | 3;
   /** Pe paginile cu un singur tip, eticheta arată perioada în loc de tip */
   showKind?: boolean;
 }) {
-  const cell = tone === "light" ? "bg-light hover:bg-white" : "bg-white hover:bg-light";
+  // Pe fundalul off-white, celula se luminează la alb sub cursor
+  const cell = "bg-light hover:bg-white";
   return (
     <ul className={`grid border-t border-line sm:grid-cols-2 ${columns === 3 ? "lg:grid-cols-3" : ""}`}>
       {items.map((item) => (
@@ -40,14 +41,15 @@ export function TripGrid({
             <p className="label text-muted">
               {showKind ? `${item.kind === "pelerinaj" ? "Pelerinaj" : "Excursie"} · ${item.duration}` : [item.duration, item.when].filter(Boolean).join(" · ")}
             </p>
-            <h3 className="t-32 mt-4 font-semibold">{item.title}</h3>
+            {/* Săgeata stă lângă titlu (nu singură într-un colț): rândul se citește ca un link */}
+            <h3 className="t-32 mt-4 flex items-start justify-between gap-6 font-semibold">
+              <span>{item.title}</span>
+              <ArrowRight size={20} className="arrow mt-[0.35em] shrink-0" />
+            </h3>
             <p className="t-14 mt-2 line-clamp-2 text-muted">
               <span className="sr-only">Locuri vizitate: </span>
               {item.places.join(" · ")}
             </p>
-            <span className="mt-auto flex justify-end pt-8">
-              <ArrowRight size={20} />
-            </span>
           </Link>
         </li>
       ))}

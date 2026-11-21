@@ -49,7 +49,7 @@ export function TrustBand() {
   ];
 
   return (
-    <section className="border-b border-line bg-white" data-bg="white" aria-label="Despre Danca Way, pe scurt">
+    <section className="border-b border-line bg-light" data-bg="light" aria-label="Despre Danca Way, pe scurt">
       <dl className="container-x grid-12 gap-y-8 py-12 lg:py-16">
         {items.map((it, i) => (
           <div key={it.label} className={`col-span-12 sm:col-span-6 lg:col-span-3 ${i ? "lg:border-l lg:border-line lg:pl-6" : ""}`}>

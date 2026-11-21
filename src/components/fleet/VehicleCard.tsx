@@ -1,19 +1,15 @@
-import { getImageProps } from "next/image";
 import Link from "next/link";
 import { ArtPhoto } from "../ArtPhoto";
 import { ArrowRight } from "../icons";
 import { Todo } from "./Todo";
-import { VehicleModel } from "./VehicleModel";
 import { SHOW_PLACEHOLDERS, type Vehicle } from "@/config/fleet";
-import { sizeOf } from "@/data/images";
 import { SPEC_LABEL, specValue, type SpecKey } from "@/lib/fleet-specs";
 
 /** Ce arată cardul: 3 date esențiale. Restul sunt pe fișa tehnică. */
 const CARD_SPECS: SpecKey[] = ["seats", "luggage", "comfort"];
 
 /**
- * Cardul unui vehicul pe /flota: modelul 3D (sau fotografia, dacă vehiculul nu are model), numele, 3 date esențiale.
- * Tot cardul deschide fișa vehiculului; pe model, doar o atingere scurtă (tragerea îl rotește).
+ * Cardul unui vehicul pe /flota: fotografia de studio, numele, 3 date esențiale. Tot cardul deschide fișa vehiculului.
  * `wide`: un singur vehicul în flotă, cardul ocupă toată lățimea.
  */
 export function VehicleCard({ v, wide }: { v: Vehicle; wide?: boolean }) {
@@ -22,19 +18,20 @@ export function VehicleCard({ v, wide }: { v: Vehicle; wide?: boolean }) {
   const frame = wide ? "aspect-[4/3] sm:aspect-[16/10] lg:aspect-[21/9]" : "aspect-[4/3]";
   const sizes = wide ? "100vw" : "(min-width: 1024px) 50vw, 100vw";
 
-  let media: React.ReactNode;
-  if (v.model3d) {
-    const poster = getImageProps({ src: v.model3d.poster, ...sizeOf(v.model3d.poster), alt: "", sizes, quality: 80 }).props;
-    media = (
-      <VehicleModel glb={v.model3d.glb} orbit={v.model3d.orbit} scale={v.model3d.scale} alt={`Modelul 3D al vehiculului ${v.name}. Trage pentru a-l roti.`} href={href} className={`bg-light ${frame}`}>
-        {/* eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text -- srcset din getImageProps; decorativă, numele e în link */}
-        <img {...poster} className="size-full object-contain px-[8%] py-[6%]" />
-      </VehicleModel>
-    );
-  } else {
-    const p = v.photos[0];
-    media = <ArtPhoto src={p.src} mobileSrc={p.mobileSrc} alt={p.alt} sizes={sizes} className={frame} />;
-  }
+  // Fotografia de studio a vehiculului (aceeași lumină ca pe prima pagină); modelul „din lut” arăta ca o jucărie
+  // lângă ea. Fără fotografie de studio: prima fotografie din fișă.
+  const p = v.cover ?? v.photos[0];
+  const media = (
+    <ArtPhoto
+      src={p.src}
+      mobileSrc={p.mobileSrc}
+      alt={p.alt}
+      sizes={sizes}
+      className={`overflow-hidden rounded-[var(--radius-card)] ${frame}`}
+      position="50% 72%"
+      grain
+    />
+  );
 
   return (
     <article className="group relative" data-vehicle-card>

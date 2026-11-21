@@ -251,7 +251,7 @@ export function RouteMap({
             data-on={activeLine === line ? "" : undefined}
             d={polyline(LINE_PTS[line])}
             fill="none"
-            stroke="var(--color-accent)"
+            stroke="#fff"
             strokeWidth="2.5"
             strokeLinecap="round"
             strokeLinejoin="round"

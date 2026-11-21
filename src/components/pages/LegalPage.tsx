@@ -7,7 +7,7 @@ export function LegalPage({ title, updated, children }: Props) {
   return (
     <>
       <PageHero eyebrow={title} title={title} intro={<p>Ultima actualizare: {updated}</p>} compact />
-      <section className="section-y bg-white" data-bg="white">
+      <section className="section-y bg-light" data-bg="light">
         <div className="container-x grid-12">
           <div className="legal col-span-12 lg:col-span-8 lg:col-start-3">{children}</div>
         </div>

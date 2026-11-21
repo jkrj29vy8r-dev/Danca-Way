@@ -14,6 +14,7 @@ type Props = {
   /** Text precompletat în „Detalii” (ex. numele excursiei) */
   defaultSubject?: string;
   headingLevel?: "h1" | "h2";
+  /** Păstrat pentru compatibilitate: toate secțiunile deschise au acum același fundal off-white */
   tone?: "white" | "light";
   /** Clase suplimentare pentru secțiune (ex. spațiu sub header pe pagina de contact) */
   className?: string;
@@ -27,7 +28,6 @@ export function QuoteSection({
   defaultService,
   defaultSubject,
   headingLevel: H = "h2",
-  tone = "white",
   className = "",
 }: Props) {
   const contacts = [
@@ -39,9 +39,9 @@ export function QuoteSection({
     <section
       id="oferta"
       data-contact-zone
-      className={`section-y scroll-mt-16 ${tone === "light" ? "bg-light" : "bg-white"} ${className}`}
+      className={`section-y scroll-mt-16 bg-light ${className}`}
       aria-labelledby="oferta-title"
-      data-bg={tone}
+      data-bg="light"
     >
       <div className="container-x grid-12 gap-y-16">
         <div className="col-span-12 lg:col-span-4">

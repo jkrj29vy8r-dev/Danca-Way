@@ -4,7 +4,7 @@ import { TripGrid } from "../TripGrid";
 import { featuredItems } from "@/data/catalog";
 
 export function TripsSection() {
-  const items = featuredItems().slice(0, 6);
+  const items = featuredItems().slice(0, 3);
   return (
     <section className="section-y bg-light" aria-labelledby="excursii-title" data-bg="light">
       <div className="container-x">

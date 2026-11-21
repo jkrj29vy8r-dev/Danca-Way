@@ -21,7 +21,7 @@ function Board({ text, accent = false }: { text: string; accent?: boolean }) {
         ) : (
           <span
             key={i}
-            className={`grid h-[1.6em] min-w-[1.1em] place-items-center rounded-[4px] bg-white/[0.06] px-[0.15em] font-mono tabular-nums ${accent ? "text-accent" : ""}`}
+            className={`grid h-[1.6em] min-w-[1.1em] place-items-center rounded-[4px] bg-white/[0.06] px-[0.15em] tabular-nums ${accent ? "text-white" : "text-mist"}`}
           >
             {ch}
           </span>

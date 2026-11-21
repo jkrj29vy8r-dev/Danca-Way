@@ -218,7 +218,7 @@ export function Timetable({ full = false }: { full?: boolean } = {}) {
                         onBlur={() => setHover(null)}
                         className="press grid w-full grid-cols-[5rem_1fr_auto] items-baseline gap-x-4 py-6 text-left sm:grid-cols-[7rem_1fr_6rem_1.5rem] sm:gap-x-6"
                       >
-                        <span className="t-32 font-mono tabular-nums">
+                        <span className="t-32 tabular-nums">
                           <CountUp value={t.dep.time} />
                         </span>
                         <span className="min-w-0">
@@ -227,14 +227,14 @@ export function Timetable({ full = false }: { full?: boolean } = {}) {
                           </span>
                           <span className="t-14 mt-2 block text-mist">
                             {key === nextKey && <span className="label mr-2 text-white">Următoarea</span>}
-                            <span className="font-mono">{code}</span> · sosire <span className="font-mono">{t.arr.time}</span>
+                            <span className="tabular-nums">{code}</span> · sosire <span className="tabular-nums">{t.arr.time}</span>
                             <span className="hidden sm:inline">
                               {" "}
                               · {t.route.vehicle} · {formatDuration(t.arrMin - t.depMin)}
                             </span>
                           </span>
                         </span>
-                        <span className="t-21 text-right font-mono tabular-nums">{t.price ? <CountUp value={`${t.price} lei`} /> : "—"}</span>
+                        <span className="t-21 text-right tabular-nums">{t.price ? <CountUp value={`${t.price} lei`} /> : "—"}</span>
                         <ChevronDown
                           className={`hidden self-center text-mist transition-transform duration-[600ms] ease-[var(--ease-out-expo)] sm:block ${isOpen ? "rotate-180" : ""}`}
                         />
@@ -248,7 +248,7 @@ export function Timetable({ full = false }: { full?: boolean } = {}) {
                               return (
                                 <li key={s.city + s.time} className={`t-14 relative grid grid-cols-[8px_3.5rem_1fr] items-baseline gap-x-4 py-2 ${inTrip ? "text-white" : "text-mist"}`}>
                                   <span aria-hidden className={`size-2 self-center rounded-full border ${inTrip ? "border-white bg-white" : "border-line-dark-strong bg-night"}`} />
-                                  <span className="font-mono tabular-nums">{s.time}</span>
+                                  <span className="tabular-nums">{s.time}</span>
                                   <span>
                                     <span className={inTrip ? "font-semibold" : ""}>{cities[s.city].name}</span> · {s.station}
                                   </span>
@@ -267,7 +267,7 @@ export function Timetable({ full = false }: { full?: boolean } = {}) {
               </p>
               <div className="mt-8 flex flex-col gap-2 sm:flex-row">
                 <a href={site.ticketsUrl} target="_blank" rel="noopener" className="btn btn-lg btn-light">
-                  Cumpără bilet online <ArrowUpRight />
+                  Rezervă locul online <ArrowUpRight />
                 </a>
                 {full && (
                   <a href="#opriri" className="btn btn-lg btn-line-light">

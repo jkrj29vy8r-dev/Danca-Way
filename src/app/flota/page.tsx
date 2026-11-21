@@ -10,7 +10,7 @@ import { pageMeta } from "@/lib/seo";
 
 export const metadata: Metadata = pageMeta({
   title: "Flota",
-  description: `Vehiculele Danca Way, cu modelul 3D și fișa tehnică: ${fleet.map((v) => v.name).join(", ")}.`,
+  description: `Vehiculele Danca Way și fișa lor tehnică: ${fleet.map((v) => v.name).join(", ")}.`,
   path: "/flota",
 });
 
@@ -19,9 +19,9 @@ export default function FlotaPage() {
   const wide = fleet.length === 1;
   return (
     <>
-      <PageHero eyebrow="Flota" title="Flota." intro={<p>Trage de model ca să-l rotești. Apasă pe vehicul pentru fișa tehnică.</p>} compact />
+      <PageHero eyebrow="Flota" title="Flota." intro={<p>Vehiculele cu care circulăm. Apasă pe vehicul pentru fișa tehnică.</p>} compact />
 
-      <section className="bg-white pt-8 pb-24 lg:pt-12 lg:pb-40" data-bg="white" aria-label="Vehiculele">
+      <section className="bg-light pt-8 pb-24 lg:pt-12 lg:pb-40" data-bg="light" aria-label="Vehiculele">
         <div className={`container-x grid gap-x-8 gap-y-24 ${wide ? "" : "lg:grid-cols-2"}`}>
           {fleet.map((v) => (
             <VehicleCard key={v.id} v={v} wide={wide} />

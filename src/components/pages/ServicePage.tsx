@@ -28,7 +28,7 @@ export function ServicePage({ page, extra }: Props) {
       </PageHero>
 
       {/* Situații concrete: titlu mare la stânga, explicația la dreapta, linii de 1 px */}
-      <section className="section-y bg-white" aria-labelledby="situatii-title" data-bg="white">
+      <section className="section-y bg-light" aria-labelledby="situatii-title" data-bg="light">
         <div className="container-x">
           <h2 id="situatii-title" className="t-48" data-reveal="lines">
             Când ne chemi.
@@ -64,7 +64,7 @@ export function ServicePage({ page, extra }: Props) {
       </section>
 
       {/* Întrebări */}
-      <section className="section-y bg-white" aria-labelledby="faq-title" data-bg="white">
+      <section className="section-y bg-light" aria-labelledby="faq-title" data-bg="light">
         <div className="container-x grid-12 gap-y-12">
           <h2 id="faq-title" className="t-48 col-span-12 lg:col-span-4" data-reveal="lines">
             Întrebări frecvente.
@@ -94,7 +94,7 @@ export function ServicePage({ page, extra }: Props) {
       />
 
       {/* Alte servicii */}
-      <section className="section-y bg-white" aria-labelledby="alte-title" data-bg="white">
+      <section className="section-y bg-light" aria-labelledby="alte-title" data-bg="light">
         <div className="container-x">
           <h2 id="alte-title" className="t-32 font-semibold">
             Alte servicii

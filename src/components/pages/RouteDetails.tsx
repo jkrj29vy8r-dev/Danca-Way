@@ -16,7 +16,7 @@ import {
 /** Toate opririle fiecărei curse, grupate pe direcții. Funcționează fără JavaScript (<details>). */
 export function AllStops() {
   return (
-    <section id="opriri" className="section-y scroll-mt-16 bg-white" aria-labelledby="opriri-title" data-bg="white">
+    <section id="opriri" className="section-y scroll-mt-16 bg-light" aria-labelledby="opriri-title" data-bg="light">
       <div className="container-x">
         <h2 id="opriri-title" className="t-48 max-w-[22ch]" data-reveal="lines">
           Toate opririle. <span className="text-muted">Fiecare cursă, stație cu stație.</span>
@@ -36,14 +36,14 @@ export function AllStops() {
                     return (
                       <details key={r.code} className="faq group border-t border-line">
                         <summary className="press grid cursor-pointer list-none grid-cols-[5rem_1fr_auto] items-baseline gap-x-4 py-6 transition-opacity hover:opacity-64 sm:grid-cols-[7rem_1fr_auto] sm:gap-x-6">
-                          <span className="t-32 font-mono tabular-nums">{a.time}</span>
+                          <span className="t-32 tabular-nums">{a.time}</span>
                           <span>
                             <span className="t-21 block font-semibold">
                               {stopName(a)} → {stopName(b)}
                             </span>
                             <span className="t-14 mt-2 block text-muted">
-                              <span className="font-mono">{r.code}</span> · {r.vehicle} · {r.stops.length} opriri, de la {cityName(first.city)}{" "}
-                              <span className="font-mono">{first.time}</span> la {cityName(last.city)} <span className="font-mono">{last.time}</span> ·{" "}
+                              <span className="tabular-nums">{r.code}</span> · {r.vehicle} · {r.stops.length} opriri, de la {cityName(first.city)}{" "}
+                              <span className="tabular-nums">{first.time}</span> la {cityName(last.city)} <span className="tabular-nums">{last.time}</span> ·{" "}
                               {formatDuration(minutesOf(r, last) - minutesOf(r, first))}
                             </span>
                           </span>
@@ -56,7 +56,7 @@ export function AllStops() {
                           {r.stops.map((s) => (
                             <li key={s.city + s.time} className="relative grid grid-cols-[8px_3.5rem_1fr] items-baseline gap-x-4 py-2">
                               <span aria-hidden className="size-2 self-center rounded-full border border-night bg-white" />
-                              <span className="font-mono tabular-nums">{s.time}</span>
+                              <span className="tabular-nums">{s.time}</span>
                               <span>
                                 <span className="font-semibold">{cities[s.city].name}</span>
                                 <span className="text-muted"> · {s.station}</span>
@@ -113,7 +113,7 @@ export function FareTable() {
                     {cityName(o)}
                   </th>
                   {DESTS.map((d) => (
-                    <td key={d} className="px-4 py-4 text-right font-mono tabular-nums">
+                    <td key={d} className="px-4 py-4 text-right tabular-nums">
                       {fare(o, d) ?? "—"}
                     </td>
                   ))}
@@ -126,8 +126,8 @@ export function FareTable() {
           <div className="col-span-12 border-t border-line-strong pt-6 md:col-span-6">
             <h3 className="t-21 font-semibold">Reduceri</h3>
             <p className="measure mt-2 text-muted">
-              Pe cursa Roman – Constanța, biletul întreg costă <span className="font-mono">160 lei</span>, iar Bileteria afișează{" "}
-              <span className="font-mono">80 lei</span> pentru copii și pensionari și <span className="font-mono">144 lei</span> pentru
+              Pe cursa Roman – Constanța, biletul întreg costă <span className="tabular-nums">160 lei</span>, iar Bileteria afișează{" "}
+              <span className="tabular-nums">80 lei</span> pentru copii și pensionari și <span className="tabular-nums">144 lei</span> pentru
               elevi și studenți. Tabelul operatorului are aceleași proporții pe toate traseele; reducerea se confirmă la cumpărare.
             </p>
           </div>
@@ -137,7 +137,7 @@ export function FareTable() {
               Biletele se cumpără online, pe danca-transport.autogari.ro, sau la telefon, la {site.contact.phoneDisplay}.
             </p>
             <a href={site.ticketsUrl} target="_blank" rel="noopener" className="btn btn-lg btn-dark mt-8">
-              Cumpără bilet online <ArrowUpRight />
+              Rezervă locul online <ArrowUpRight />
             </a>
           </div>
         </div>
@@ -156,7 +156,7 @@ export function Stations() {
     codes: routes.filter((r) => r.stops.some((s) => s.city === c)).map((r) => r.code),
   }));
   return (
-    <section className="section-y bg-white" aria-labelledby="statii-title" data-bg="white">
+    <section className="section-y bg-light" aria-labelledby="statii-title" data-bg="light">
       <div className="container-x">
         <h2 id="statii-title" className="t-48 max-w-[22ch]" data-reveal="lines">
           Stații. <span className="text-muted">De unde urci, în fiecare oraș.</span>
@@ -166,7 +166,7 @@ export function Stations() {
             <li key={c.city} className="grid-12 gap-y-2 border-t border-line py-6">
               <p className="t-21 col-span-12 font-semibold md:col-span-3">{cityName(c.city)}</p>
               <p className="col-span-12 text-muted md:col-span-6">{c.stations.join(" · ")}</p>
-              <p className="t-14 col-span-12 font-mono text-muted md:col-span-3 md:text-right">
+              <p className="t-14 col-span-12 tabular-nums text-muted md:col-span-3 md:text-right">
                 <span className="sr-only">Curse: </span>
                 {c.codes.join(" · ")}
               </p>

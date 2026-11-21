@@ -28,7 +28,7 @@ export function Details() {
           <ul className="details-row mt-12 lg:mt-16" aria-label="Detalii ale autocarului" tabIndex={0}>
             {DETAILS.map((d, i) => (
               <li key={d.file} className="enter" style={{ "--i": i } as React.CSSProperties}>
-                <div className="aspect-[4/5] overflow-hidden bg-black/30">
+                <div className="aspect-[4/5] overflow-hidden rounded-[var(--radius-card)] bg-black/30">
                   <picture>
                     <source type="image/avif" srcSet={srcSet(d.file, "avif")} sizes={SIZES} />
                     <img

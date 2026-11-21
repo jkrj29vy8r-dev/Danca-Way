@@ -188,7 +188,7 @@ export function QuoteForm({ defaultService, defaultSubject, labelledBy }: Props)
   });
   const errorText = (f: QuoteField) =>
     err(f) ? (
-      <p id={`${uid}-${f}-err`} className="t-14 mt-2 font-semibold text-error">
+      <p id={`${uid}-${f}-err`} className="field-error t-14 mt-2 font-semibold text-error">
         {err(f)}
       </p>
     ) : null;

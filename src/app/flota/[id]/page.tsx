@@ -97,7 +97,7 @@ export default async function VehiclePage(props: Params) {
       )}
 
       {/* Date tehnice */}
-      <section className="section-y bg-white" data-bg="white" aria-labelledby="date-title">
+      <section className="section-y bg-light" data-bg="light" aria-labelledby="date-title">
         <div className="container-x">
           <h2 id="date-title" className="t-48" data-reveal="lines">
             Date tehnice.
@@ -108,7 +108,7 @@ export default async function VehiclePage(props: Params) {
               {figures.map((f) => (
                 <div key={f.label} className="flex flex-col border-t border-line pt-6">
                   <dt className="t-14 mt-3 text-muted">{f.label}</dt>
-                  <dd className="t-72 order-first font-mono font-normal tabular-nums">{f.value ?? "—"}</dd>
+                  <dd className="t-72 order-first tabular-nums font-normal tabular-nums">{f.value ?? "—"}</dd>
                   {!f.value && (
                     <dd className="mt-4">
                       <Todo field={f.field!} />
@@ -127,7 +127,7 @@ export default async function VehiclePage(props: Params) {
                   {g.rows.map((r) => (
                     <div key={r.label} className="flex items-baseline justify-between gap-8 border-b border-line py-5">
                       <dt className="text-muted">{r.label}</dt>
-                      <dd className={`text-right font-semibold ${r.mono ? "font-mono" : ""}`}>{r.value ?? <Todo field={r.field ?? r.label} />}</dd>
+                      <dd className={`text-right font-semibold ${r.mono ? "tabular-nums" : ""}`}>{r.value ?? <Todo field={r.field ?? r.label} />}</dd>
                     </div>
                   ))}
                 </dl>
@@ -153,8 +153,8 @@ export default async function VehiclePage(props: Params) {
             <ul className="mt-16 border-t border-line lg:mt-24">
               {trips.map((t) => (
                 <li key={t.code} className="grid-12 items-baseline gap-y-2 border-b border-line py-6">
-                  <span className="col-span-3 font-mono text-muted lg:col-span-1">{t.code}</span>
-                  <span className="t-32 col-span-9 font-mono tabular-nums lg:col-span-3">
+                  <span className="col-span-3 tabular-nums text-muted lg:col-span-1">{t.code}</span>
+                  <span className="t-32 col-span-9 tabular-nums lg:col-span-3">
                     {t.dep} → {t.arr}
                   </span>
                   <span className="col-span-12 font-semibold lg:col-span-5">
@@ -163,7 +163,7 @@ export default async function VehiclePage(props: Params) {
                   <span className="t-14 col-span-12 text-muted lg:col-span-3 lg:text-right">
                     {t.otopeni ? (
                       <>
-                        Terminal Plecări Otopeni, <span className="font-mono">{t.otopeni}</span>
+                        Terminal Plecări Otopeni, <span className="tabular-nums">{t.otopeni}</span>
                       </>
                     ) : null}
                   </span>
@@ -174,7 +174,7 @@ export default async function VehiclePage(props: Params) {
         </section>
       )}
 
-      <section className="section-y bg-white" data-bg="white" aria-labelledby="inchiriere-title">
+      <section className="section-y bg-light" data-bg="light" aria-labelledby="inchiriere-title">
         <div className="container-x grid-12 gap-y-8">
           <h2 id="inchiriere-title" className="t-48 col-span-12 lg:col-span-7" data-reveal="lines">
             {v.kind}ul, pentru grupul tău. <span className="text-muted">Excursii, evenimente, firme.</span>

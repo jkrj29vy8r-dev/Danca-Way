@@ -20,7 +20,7 @@ export function CatalogPage({ kind, title, intro, groups }: Props) {
             {groups.map((g) => (
               <li key={g.id}>
                 <a href={`#${g.id}`} className="btn btn-line-light min-h-10 px-4 font-normal">
-                  {g.label} <span className="font-mono text-mist">{g.items.length}</span>
+                  {g.label} <span className="tabular-nums text-mist">{g.items.length}</span>
                 </a>
               </li>
             ))}
@@ -34,9 +34,9 @@ export function CatalogPage({ kind, title, intro, groups }: Props) {
           <section
             key={g.id}
             id={g.id}
-            className={`section-y scroll-mt-16 ${tone === "light" ? "bg-light" : "bg-white"}`}
+            className={`section-y scroll-mt-16 bg-light`}
             aria-labelledby={`${g.id}-title`}
-            data-bg={tone}
+            data-bg="light"
           >
             <div className="container-x">
               <h2 id={`${g.id}-title`} className="t-48" data-reveal="lines">

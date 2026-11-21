@@ -145,11 +145,11 @@ export function BookingBar() {
         {next.trip && (
           <span className="hidden text-mist sm:inline">
             {" · "}
-            <span className="font-mono tabular-nums text-white">{next.trip.dep.time}</span>
+            <span className="tabular-nums text-white">{next.trip.dep.time}</span>
             {next.wait !== null && (
               <>
                 {" "}
-                în <span className="font-mono tabular-nums">{formatClock(next.wait)}</span>
+                în <span className="tabular-nums">{formatClock(next.wait)}</span>
               </>
             )}
           </span>
@@ -181,9 +181,9 @@ export function BookingBar() {
             <span className="label shrink-0 text-mist transition-colors duration-[600ms] ease-[var(--ease-out-expo)] group-hover:text-white">Modifică</span>
           </button>
           {tab === "regulate" ? (
-            // Pe telefon, „Bilet” e deja în bara de jos
+            // Pe telefon, „Rezervă” e deja în bara de jos
             <a href={site.ticketsUrl} target="_blank" rel="noopener" className="btn btn-accent hidden min-h-10 shrink-0 px-4 md:inline-flex">
-              Cumpără bilet <ArrowUpRight size={16} />
+              Rezervă locul <ArrowUpRight size={16} />
             </a>
           ) : (
             <button type="button" onClick={goQuote} className="btn btn-accent min-h-10 shrink-0 px-4">
@@ -305,17 +305,17 @@ function Panel({ where, tab, setTab, from, to, setFrom, setTo, next, req, setReq
             <div className="bseg bseg-next" aria-live="polite" aria-atomic="true">
               <span className="label flex justify-between gap-4 text-muted">
                 <span>{next.day ? `Următoarea plecare, ${next.day}` : "Prima plecare a zilei"}</span>
-                {next.trip && <span className="font-mono">{next.trip.route.code}</span>}
+                {next.trip && <span className="tabular-nums">{next.trip.route.code}</span>}
               </span>
               {next.trip ? (
                 <span className="flex flex-wrap items-baseline gap-x-3">
-                  <span className="t-21 font-mono font-semibold tabular-nums">{next.trip.dep.time}</span>
+                  <span className="t-21 tabular-nums font-semibold tabular-nums">{next.trip.dep.time}</span>
                   <span className="t-14 text-muted">
                     {next.wait !== null ? (
                       <>
                         <span className="sr-only">pleacă peste {Math.round(next.wait / 60)} de minute</span>
                         <span aria-hidden>
-                          în <span className="font-mono tabular-nums text-ink">{formatClock(next.wait)}</span>
+                          în <span className="tabular-nums text-ink">{formatClock(next.wait)}</span>
                         </span>
                       </>
                     ) : (
@@ -326,7 +326,7 @@ function Panel({ where, tab, setTab, from, to, setFrom, setTo, next, req, setReq
                     {next.trip.price ? (
                       <>
                         {" · "}
-                        <span className="font-mono">{next.trip.price} lei</span>
+                        <span className="tabular-nums">{next.trip.price} lei</span>
                       </>
                     ) : null}
                   </span>
@@ -336,7 +336,7 @@ function Panel({ where, tab, setTab, from, to, setFrom, setTo, next, req, setReq
               )}
             </div>
             <a href={site.ticketsUrl} target="_blank" rel="noopener" className="bcta btn btn-lg btn-accent">
-              Cumpără bilet <ArrowUpRight />
+              Rezervă locul <ArrowUpRight />
             </a>
           </div>
         ) : (
@@ -398,7 +398,7 @@ function Stepper({ id, value, limits: [min, max], onChange }: { id: string; valu
           max={max}
           value={value}
           onChange={(e) => onChange(clamp(Number(e.target.value)))}
-          className="bseg-input w-12 text-center font-mono tabular-nums [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none"
+          className="bseg-input w-12 text-center tabular-nums [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none"
         />
         <button type="button" className="bstep press" aria-label="Un pasager în plus" disabled={value >= max} onClick={() => onChange(clamp(value + 1))}>
           +
