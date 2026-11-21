@@ -42,6 +42,9 @@ export function HeroLive() {
 
     let alive = true;
     let visible = true;
+    // „În repaus”: hero-ul n-a fost derulat mai mult de 30% din ecran. Peste atât, farurile preiau lumina (HeroMotion)
+    // și stratul viu se stinge (--lit); videourile lui se opresc, ca derularea să rămână fluidă pe procesoare slabe.
+    let resting = window.scrollY < window.innerHeight * 0.3;
     let started = false;
     const play = () => videos.forEach((v) => v.src && v.play().catch(() => {}));
     const pause = () => videos.forEach((v) => v.pause());
@@ -53,7 +56,7 @@ export function HeroLive() {
       if (!reduced) {
         atmoVideo.src = `${atmo(t, f)}.${ext}`;
         if (desktop && dustVideo) dustVideo.src = `${BASE}/praf-16x9.${ext}`;
-        if (visible) play();
+        if (visible && resting) play();
       }
       el.setAttribute("data-on", "");
     };
@@ -80,18 +83,35 @@ export function HeroLive() {
       .then(start);
 
     // Doar cât hero-ul e în ecran: cele două videouri se opresc când pleci (cel mult două rulează odată pe pagină)
+    const sync = () => {
+      if (!started || reduced) return;
+      if (visible && resting) play();
+      else pause();
+    };
     const io = new IntersectionObserver(([e]) => {
       visible = e.isIntersecting;
-      if (!started || reduced) return;
-      if (visible) play();
-      else pause();
+      sync();
     });
     io.observe(media);
+    let restRaf = 0;
+    const onRest = () => {
+      if (restRaf) return;
+      restRaf = requestAnimationFrame(() => {
+        restRaf = 0;
+        const r = window.scrollY < window.innerHeight * 0.3;
+        if (r !== resting) {
+          resting = r;
+          sync();
+        }
+      });
+    };
+    window.addEventListener("scroll", onRest, { passive: true });
 
     if (reduced)
       return () => {
         alive = false;
         io.disconnect();
+        window.removeEventListener("scroll", onRest);
       };
 
     // Spotul: țintă (cursor sau derulare) → poziție, cu inerție. Doar `translate` (compoziție, fără repictare).
@@ -142,12 +162,15 @@ export function HeroLive() {
       cancelAnimationFrame(raf);
       window.removeEventListener("pointermove", onMove);
       window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("scroll", onRest);
+      cancelAnimationFrame(restRaf);
       pause();
     };
   }, []);
 
   return (
     <div ref={box} className="hero-live" aria-hidden>
+      <div className="hero-live-fade">
       {/* În spatele autocarului: atmosfera și spotul, amestecate „screen” prin masca inversă */}
       <div className="hero-launch-img hero-live-behind">
         <div className="hero-atmo">
@@ -161,6 +184,7 @@ export function HeroLive() {
       </div>
       <div className="hero-dust">
         <video muted playsInline loop preload="none" disablePictureInPicture />
+      </div>
       </div>
     </div>
   );

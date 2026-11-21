@@ -729,6 +729,12 @@ html[data-ora="zi"] {
 .hero-live[data-on] {
   opacity: 1;
 }
+/* Când derulezi, farurile aprinse (HeroLit, --lit 0 → 1) preiau lumina: stratul viu se stinge în același timp */
+.hero-live-fade {
+  position: absolute;
+  inset: 0;
+  opacity: calc(1 - var(--lit, 0));
+}
 .intro:not(.intro-done) .hero-live {
   opacity: 0;
 }
