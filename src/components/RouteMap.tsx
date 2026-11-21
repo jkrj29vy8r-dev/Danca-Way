@@ -121,11 +121,18 @@ export function RouteMap({ activeLine, highlight = null, className = "" }: Props
       svg.removeAttribute("data-animate");
       return;
     }
+    // Harta deja în ecran la încărcare: linia apare desenată (GSAP vine abia la prima interacțiune).
+    const r = svg.getBoundingClientRect();
+    if (r.top < window.innerHeight * 0.8 && r.bottom > 0) {
+      seen.current = true;
+      svg.setAttribute("data-drawn", "");
+    }
     let cancelled = false;
     let st: { kill: () => void } | undefined;
     loadGsap().then(({ gsap, ScrollTrigger }) => {
       if (cancelled) return;
       gsapRef.current = gsap;
+      if (seen.current) return;
       st = ScrollTrigger.create({
         trigger: svg,
         start: "top 80%",

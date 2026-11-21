@@ -642,6 +642,12 @@
 .intro .hero-intro-video {
   display: block;
 }
+/* Clipul e cu 0,4% mai mic decât fotografia (sub un pixel pe margini, invizibil): Chrome schimbă LCP-ul doar pe un
+   element strict mai mare, iar la aceeași cutie rotunjirea (766,3 px) îl făcea pe clip „mai mare” cu câțiva pixeli²,
+   deci LCP devenea pornirea clipului în loc de fotografie. */
+.js.intro .hero-launch-img.hero-intro-video {
+  scale: 0.996;
+}
 .intro.intro-playing .hero-intro-video {
   opacity: 1;
   transition: none;

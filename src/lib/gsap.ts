@@ -7,7 +7,7 @@ let loading: Promise<Loaded> | null = null;
 
 /**
  * Încarcă GSAP + ScrollTrigger doar după ce pagina a devenit interactivă: la prima interacțiune
- * (scroll, atingere, tastă, mișcarea mouse-ului) sau după ~5 s de liniște. Conținutul e vizibil și fără animații.
+ * (scroll, atingere, tastă, mișcarea mouse-ului). Conținutul e vizibil și fără animații.
  */
 export function loadGsap(): Promise<Loaded> {
   loading ??= afterInteractive()
@@ -35,8 +35,12 @@ export function whenIdle(timeout = 900): Promise<void> {
 let interactive: Promise<void> | null = null;
 const EVENTS = ["pointermove", "pointerdown", "keydown", "touchstart", "wheel", "scroll"] as const;
 
-/** Prima interacțiune a vizitatorului sau, dacă nu vine, ~5 s după încărcare (pe un moment liber). */
-export function afterInteractive(quietMs = 5000): Promise<void> {
+/**
+ * Prima interacțiune a vizitatorului (pe un moment liber). Fără temporizator de rezervă: tot ce folosește GSAP
+ * pornește la derulare (orbita, titlurile, paralaxa, harta care intră în ecran), iar ce e deja în ecran la
+ * încărcare rămâne static, deci cine doar citește nu plătește ~70 KB de JavaScript și un task lung degeaba.
+ */
+export function afterInteractive(): Promise<void> {
   interactive ??= new Promise<void>((resolve) => {
     if (typeof window === "undefined") return resolve();
     let done = false;
@@ -47,9 +51,6 @@ export function afterInteractive(quietMs = 5000): Promise<void> {
       whenIdle(500).then(resolve);
     };
     EVENTS.forEach((e) => window.addEventListener(e, finish, { once: true, passive: true }));
-    const start = () => setTimeout(finish, quietMs);
-    if (document.readyState === "complete") start();
-    else window.addEventListener("load", start, { once: true });
   });
   return interactive;
 }
