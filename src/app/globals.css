@@ -620,6 +620,14 @@
     scale: 1;
   }
 }
+/* Farurile aprinse la derulare: aceeași încadrare, opacitatea urmează --lit (HeroMotion) */
+.hero-lit {
+  opacity: var(--lit, 0);
+}
+.hero-lit:not([src]) {
+  visibility: hidden;
+}
+
 /* Cât așteaptă clipul, fotografia e doar întunecată (nu acoperită: așa rămâne ea LCP-ul paginii).
    Clipul, încadrat exact ca fotografia, apare abia când rulează și dispare lin la final (ultimul lui cadru = fotografia). */
 .intro:not(.intro-done) .hero-launch picture img {

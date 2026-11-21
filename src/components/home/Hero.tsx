@@ -1,5 +1,6 @@
 import { getImageProps } from "next/image";
 import { HeroIntro } from "./HeroIntro";
+import { HeroLit } from "./HeroLit";
 import { HeroMotion } from "./HeroMotion";
 import { coach } from "@/config/fleet";
 import { sizeOf } from "@/data/images";
@@ -8,6 +9,9 @@ const cover = coach.cover!;
 const DESK = cover.src;
 const PHONE = cover.mobileSrc ?? cover.src;
 const ALT = cover.alt;
+/** Aceleași încadrări cu farurile aprinse (pentru derulare) */
+const DESK_LIT = "/images/hero-setra-studio-faruri.jpg";
+const PHONE_LIT = "/images/hero-setra-studio-faruri-mobil.jpg";
 
 /** Titlul, pe rândurile lui vizibile: pe telefon câte o bucată pe rând, pe desktop două rânduri. */
 const LINES = [
@@ -20,13 +24,16 @@ const LINES = [
 /**
  * Hero ca la o lansare de model: fotografia autocarului pe tot ecranul, titlul pe fundalul închis de deasupra lui.
  * <picture>: încadrare lată pe desktop, 9:16 pe telefon (toată fața și roata din față); next/image dă AVIF/WebP.
- * Fotografia e LCP-ul paginii (fetchPriority high, preîncărcată). La prima vizită din sesiune, HeroIntro rulează
+ * Fotografia e LCP-ul paginii (fetchPriority high, preîncărcată). La derulare, varianta cu farurile aprinse (HeroLit)
+ * apare peste ea pe primele 30% din ecran. La prima vizită din sesiune, HeroIntro rulează
  * clipul „lights on” peste ea și apoi titlul urcă linie cu linie; altfel fotografia și titlul apar direct.
  */
 export function Hero() {
   const common = { alt: ALT, sizes: "100vw", quality: 80 };
   const desk = getImageProps({ ...common, src: DESK, ...sizeOf(DESK) }).props;
   const phone = getImageProps({ ...common, src: PHONE, ...sizeOf(PHONE) }).props;
+  const deskLit = getImageProps({ ...common, alt: "", src: DESK_LIT, ...sizeOf(DESK_LIT) }).props;
+  const phoneLit = getImageProps({ ...common, alt: "", src: PHONE_LIT, ...sizeOf(PHONE_LIT) }).props;
   return (
     <section className="hero-launch bg-night text-white" data-bg="night" aria-labelledby="hero-title">
       {/* Preîncărcare pe încadrări (React le mută în <head>): fiecare ecran cere din timp doar imaginea lui */}
@@ -47,6 +54,10 @@ export function Hero() {
             className="hero-launch-img"
           />
         </picture>
+        <HeroLit
+          deskSrcSet={deskLit.srcSet!}
+          phone={{ src: phoneLit.src, srcSet: phoneLit.srcSet, width: Number(phoneLit.width), height: Number(phoneLit.height) }}
+        />
         <HeroIntro />
       </HeroMotion>
       <div aria-hidden className="hero-launch-scrim" />
