@@ -53,6 +53,17 @@ detaliul (c) arată sigla cromată SETRA de pe lateral, nu insigna modelului.
   deci se schimbă doar lumina). Rămâne, generat: o pană de lumină albăstruie pe fundal între 2,8 și 3,6 s și lampa laterală
   portocalie aprinsă slab.
 
+### 2b. Intro-ul folosit pe pagina principală (încadrat exact ca fotografia din hero)
+
+| Fișiere | Ce sunt |
+| --- | --- |
+| `intro-hero-desktop.{webm,mp4}` + `-poster.jpg` | 1600 × 1792 (forma imaginii mari din hero, 3200 × 3584), 5 s, fără sunet. WebM 0,3 MB, MP4 1,4 MB |
+| `intro-hero-mobil.{webm,mp4}` + `-poster.jpg` | 1080 × 1920 (încadrarea de telefon `hero-setra-studio-mobil.jpg`), 5 s, fără sunet. WebM 0,2 MB, MP4 1,1 MB |
+
+Compuse local din clipul Kling 16:9 de mai sus (`7e4ec75b…`): clipul acoperă rândurile 1300–3100 ale imaginii mari, iar
+restul cadrului e fotografia, întunecată în fiecare moment la fel ca marginile clipului (fără margini vizibile). Ultimele
+12 cadre trec în fotografie; ultimul cadru este fotografia exactă (diferență 0). Pe site rulează de 2× mai repede.
+
 ## 3. Orbită la scroll (video 6 s + 120 de cadre)
 
 | Fișiere | Ce sunt |

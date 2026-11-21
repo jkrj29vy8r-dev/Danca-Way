@@ -1,4 +1,5 @@
 import { getImageProps } from "next/image";
+import { HeroIntro } from "./HeroIntro";
 import { HeroMotion } from "./HeroMotion";
 import { coach } from "@/config/fleet";
 import { sizeOf } from "@/data/images";
@@ -8,10 +9,19 @@ const DESK = cover.src;
 const PHONE = cover.mobileSrc ?? cover.src;
 const ALT = cover.alt;
 
+/** Titlul, pe rândurile lui vizibile: pe telefon câte o bucată pe rând, pe desktop două rânduri. */
+const LINES = [
+  { text: "Din Neamț", muted: false },
+  { text: "la București.", muted: false },
+  { text: "Din Otopeni,", muted: true },
+  { text: "acasă.", muted: true },
+];
+
 /**
  * Hero ca la o lansare de model: fotografia autocarului pe tot ecranul, titlul pe fundalul închis de deasupra lui.
- * <picture>: încadrare lată pe desktop, verticală pe telefon; next/image generează AVIF/WebP pentru fiecare lățime.
- * La încărcare imaginea se retrage 4%, apoi alunecă lent la scroll (HeroMotion). Fără JS: imagine statică.
+ * <picture>: încadrare lată pe desktop, 9:16 pe telefon (toată fața și roata din față); next/image dă AVIF/WebP.
+ * Fotografia e LCP-ul paginii (fetchPriority high, preîncărcată). La prima vizită din sesiune, HeroIntro rulează
+ * clipul „lights on” peste ea și apoi titlul urcă linie cu linie; altfel fotografia și titlul apar direct.
  */
 export function Hero() {
   const common = { alt: ALT, sizes: "100vw", quality: 80 };
@@ -19,6 +29,9 @@ export function Hero() {
   const phone = getImageProps({ ...common, src: PHONE, ...sizeOf(PHONE) }).props;
   return (
     <section className="hero-launch bg-night text-white" data-bg="night" aria-labelledby="hero-title">
+      {/* Preîncărcare pe încadrări (React le mută în <head>): fiecare ecran cere din timp doar imaginea lui */}
+      <link rel="preload" as="image" imageSrcSet={desk.srcSet} imageSizes="100vw" media="(min-width: 48rem)" fetchPriority="high" />
+      <link rel="preload" as="image" imageSrcSet={phone.srcSet} imageSizes="100vw" media="(max-width: 47.99rem)" fetchPriority="high" />
       <HeroMotion>
         <picture>
           <source media="(min-width: 48rem)" srcSet={desk.srcSet} sizes="100vw" />
@@ -34,19 +47,23 @@ export function Hero() {
             className="hero-launch-img"
           />
         </picture>
+        <HeroIntro />
       </HeroMotion>
       <div aria-hidden className="hero-launch-scrim" />
       <div aria-hidden className="hero-launch-grain" />
       <div className="hero-launch-copy container-x">
         <h1 id="hero-title" className="t-112 max-w-[13ch] lg:t-72 lg:max-w-none">
-          <span className="reveal-line">
-            <span style={{ "--i": 0 } as React.CSSProperties}>Din Neamț la București.</span>
-          </span>
-          <span className="reveal-line text-mist">
-            <span style={{ "--i": 1 } as React.CSSProperties}>Din Otopeni, acasă.</span>
-          </span>
+          {LINES.map((l, i) => (
+            <span key={l.text}>
+              {i === 2 && <br className="hidden lg:inline" />}
+              <span className={`hero-line ${l.muted ? "text-mist" : ""}`}>
+                <span style={{ "--i": i } as React.CSSProperties}>{l.text}</span>
+              </span>
+              {i % 2 === 0 && " "}
+            </span>
+          ))}
         </h1>
-        <p className="label mt-8 hidden text-mist md:block">{coach.name}</p>
+        <p className="hero-kicker label mt-8 hidden text-mist md:block">{coach.name}</p>
       </div>
     </section>
   );

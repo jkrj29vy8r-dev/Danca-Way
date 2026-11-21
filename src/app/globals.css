@@ -43,6 +43,8 @@
   --radius-full: 9999px;
 
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  /* Dezvăluirile cu mască (titluri): urcă repede, se așază lin */
+  --ease-reveal: cubic-bezier(0.22, 1, 0.36, 1);
   /* Orice `transition-*` fără durată explicită: 0,6 s, expo.out */
   --default-transition-duration: 600ms;
   --default-transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
@@ -532,10 +534,23 @@
     min-height: 0;
   }
 }
+/* De la 48rem, fotografia începe sub bara de sus (care o acoperă oricum): așa nu ocupă tot ecranul, iar Chrome o ia
+   în calcul ca LCP (imaginile cât tot ecranul sunt tratate ca fundal și ignorate). Înălțimea fixă a barei, nu --hdr,
+   care devine 0 când bara se ascunde. Pe telefon hero-ul e oricum mai scund decât ecranul (186vw). */
 .hero-launch-media {
   position: absolute;
   inset: 0;
   z-index: -2;
+}
+@media (width >= 48rem) {
+  .hero-launch-media {
+    top: 4rem;
+  }
+}
+@media (width >= 64rem) {
+  .hero-launch-media {
+    top: 5rem;
+  }
 }
 .hero-launch-img {
   position: absolute;
@@ -568,6 +583,65 @@
     transition: scale 2.8s cubic-bezier(0.22, 1, 0.36, 1);
   }
 }
+/* ───────── Intro (prima vizită din sesiune): clipul „lights on”, apoi fotografia și titlul ───────── */
+/* Liniile titlului: fiecare rând vizibil e o mască separată (inline-block), urcă pe rând la 80 ms */
+.hero-line {
+  display: inline-block;
+  vertical-align: top;
+  overflow: hidden;
+  padding-bottom: 0.14em;
+  margin-bottom: -0.14em;
+}
+.hero-line > span {
+  display: inline-block;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .hero-line > span {
+    animation: reveal-up 0.9s var(--ease-reveal) both;
+    animation-delay: calc(var(--i, 0) * 80ms + 150ms);
+  }
+  .intro .hero-line > span {
+    animation: none;
+    transform: translateY(110%);
+  }
+  .intro.intro-text .hero-line > span {
+    animation: reveal-up 0.9s var(--ease-reveal) both;
+    animation-delay: calc(var(--i, 0) * 80ms);
+  }
+  .intro .hero-kicker {
+    opacity: 0;
+  }
+  .intro.intro-text .hero-kicker {
+    opacity: 1;
+    transition: opacity 0.6s var(--ease-reveal) 0.3s;
+  }
+  /* Fără retragerea de 4% la încărcare: intro-ul ține locul ei */
+  .js.intro .hero-launch-img {
+    scale: 1;
+  }
+}
+/* Cât așteaptă clipul, fotografia e doar întunecată (nu acoperită: așa rămâne ea LCP-ul paginii).
+   Clipul, încadrat exact ca fotografia, apare abia când rulează și dispare lin la final (ultimul lui cadru = fotografia). */
+.intro:not(.intro-done) .hero-launch picture img {
+  filter: brightness(0.04);
+}
+.hero-intro-video {
+  display: none;
+  opacity: 0;
+  transition: opacity 0.35s linear;
+}
+.intro .hero-intro-video {
+  display: block;
+}
+.intro.intro-playing .hero-intro-video {
+  opacity: 1;
+  transition: none;
+}
+.intro.intro-done .hero-intro-video {
+  opacity: 0;
+  transition: opacity 0.35s linear;
+}
+
 /* Gradient foarte fin, doar în colțul cu titlul */
 .hero-launch-scrim {
   position: absolute;

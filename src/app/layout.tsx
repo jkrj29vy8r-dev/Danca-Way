@@ -54,8 +54,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="ro" className={`${geist.variable} ${geistMono.variable}`} suppressHydrationWarning>
       <head>
-        {/* Marchează că JS rulează: animațiile care ascund inițial conținut se activează doar atunci. */}
-        <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }} />
+        {/* Marchează că JS rulează: animațiile care ascund inițial conținut se activează doar atunci.
+            `intro`: prima vizită din sesiune pe pagina principală, fără „reduced motion” → hero-ul pornește cu clipul
+            (decis înainte de primul cadru, ca să nu clipească fotografia). */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "var d=document.documentElement;d.classList.add('js');try{if(location.pathname==='/'&&!sessionStorage.getItem('dw-intro')&&!matchMedia('(prefers-reduced-motion: reduce)').matches)d.classList.add('intro')}catch(e){}",
+          }}
+        />
       </head>
       <body>
         <Suspense>

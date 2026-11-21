@@ -12,7 +12,7 @@ export function HeroMotion({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const box = ref.current;
-    const img = box?.querySelector("img");
+    const img = box?.querySelector<HTMLImageElement>("picture img");
     if (!box || !img || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const settle = () => requestAnimationFrame(() => box.setAttribute("data-loaded", ""));
