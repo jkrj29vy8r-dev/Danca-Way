@@ -16,7 +16,8 @@ export function Footer() {
   const year = new Date().getFullYear();
   return (
     <footer className="bg-night text-white" data-bg="night" data-contact-zone>
-      <div className="container-x pt-24 pb-12 lg:pt-40">
+      {/* Pe mobil, sub ultimul rând rămâne locul barei fixe Sună · WhatsApp · Bilet (+ zona sigură de jos) */}
+      <div className="container-x pt-24 pb-[calc(3rem+4.5rem+env(safe-area-inset-bottom))] md:pb-12 lg:pt-40">
         <div className="grid-12 gap-y-16">
           <div className="col-span-12 lg:col-span-4">
             <Logo variant="alb" className="h-10 w-auto" />

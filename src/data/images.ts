@@ -5,6 +5,11 @@
 export const imageSizes: Record<string, { width: number; height: number }> = {
   "/images/hero-setra-studio.jpg": { width: 3200, height: 3584 },
   "/images/hero-setra-studio-portrait.jpg": { width: 1500, height: 2775 },
+  // Încadrarea de telefon (9:16): decupată din hero-ul mare (x 100–1900, y 384–3584), cu toată fața și roata din față
+  "/images/hero-setra-studio-mobil.jpg": { width: 1800, height: 3200 },
+  // Aceleași două încadrări cu farurile aprinse (pasul „faruri” de la scroll)
+  "/images/hero-setra-studio-faruri.jpg": { width: 3200, height: 3584 },
+  "/images/hero-setra-studio-faruri-mobil.jpg": { width: 1800, height: 3200 },
   "/images/setra-fata-strada.jpg": { width: 1600, height: 1200 },
   "/images/setra-lateral-strada.jpg": { width: 1600, height: 1200 },
   // Imaginea de rezervă a modelului 3D (PNG transparent), pentru browserele fără WebGL

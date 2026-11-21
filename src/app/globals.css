@@ -78,6 +78,7 @@
   }
   body {
     @apply bg-white font-sans text-ink;
+    overflow-x: clip;
     font-size: 1.0625rem;
     line-height: 1.55;
     font-weight: 400;
@@ -521,7 +522,15 @@
   isolation: isolate;
   height: 100svh;
   min-height: 36rem;
-  overflow: hidden;
+  overflow: clip;
+}
+/* Telefon: înălțimea urmează încadrarea 9:16, ca acoperișul autocarului să vină la ~40 px sub titlu
+   (pe ecranele înalte, restul ecranului arată deja bara de rezervare de dedesubt). */
+@media (width < 48rem) {
+  .hero-launch {
+    height: min(100svh, 186vw);
+    min-height: 0;
+  }
 }
 .hero-launch-media {
   position: absolute;
@@ -534,7 +543,8 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: 28% 100%;
+  /* Telefon: încadrarea 9:16 are fața autocarului la stânga și roata din față la ~85%; 49% le păstrează pe amândouă */
+  object-position: 49% 100%;
   translate: 0 var(--hero-y, 0px);
   will-change: translate, scale;
 }
@@ -591,7 +601,7 @@
 }
 
 .hero-launch-copy {
-  padding-top: calc(var(--hdr) + 2.5rem);
+  padding-top: calc(var(--hdr) + 1.75rem);
 }
 @media (width >= 64rem) {
   .hero-launch-copy {

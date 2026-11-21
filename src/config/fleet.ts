@@ -83,7 +83,7 @@ export const fleet: Vehicle[] = [
     ],
     cover: {
       src: "/images/hero-setra-studio.jpg",
-      mobileSrc: "/images/hero-setra-studio-portrait.jpg",
+      mobileSrc: "/images/hero-setra-studio-mobil.jpg",
       alt: "Autocarul Setra S 517 HD al Danca Way, din față-lateral, într-un studio întunecat",
     },
     model3d: { glb: "/3d/setra-s517hd_clay.glb", poster: "/3d/setra-s517hd_clay.png", orbit: "35deg 76deg", scale: 1 },

@@ -57,15 +57,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* Marchează că JS rulează: animațiile care ascund inițial conținut se activează doar atunci. */}
         <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }} />
       </head>
-      {/* Pe mobil, spațiu sub conținut pentru bara fixă Sună · WhatsApp · Bilet */}
-      <body className="pb-[calc(4rem+env(safe-area-inset-bottom))] md:pb-0">
+      <body>
         <Suspense>
           <NavProgress />
         </Suspense>
         <Suspense>
           <Header />
         </Suspense>
-        <main id="continut">{children}</main>
+        <main id="continut" className="overflow-x-clip">
+          {children}
+        </main>
         <Footer />
         <WhatsAppButton />
         <MobileActionBar />
