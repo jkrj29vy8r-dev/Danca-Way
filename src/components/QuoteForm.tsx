@@ -8,6 +8,7 @@ import { serviceById, services, type ServiceId } from "@/data/services";
 import { site, telHref } from "@/config/site";
 import { ArrowRight } from "./icons";
 import { PREFILL_EVENT, type QuotePrefill } from "./QuoteLink";
+import { SUCCESS_EVENT } from "@/lib/success";
 
 type Props = {
   /** Serviciul preselectat (ex. pe paginile de serviciu) */
@@ -101,6 +102,11 @@ export function QuoteForm({ defaultService, defaultSubject, labelledBy }: Props)
     window.addEventListener(PREFILL_EVENT, onPrefill);
     return () => window.removeEventListener(PREFILL_EVENT, onPrefill);
   }, []);
+
+  // Cererea a plecat: momentul de confirmare (SuccessMoment) cu rândunica și bifa
+  useEffect(() => {
+    if (state.status === "success") window.dispatchEvent(new CustomEvent(SUCCESS_EVENT, { detail: { kind: "oferta" } }));
+  }, [state.status]);
 
   // După un răspuns cu erori de la server, focusul merge pe primul câmp greșit.
   useEffect(() => {

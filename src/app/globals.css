@@ -414,6 +414,73 @@
   fill: #fff;
   font-weight: 600;
 }
+/* Rândunica trece pe lângă oprire: punctul se aprinde (alb, cu o aură mică) */
+.route-map .stop-dot,
+.route-map .stop-capsule {
+  transition:
+    fill 0.5s var(--ease-reveal),
+    stroke 0.5s var(--ease-reveal),
+    filter 0.5s var(--ease-reveal);
+}
+.route-map .route-stop[data-passed] .stop-dot {
+  fill: #fff;
+  stroke: #fff;
+  filter: drop-shadow(0 0 3px rgb(255 255 255 / 0.9));
+}
+.route-map .route-stop[data-passed] .stop-capsule {
+  stroke: #fff;
+  filter: drop-shadow(0 0 3px rgb(255 255 255 / 0.9));
+}
+.route-map .route-stop[data-passed] .stop-label {
+  fill: #fff;
+}
+
+/* ───────── Rândunica de pe hartă (MapSwallow) ───────── */
+.route-map-wrap {
+  position: relative;
+}
+.map-bird-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.map-bird {
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  transition: opacity 0.5s var(--ease-reveal);
+  will-change: translate;
+}
+.map-bird-2d {
+  position: absolute;
+  width: 24px;
+  height: auto;
+  left: -12px;
+  top: -17px;
+  max-width: none;
+  rotate: var(--heading, 0deg);
+  scale: 1 var(--bank, 1);
+  filter: drop-shadow(0 4px 6px rgb(0 0 0 / 0.45));
+}
+.map-bird[data-3d] .map-bird-2d {
+  display: none;
+}
+.map-bird-3d {
+  position: absolute;
+  width: 54px;
+  height: 54px;
+  left: -27px;
+  top: -27px;
+  background: transparent;
+  --poster-color: transparent;
+  pointer-events: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .map-bird-layer {
+    display: none;
+  }
+}
 @media (prefers-reduced-motion: no-preference) {
   /* Până intră în ecran, linia activă nu e desenată */
   .js .route-map[data-animate]:not([data-drawn]) .route-line {
@@ -629,6 +696,232 @@
   visibility: hidden;
 }
 
+/* Tonul fundalului urmează discret momentul zilei din Neamț (data-ora, pus în <head> înainte de primul cadru):
+   zorii puțin mai albaștri, ziua puțin mai deschisă, noaptea bleumarinul de bază. Diferențe de 1–3 niveluri. */
+html[data-ora="zori"] {
+  --color-night: #0c1529;
+}
+html[data-ora="zi"] {
+  --color-night: #0e192d;
+}
+
+/* ───────── Lumina vie din hero (HeroLive) ─────────
+   Straturile au aceeași cutie, translate și scale ca fotografia (clasa hero-launch-img), iar măștile au proporția
+   fotografiei, cu aceleași cover și poziție: lumina rămâne în spatele autocarului oricât s-ar redimensiona ecranul. */
+.hero-live {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 1.8s var(--ease-reveal);
+  --atmo: 0.55;
+}
+.hero-live[data-on] {
+  opacity: 1;
+}
+.intro:not(.intro-done) .hero-live {
+  opacity: 0;
+}
+.hero-live[data-ora="zori"] {
+  --atmo: 0.38;
+}
+.hero-live[data-ora="zi"] {
+  --atmo: 0.22;
+}
+.hero-live[data-ora="noapte"] {
+  --atmo: 0.6;
+}
+.hero-live-behind,
+.hero-live-body {
+  overflow: hidden;
+  mask-repeat: no-repeat;
+  mask-size: cover;
+  mask-position: 49% 100%;
+}
+.hero-live-behind {
+  mix-blend-mode: screen;
+  mask-image: url("/media/live/hero-masca-mobil-inversa.png");
+}
+.hero-live-body {
+  mix-blend-mode: soft-light;
+  mask-image: url("/media/live/hero-masca-mobil.png");
+  opacity: 0.8;
+}
+@media (width >= 48rem) {
+  .hero-live-behind {
+    mask-image: url("/media/live/hero-masca-desktop-inversa.png");
+    mask-position: 50% 66%;
+  }
+  .hero-live-body {
+    mask-image: url("/media/live/hero-masca-desktop.png");
+    mask-position: 50% 66%;
+  }
+}
+@media (width >= 48rem) and (max-aspect-ratio: 3/2) {
+  .hero-live-behind,
+  .hero-live-body {
+    mask-position: 50% 74%;
+  }
+}
+.hero-atmo,
+.hero-atmo video,
+.hero-dust video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.hero-atmo {
+  opacity: var(--atmo);
+}
+/* Spotul: un disc mare cu gradient, mutat doar cu translate (--sx, --sy vin din HeroLive, cu inerție) */
+.hero-spot {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 70vmax;
+  height: 70vmax;
+  margin: -35vmax 0 0 -35vmax;
+  border-radius: 50%;
+  translate: var(--sx, 62vw) var(--sy, 30vh);
+  background: radial-gradient(closest-side, rgb(150 172 225 / 0.22), rgb(150 172 225 / 0.07) 45%, rgb(150 172 225 / 0) 72%);
+  will-change: translate;
+}
+.hero-live-body .hero-spot {
+  width: 40vmax;
+  height: 40vmax;
+  margin: -20vmax 0 0 -20vmax;
+  background: radial-gradient(closest-side, rgb(255 255 255 / 0.26), rgb(255 255 255 / 0) 72%);
+}
+/* Praful plutește doar în aerul din spatele autocarului (pe caroserie ar părea murdărie pe fotografie) */
+.hero-dust {
+  position: absolute;
+  inset: 0;
+  display: none;
+  mix-blend-mode: screen;
+  opacity: 0.32;
+  translate: var(--px, 0) var(--py, 0);
+  mask-image: url("/media/live/hero-masca-desktop-inversa.png");
+  mask-repeat: no-repeat;
+  mask-size: cover;
+  mask-position: 50% 66%;
+}
+@media (width >= 48rem) and (max-aspect-ratio: 3/2) {
+  .hero-dust {
+    mask-position: 50% 74%;
+  }
+}
+@media (width >= 48rem) {
+  .hero-dust {
+    display: block;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-spot,
+  .hero-dust {
+    display: none;
+  }
+}
+.hero-clock time {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ───────── Cifre care se rotesc (RollingDigits) ───────── */
+/* Înălțimea unei cifre e fixată în em (1,2em) pe fereastră și pe bandă, ca să nu se vadă jumătăți de cifre */
+.roll {
+  display: inline-flex;
+  line-height: 1.2em;
+  font-variant-numeric: tabular-nums;
+}
+.roll-d {
+  display: inline-block;
+  height: 1.2em;
+  overflow: hidden;
+  vertical-align: top;
+}
+.roll-strip {
+  display: block;
+  width: 1ch;
+  word-break: break-all;
+  white-space: normal;
+  line-height: 1.2em;
+  translate: 0 calc(var(--n, 0) * -1.2em);
+  transition: translate 0.5s var(--ease-reveal);
+}
+@media (prefers-reduced-motion: reduce) {
+  .roll-strip {
+    transition: none;
+  }
+}
+
+/* ───────── Tabela de plecări ───────── */
+.live-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--color-accent);
+  box-shadow: 0 0 0 0 color-mix(in oklab, var(--color-accent) 50%, transparent);
+  animation: live-pulse 2.4s var(--ease-reveal) infinite;
+}
+@keyframes live-pulse {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in oklab, var(--color-accent) 45%, transparent);
+  }
+  70%,
+  100% {
+    box-shadow: 0 0 0 0.5rem color-mix(in oklab, var(--color-accent) 0%, transparent);
+  }
+}
+.board {
+  border-top: 1px solid var(--color-line-dark);
+}
+.board-row {
+  display: grid;
+  grid-template-columns: 4.5rem 1fr;
+  gap: 0.25rem 1rem;
+  align-items: baseline;
+  padding-block: 1.5rem;
+  border-bottom: 1px solid var(--color-line-dark);
+}
+.board-time {
+  font-size: clamp(1.75rem, 1.4rem + 1.2vw, 2.5rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.board-wait {
+  grid-column: 2;
+  font-size: 1.0625rem;
+  line-height: 1.2em;
+  font-variant-numeric: tabular-nums;
+}
+.board-wait .roll {
+  vertical-align: top;
+}
+.board-price {
+  grid-column: 2;
+  font-size: 0.875rem;
+  color: var(--color-mist);
+  font-variant-numeric: tabular-nums;
+}
+@media (width >= 48rem) {
+  .board-row {
+    grid-template-columns: 8rem 1fr 15rem 6rem;
+    gap: 1.5rem;
+  }
+  .board-wait,
+  .board-price {
+    grid-column: auto;
+    text-align: right;
+  }
+  .board-price {
+    font-size: 1.0625rem;
+    color: var(--color-white);
+  }
+}
+
 /* Cât așteaptă clipul, fotografia e doar întunecată (nu acoperită: așa rămâne ea LCP-ul paginii).
    Clipul, încadrat exact ca fotografia, apare abia când rulează și dispare lin la final (ultimul lui cadru = fotografia). */
 .intro:not(.intro-done) .hero-launch picture img {
@@ -669,6 +962,8 @@
 /* Zgomot SVG static (fără animație, sub 0,5 KB): gri opac centrat pe 50% (media zgomotului fractal e ~0,62, de aici
    -0,864), amestecat „overlay” la 14%: ~4 niveluri din 255, fără să schimbe luminozitatea medie. */
 :root {
+  /* Singura umbră a site-ului: elementele care plutesc (confirmarea, bara compactă, meniul deschis) */
+  --shadow-float: 0 24px 48px -16px rgb(11 20 38 / 0.38), 0 2px 8px -2px rgb(11 20 38 / 0.16);
   --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='.733 .733 .733 0 -.864 .733 .733 .733 0 -.864 .733 .733 .733 0 -.864 0 0 0 0 1'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
 }
 .grain::after,
@@ -1318,4 +1613,244 @@ html.lenis body {
     scale: 1;
     transition: none;
   }
+}
+
+/* ───────────────────────── Cursorul de pe desktop (CursorRing) ───────────────────────── */
+.cursor-ring {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 60;
+  display: grid;
+  place-items: center;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s var(--ease-reveal);
+}
+.cursor-ring[data-on]:not([data-hidden]) {
+  opacity: 1;
+}
+.cursor-ring::before {
+  content: "";
+  position: absolute;
+  width: 1.75rem;
+  height: 1.75rem;
+  margin: -0.875rem 0 0 -0.875rem;
+  left: 0;
+  top: 0;
+  border-radius: 50%;
+  border: 1px solid rgb(11 20 38 / 0.45);
+  transition:
+    width 0.35s var(--ease-reveal),
+    height 0.35s var(--ease-reveal),
+    margin 0.35s var(--ease-reveal),
+    background-color 0.35s var(--ease-reveal),
+    border-color 0.35s var(--ease-reveal),
+    scale 0.15s var(--ease-reveal);
+}
+.cursor-ring[data-dark]::before {
+  border-color: rgb(255 255 255 / 0.55);
+}
+.cursor-ring[data-active]::before {
+  width: 2.75rem;
+  height: 2.75rem;
+  margin: -1.375rem 0 0 -1.375rem;
+}
+.cursor-ring[data-word]::before {
+  width: 4.5rem;
+  height: 4.5rem;
+  margin: -2.25rem 0 0 -2.25rem;
+  background: var(--color-night);
+  border-color: var(--color-night);
+}
+.cursor-ring[data-dark][data-word]::before {
+  background: var(--color-white);
+  border-color: var(--color-white);
+}
+.cursor-ring[data-press]::before {
+  scale: 0.9;
+}
+.cursor-word {
+  position: absolute;
+  left: 0;
+  top: 0;
+  translate: -50% -50%;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--color-white);
+  opacity: 0;
+  transition: opacity 0.2s var(--ease-reveal);
+  white-space: nowrap;
+}
+.cursor-ring[data-dark] .cursor-word {
+  color: var(--color-night);
+}
+.cursor-ring[data-word] .cursor-word {
+  opacity: 1;
+  transition-delay: 0.08s;
+}
+@media (pointer: coarse), (prefers-reduced-motion: reduce) {
+  .cursor-ring {
+    display: none;
+  }
+}
+
+/* ───────────────────────── Momentul de confirmare (SuccessMoment) ───────────────────────── */
+.success-moment {
+  position: fixed;
+  left: 50%;
+  bottom: calc(1.5rem + env(safe-area-inset-bottom));
+  z-index: 55;
+  width: min(26rem, calc(100vw - 2rem));
+  translate: -50% 0;
+  pointer-events: none;
+}
+@media (width < 48rem) {
+  .success-moment {
+    bottom: calc(5.5rem + env(safe-area-inset-bottom));
+  }
+}
+.success-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  overflow: hidden;
+  border-radius: 1.25rem;
+  background: var(--color-night);
+  color: var(--color-white);
+  box-shadow: var(--shadow-float);
+  animation: success-in 0.5s var(--ease-reveal) both, success-out 0.5s var(--ease-reveal) 2.9s forwards;
+}
+@keyframes success-in {
+  from {
+    opacity: 0;
+    translate: 0 1rem;
+  }
+}
+@keyframes success-out {
+  to {
+    opacity: 0;
+    translate: 0 0.5rem;
+  }
+}
+.success-light {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  mix-blend-mode: screen;
+  opacity: 0.35;
+  pointer-events: none;
+}
+.success-bird {
+  position: absolute;
+  left: 0;
+  top: 12%;
+  width: 3.5rem;
+  height: auto;
+  max-width: none;
+  animation: success-fly 1.4s var(--ease-reveal) 0.15s both;
+}
+@keyframes success-fly {
+  from {
+    translate: -4rem 1.5rem;
+    rotate: -12deg;
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  85% {
+    opacity: 1;
+  }
+  to {
+    translate: 26rem -1.5rem;
+    rotate: 6deg;
+    opacity: 0;
+  }
+}
+.success-check {
+  position: relative;
+  flex: none;
+  width: 2rem;
+  height: 2rem;
+  fill: none;
+  stroke: var(--color-white);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.success-check circle {
+  stroke: var(--color-line-dark-strong);
+}
+.success-check path {
+  stroke-dasharray: 20;
+  stroke-dashoffset: 20;
+  animation: success-draw 0.6s var(--ease-reveal) 0.55s forwards;
+}
+@keyframes success-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+.success-card p {
+  position: relative;
+}
+@media (prefers-reduced-motion: reduce) {
+  .success-bird,
+  .success-light {
+    display: none;
+  }
+  .success-check path {
+    stroke-dashoffset: 0;
+    animation: none;
+  }
+}
+
+/* ───────────────────────── Rândunica aterizează pe „Rezervă locul” (SwallowLanding) ───────────────────────── */
+.landing {
+  position: relative;
+  display: inline-block;
+}
+.landing-bird {
+  position: absolute;
+  right: 1.25rem;
+  bottom: calc(100% - 0.35rem);
+  width: 3.25rem;
+  height: auto;
+  max-width: none;
+  opacity: 0;
+  pointer-events: none;
+  filter: drop-shadow(0 6px 6px rgb(11 20 38 / 0.25));
+}
+.landing-bird[data-landed] {
+  animation: landing-breathe 3.6s ease-in-out infinite;
+}
+@keyframes landing-breathe {
+  50% {
+    translate: 0 -1px;
+  }
+}
+.landing:hover .landing-bird[data-landed] {
+  translate: 0 -3px;
+  transition: translate 0.3s var(--ease-reveal);
+}
+@media (prefers-reduced-motion: reduce) {
+  .landing-bird {
+    display: none;
+  }
+}
+
+/* ───────────────────────── Înclinarea după viteza derulării (VelocitySkew) ───────────────────────── */
+main [data-photo],
+main .details-row li > div,
+main h2.t-48,
+main h2.t-72 {
+  transform-origin: 50% 50%;
 }

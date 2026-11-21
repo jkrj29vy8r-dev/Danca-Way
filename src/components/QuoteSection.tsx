@@ -1,5 +1,7 @@
 import { QuoteForm } from "./QuoteForm";
 import { mailHref, site, telHref, whatsappHref } from "@/config/site";
+import { ArrowUpRight } from "./icons";
+import { SwallowLanding } from "./SwallowLanding";
 import type { ServiceId } from "@/data/services";
 
 type Props = {
@@ -47,6 +49,14 @@ export function QuoteSection({
             {title} <span className="text-muted">{lead}</span>
           </H>
           <p className="measure mt-6 text-muted">{intro}</p>
+          {/* Biletele la cursele regulate: acțiunea pe care aterizează rândunica */}
+          <div className="mt-10">
+            <SwallowLanding>
+              <a href={site.ticketsUrl} target="_blank" rel="noopener" className="btn btn-lg btn-dark">
+                Rezervă locul <ArrowUpRight />
+              </a>
+            </SwallowLanding>
+          </div>
 
           <dl className="mt-12 border-b border-line">
             {contacts.map((c) => (

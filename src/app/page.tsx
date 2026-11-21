@@ -5,7 +5,7 @@ import { BookingBar } from "@/components/home/BookingBar";
 import { TrustBand } from "@/components/home/TrustBand";
 import { OrbitSection } from "@/components/home/OrbitSection";
 import { Details } from "@/components/home/Details";
-import { Facts } from "@/components/home/Facts";
+import { Departures } from "@/components/home/Departures";
 import { Timetable } from "@/components/home/Timetable";
 import { ServicesList } from "@/components/home/ServicesList";
 import { TripsSection } from "@/components/home/TripsSection";
@@ -35,7 +35,7 @@ export default function HomePage() {
       <Hero />
       <BookingBar />
       <TrustBand />
-      <Facts />
+      <Departures />
       {/* Granițe Suspense: React hidratează secțiunile pe rând, în sarcini mici, fără să blocheze pagina */}
       <Suspense>
         <Timetable />

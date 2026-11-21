@@ -6,6 +6,10 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { MotionController } from "@/components/MotionController";
 import { SmoothScroll } from "@/components/SmoothScroll";
+import { VelocitySkew } from "@/components/VelocitySkew";
+import { CursorRing } from "@/components/CursorRing";
+import { SuccessMoment } from "@/components/SuccessMoment";
+import { timeOfDayScript } from "@/lib/time-of-day";
 import { NavProgress } from "@/components/NavProgress";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { MobileActionBar } from "@/components/MobileActionBar";
@@ -61,7 +65,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script
           dangerouslySetInnerHTML={{
             __html:
-              "var d=document.documentElement;d.classList.add('js');try{if(location.pathname==='/'&&!sessionStorage.getItem('dw-intro')&&!matchMedia('(prefers-reduced-motion: reduce)').matches)d.classList.add('intro')}catch(e){}",
+              "var d=document.documentElement;d.classList.add('js');try{if(location.pathname==='/'&&!sessionStorage.getItem('dw-intro')&&!matchMedia('(prefers-reduced-motion: reduce)').matches)d.classList.add('intro')}catch(e){}" +
+              timeOfDayScript,
           }}
         />
       </head>
@@ -80,6 +85,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <MobileActionBar />
         <MotionController />
         <SmoothScroll />
+        <VelocitySkew />
+        <CursorRing />
+        <SuccessMoment />
         <JsonLd data={localBusinessJsonLd()} />
       </body>
     </html>

@@ -1,6 +1,8 @@
 import { getImageProps } from "next/image";
 import { HeroIntro } from "./HeroIntro";
+import { HeroClock } from "./HeroClock";
 import { HeroLit } from "./HeroLit";
+import { HeroLive } from "./HeroLive";
 import { HeroMotion } from "./HeroMotion";
 import { coach } from "@/config/fleet";
 import { sizeOf } from "@/data/images";
@@ -58,6 +60,7 @@ export function Hero() {
           deskSrcSet={deskLit.srcSet!}
           phone={{ src: phoneLit.src, srcSet: phoneLit.srcSet, width: Number(phoneLit.width), height: Number(phoneLit.height) }}
         />
+        <HeroLive />
         <HeroIntro />
       </HeroMotion>
       <div aria-hidden className="hero-launch-scrim" />
@@ -74,7 +77,9 @@ export function Hero() {
             </span>
           ))}
         </h1>
-        <p className="hero-kicker label mt-8 hidden text-mist md:block">{coach.name}</p>
+        <div className="hero-kicker mt-6 md:mt-8">
+          <HeroClock />
+        </div>
       </div>
     </section>
   );
