@@ -7,9 +7,6 @@ export const imageSizes: Record<string, { width: number; height: number }> = {
   "/images/hero-setra-studio-portrait.jpg": { width: 1500, height: 2775 },
   "/images/setra-fata-strada.jpg": { width: 1600, height: 1200 },
   "/images/setra-lateral-strada.jpg": { width: 1600, height: 1200 },
-  "/images/setra-fata-apus-vertical.jpg": { width: 900, height: 1600 },
-  "/images/setra-fata-vertical.jpg": { width: 900, height: 1600 },
-  "/images/setra-autogara-vertical.jpg": { width: 900, height: 1600 },
   // Imaginea de rezervă a modelului 3D (PNG transparent), pentru browserele fără WebGL
   "/3d/setra-s517hd_clay.png": { width: 1843, height: 1208 },
 };

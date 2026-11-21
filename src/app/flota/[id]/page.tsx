@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArtPhoto } from "@/components/ArtPhoto";
 import { ArrowRight } from "@/components/icons";
 import { JsonLd } from "@/components/JsonLd";
 import { Todo } from "@/components/fleet/Todo";
@@ -79,7 +78,6 @@ export default async function VehiclePage(props: Params) {
     .map((g) => ({ ...g, rows: g.rows.filter((r) => r.value || SHOW_PLACEHOLDERS) }))
     .filter((g) => g.rows.length);
   const cover = v.cover ?? v.photos[0];
-  const gallery = v.photos.slice(2, 5);
 
   return (
     <>
@@ -172,17 +170,6 @@ export default async function VehiclePage(props: Params) {
                 </li>
               ))}
             </ul>
-          </div>
-        </section>
-      )}
-
-      {/* Fotografii reale */}
-      {gallery.length > 0 && (
-        <section className="bg-night py-2 text-white" data-bg="night" aria-label={`Fotografii cu ${v.name}`}>
-          <div className="grid gap-2 sm:grid-cols-3">
-            {gallery.map((g) => (
-              <ArtPhoto key={g.src} src={g.src} alt={g.alt} sizes="(min-width: 640px) 33vw, 100vw" parallax grain className="aspect-[3/4] w-full" />
-            ))}
           </div>
         </section>
       )}

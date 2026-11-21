@@ -19,11 +19,8 @@ Granulația nu e în fișiere: se adaugă din CSS (clasa `grain`), doar pe imagi
 | --- | --- | --- | --- |
 | `hero-setra-studio.jpg` | 3200 × 3584 | Setra S 517 HD în studio, din față-lateral (pornind de la fotografia reală) | Hero-ul paginii principale, capul fișei tehnice |
 | `hero-setra-studio-portrait.jpg` | 1500 × 2775 | Aceeași, încadrare verticală | Aceleași, pe telefon |
-| `setra-fata-strada.jpg` | 1600 × 1200 | Fotografie reală: Setra din față, pe stradă | Cardul Flota de pe pagina principală (până există vederea 360°) |
-| `setra-fata-apus-vertical.jpg` | 900 × 1600 | Fotografie reală: Setra din față, la apus | Același card, pe telefon; galeria fișei tehnice |
+| `setra-fata-strada.jpg` | 1600 × 1200 | Fotografie reală: Setra din față, pe stradă | Cardul Flota de pe pagina principală, fișa tehnică |
 | `setra-lateral-strada.jpg` | 1600 × 1200 | Fotografie reală: Setra din lateral | Curse regulate (hero) |
-| `setra-fata-vertical.jpg` | 900 × 1600 | Fotografie reală: Setra din față, în parcare | Curse regulate pe telefon; galeria fișei tehnice |
-| `setra-autogara-vertical.jpg` | 900 × 1600 | Fotografie reală: Setra în parcare, de departe | Galeria fișei tehnice |
 
 ## Ce lipsește încă
 

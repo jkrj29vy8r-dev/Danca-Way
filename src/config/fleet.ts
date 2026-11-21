@@ -77,13 +77,9 @@ export const fleet: Vehicle[] = [
     photos: [
       {
         src: "/images/setra-fata-strada.jpg",
-        mobileSrc: "/images/setra-fata-apus-vertical.jpg",
         alt: "Autocarul Setra al Danca Way, din față, cu farurile aprinse, pe o stradă din oraș",
       },
       { src: "/images/setra-lateral-strada.jpg", alt: "Autocarul Setra al Danca Way, din lateral, parcat pe o stradă cu clădiri vechi" },
-      { src: "/images/setra-fata-apus-vertical.jpg", alt: "Autocarul Setra al Danca Way, din față, la apus" },
-      { src: "/images/setra-fata-vertical.jpg", alt: "Autocarul Setra al Danca Way, din față, într-o parcare, ziua" },
-      { src: "/images/setra-autogara-vertical.jpg", alt: "Autocarul Setra al Danca Way, într-o parcare largă, sub cerul senin" },
     ],
     cover: {
       src: "/images/hero-setra-studio.jpg",
