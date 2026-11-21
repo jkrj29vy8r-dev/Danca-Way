@@ -20,8 +20,8 @@ export const site = {
     /** Număr WhatsApp, doar cifre, cu prefixul țării — același număr; schimbă-l dacă WhatsApp e pe alt număr */
     whatsapp: "40725819224",
     whatsappMessage: "Bună ziua! Aș dori o ofertă de transport.",
-    /** PLACEHOLDER — adresa de email */
-    email: "contact@firma.ro",
+    /** PLACEHOLDER — adresa de email reală. `null` = nu apare nicăieri pe site (până o primim, nu afișăm una inventată). */
+    email: null as string | null,
     /** Sediul, conform paginii de contact Danca (danca-transport.autogari.ro/contact) */
     address: {
       street: "Str. Brândușelor nr. 92, sat Adjudeni",
@@ -89,7 +89,7 @@ export const site = {
 } as const;
 
 export const telHref = `tel:${site.contact.phoneE164}`;
-export const mailHref = `mailto:${site.contact.email}`;
+export const mailHref: string | null = site.contact.email ? `mailto:${site.contact.email}` : null;
 export const whatsappHref = `https://wa.me/${site.contact.whatsapp}?text=${encodeURIComponent(
   site.contact.whatsappMessage,
 )}`;

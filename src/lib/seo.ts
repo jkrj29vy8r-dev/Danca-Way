@@ -30,7 +30,7 @@ export function localBusinessJsonLd() {
     description:
       "Curse regulate Târgu Neamț – București Obor (05:00, 09:00), București – Otopeni – Roman și Roman – Constanța; transfer privat 8+1, închiriere microbuz cu șofer, excursii și pelerinaje.",
     telephone: contact.phoneE164,
-    email: contact.email,
+    email: contact.email ?? undefined,
     priceRange: "$$",
     address: {
       "@type": "PostalAddress",

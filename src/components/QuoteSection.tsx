@@ -31,7 +31,7 @@ export function QuoteSection({
   const contacts = [
     { label: "Telefon", value: site.contact.phoneDisplay, href: telHref },
     { label: "WhatsApp", value: site.contact.phoneDisplay, href: whatsappHref, external: true },
-    { label: "Email", value: site.contact.email, href: mailHref },
+    ...(site.contact.email && mailHref ? [{ label: "Email", value: site.contact.email, href: mailHref }] : []),
   ];
   return (
     <section

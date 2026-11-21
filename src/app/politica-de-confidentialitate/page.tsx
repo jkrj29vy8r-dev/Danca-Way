@@ -19,8 +19,13 @@ export default function ConfidentialitatePage() {
       <h2>1. Operatorul datelor</h2>
       <p>
         <strong>{site.legalName}</strong>, CUI {site.cui}, cu sediul în {a.street}, comuna {a.locality}, județul {a.region}.
-        Pentru orice întrebare despre datele tale: <a href={mailHref}>{site.contact.email}</a> sau{" "}
-        <a href={telHref}>{site.contact.phoneDisplay}</a>.
+        Pentru orice întrebare despre datele tale:{" "}
+        {site.contact.email && mailHref ? (
+          <>
+            <a href={mailHref}>{site.contact.email}</a> sau{" "}
+          </>
+        ) : null}
+        <a href={telHref}>{site.contact.phoneDisplay}</a> (telefon sau WhatsApp).
       </p>
 
       <h2>2. Ce date colectăm</h2>
@@ -78,7 +83,17 @@ export default function ConfidentialitatePage() {
       <h2>6. Drepturile tale</h2>
       <p>
         Conform art. 15–22 GDPR ai dreptul de acces, de rectificare, de ștergere, de restricționare a prelucrării, de
-        portabilitate și de opoziție. Le poți exercita gratuit scriindu-ne la <a href={mailHref}>{site.contact.email}</a>;
+        portabilitate și de opoziție. Le poți exercita gratuit{" "}
+        {site.contact.email && mailHref ? (
+          <>
+            scriindu-ne la <a href={mailHref}>{site.contact.email}</a>
+          </>
+        ) : (
+          <>
+            la <a href={telHref}>{site.contact.phoneDisplay}</a>, prin telefon sau WhatsApp
+          </>
+        )}
+        ;
         îți răspundem în cel mult o lună. Ai și dreptul de a depune plângere la Autoritatea Națională de Supraveghere a
         Prelucrării Datelor cu Caracter Personal (ANSPDCP), B-dul G-ral. Gheorghe Magheru nr. 28-30, Sector 1, București,{" "}
         <a href="https://www.dataprotection.ro" target="_blank" rel="noopener">

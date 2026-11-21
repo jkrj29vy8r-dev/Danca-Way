@@ -19,7 +19,14 @@ export default function TermeniPage() {
       <p>
         Site-ul este operat de <strong>{site.legalName}</strong>, cu sediul în {a.street}, comuna {a.locality}, județul{" "}
         {a.region}, CUI {site.cui}, înregistrată la Registrul Comerțului sub nr. {site.regCom}. Ne poți contacta la{" "}
-        <a href={telHref}>{site.contact.phoneDisplay}</a> sau la <a href={mailHref}>{site.contact.email}</a>.
+        <a href={telHref}>{site.contact.phoneDisplay}</a> (telefon sau WhatsApp)
+        {site.contact.email && mailHref ? (
+          <>
+            {" "}
+            sau la <a href={mailHref}>{site.contact.email}</a>
+          </>
+        ) : null}
+        .
       </p>
 
       <h2>2. Ce găsești pe site</h2>
@@ -68,8 +75,13 @@ export default function TermeniPage() {
 
       <h2>8. Reclamații și soluționarea litigiilor</h2>
       <p>
-        Pentru orice nemulțumire, scrie-ne la <a href={mailHref}>{site.contact.email}</a> sau sună la{" "}
-        <a href={telHref}>{site.contact.phoneDisplay}</a>. Dacă nu ajungem la o soluție, te poți adresa Autorității
+        Pentru orice nemulțumire,{" "}
+        {site.contact.email && mailHref ? (
+          <>
+            scrie-ne la <a href={mailHref}>{site.contact.email}</a> sau{" "}
+          </>
+        ) : null}
+        sună-ne ori scrie-ne pe WhatsApp la <a href={telHref}>{site.contact.phoneDisplay}</a>. Dacă nu ajungem la o soluție, te poți adresa Autorității
         Naționale pentru Protecția Consumatorilor (
         <a href={site.legal.anpc} target="_blank" rel="noopener">
           anpc.ro

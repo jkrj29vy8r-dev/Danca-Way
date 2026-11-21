@@ -89,6 +89,20 @@ export async function sendQuote(_prev: QuoteState, formData: FormData): Promise<
     };
   }
 
+  // Destinatarii: QUOTE_TO_EMAIL sau emailul firmei. Fără niciunul, cererea nu are unde ajunge: spunem asta direct.
+  const recipients = (process.env.QUOTE_TO_EMAIL ?? site.contact.email ?? "")
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean);
+  if (recipients.length === 0) {
+    console.error("[oferta] Lipsește destinatarul (QUOTE_TO_EMAIL sau site.contact.email).");
+    return {
+      status: "error",
+      message: `Nu am putut trimite cererea. Te rugăm să ne suni la ${site.contact.phoneDisplay}.`,
+      values: raw,
+    };
+  }
+
   const resend = new Resend(apiKey);
   const html = `
     <div style="font-family:-apple-system,Segoe UI,Arial,sans-serif;color:#0B1426;max-width:560px">
@@ -107,7 +121,7 @@ export async function sendQuote(_prev: QuoteState, formData: FormData): Promise<
 
   const { error } = await resend.emails.send({
     from: process.env.QUOTE_FROM_EMAIL ?? "Danca Way <onboarding@resend.dev>",
-    to: (process.env.QUOTE_TO_EMAIL ?? site.contact.email).split(",").map((s) => s.trim()),
+    to: recipients,
     replyTo: q.email || undefined,
     subject: `Cerere ofertă: ${serviceLabel} · ${q.plecare} → ${q.destinatie} · ${formatDate(q.data)}`,
     html,

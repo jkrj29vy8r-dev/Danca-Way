@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { LegalPage } from "@/components/pages/LegalPage";
-import { mailHref, site } from "@/config/site";
+import { mailHref, site, telHref } from "@/config/site";
 import { pageMeta } from "@/lib/seo";
 
 // Verificat pe 9 noiembrie 2026: site-ul nu setează cookie-uri și nu scrie în localStorage, sessionStorage sau IndexedDB.
@@ -45,7 +45,13 @@ export default function CookiePage() {
       <h2>Dacă se schimbă ceva</h2>
       <p>
         Dacă vom adăuga vreodată cookie-uri care nu sunt strict necesare, îți vom cere acordul înainte și vom actualiza
-        această pagină. Întrebări: <a href={mailHref}>{site.contact.email}</a>.
+        această pagină. Întrebări:{" "}
+        {site.contact.email && mailHref ? (
+          <a href={mailHref}>{site.contact.email}</a>
+        ) : (
+          <a href={telHref}>{site.contact.phoneDisplay}</a>
+        )}
+        .
       </p>
     </LegalPage>
   );

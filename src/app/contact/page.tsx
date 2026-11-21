@@ -5,7 +5,7 @@ import { pageMeta } from "@/lib/seo";
 
 export const metadata: Metadata = pageMeta({
   title: "Contact și cerere de ofertă",
-  description: `Cere ofertă pentru transfer privat 8+1, transfer Otopeni, închiriere microbuz cu șofer, excursii, pelerinaje și grupuri. Telefon ${site.contact.phoneDisplay}, WhatsApp și email ${site.contact.email}.`,
+  description: `Cere ofertă pentru transfer privat 8+1, transfer Otopeni, închiriere microbuz cu șofer, excursii, pelerinaje și grupuri. Telefon și WhatsApp ${site.contact.phoneDisplay}${site.contact.email ? `, email ${site.contact.email}` : ""}.`,
   path: "/contact",
 });
 
