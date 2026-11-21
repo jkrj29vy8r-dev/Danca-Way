@@ -1193,3 +1193,68 @@ input.bseg-input {
     aspect-ratio: 16 / 9;
   }
 }
+
+/* ───────────────────────── Detaliile: rând cu scroll-snap pe telefon, grilă de 4 de la 64rem ───────────────────────── */
+.details-row {
+  display: flex;
+  gap: 1rem;
+  /* până la marginile ecranului, cu primul cadru aliniat la text */
+  margin-inline: -1.5rem;
+  padding-inline: 1.5rem;
+  scroll-padding-inline: 1.5rem;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+.details-row::-webkit-scrollbar {
+  display: none;
+}
+.details-row > li {
+  flex: 0 0 min(78vw, 22rem);
+  scroll-snap-align: start;
+}
+@media (width >= 48rem) {
+  .details-row {
+    margin-inline: -3rem;
+    padding-inline: 3rem;
+    scroll-padding-inline: 3rem;
+  }
+  .details-row > li {
+    flex-basis: 45vw;
+  }
+}
+@media (width >= 64rem) {
+  .details-row {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1.5rem;
+    margin-inline: 0;
+    padding-inline: 0;
+    overflow: visible;
+  }
+}
+
+/* Intrarea în ecran (EnterOnView): opacitate 0 → 1, fotografia de la 1,04 la 1, cu 80 ms între cadre */
+.js .enter {
+  opacity: 0;
+  transition: opacity 0.9s var(--ease-reveal) calc(var(--i, 0) * 80ms);
+}
+.js .enter img {
+  scale: 1.04;
+  transition: scale 1.4s var(--ease-reveal) calc(var(--i, 0) * 80ms);
+}
+.js .enter[data-in] {
+  opacity: 1;
+}
+.js .enter[data-in] img {
+  scale: 1;
+}
+@media (prefers-reduced-motion: reduce) {
+  .js .enter,
+  .js .enter img {
+    opacity: 1;
+    scale: 1;
+    transition: none;
+  }
+}

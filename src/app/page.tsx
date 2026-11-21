@@ -4,6 +4,7 @@ import { Hero } from "@/components/home/Hero";
 import { BookingBar } from "@/components/home/BookingBar";
 import { TrustBand } from "@/components/home/TrustBand";
 import { OrbitSection } from "@/components/home/OrbitSection";
+import { Details } from "@/components/home/Details";
 import { Facts } from "@/components/home/Facts";
 import { Timetable } from "@/components/home/Timetable";
 import { ServicesList } from "@/components/home/ServicesList";
@@ -40,6 +41,7 @@ export default function HomePage() {
         <Timetable />
       </Suspense>
       <OrbitSection />
+      <Details />
       <ServicesList />
       <TripsSection />
       <Suspense>
