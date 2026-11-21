@@ -3,7 +3,7 @@ import { Suspense } from "react";
 import { Hero } from "@/components/home/Hero";
 import { BookingBar } from "@/components/home/BookingBar";
 import { TrustBand } from "@/components/home/TrustBand";
-import { Fleet360 } from "@/components/home/Fleet360";
+import { OrbitSection } from "@/components/home/OrbitSection";
 import { Facts } from "@/components/home/Facts";
 import { Timetable } from "@/components/home/Timetable";
 import { ServicesList } from "@/components/home/ServicesList";
@@ -39,7 +39,7 @@ export default function HomePage() {
       <Suspense>
         <Timetable />
       </Suspense>
-      <Fleet360 />
+      <OrbitSection />
       <ServicesList />
       <TripsSection />
       <Suspense>

@@ -1074,3 +1074,122 @@ input.bseg-input {
   background: var(--color-white);
   color: var(--color-ink);
 }
+
+/* ───────────────────────── Orbita la derulare ───────────────────────── */
+/* 250vh de derulare; ecranul din interior rămâne lipit (locul e rezervat din CSS, fără salturi când vine GSAP) */
+.orbit {
+  position: relative;
+  height: 250vh;
+}
+.orbit-sticky {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  overflow: clip;
+}
+.orbit-still img,
+.orbit-canvas,
+.orbit-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.orbit-canvas {
+  display: block;
+}
+/* Umbră discretă sus și jos, doar sub legende și link (contrast AA peste plafonul și fața albă a autocarului) */
+.orbit-sticky::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    color-mix(in oklab, var(--color-night) 70%, transparent) 0%,
+    color-mix(in oklab, var(--color-night) 0%, transparent) 42%,
+    color-mix(in oklab, var(--color-night) 0%, transparent) 70%,
+    color-mix(in oklab, var(--color-night) 75%, transparent) 100%
+  );
+}
+.orbit-captions,
+.orbit-link {
+  z-index: 1;
+}
+/* Fotografia de pornire contează doar fără JavaScript și cu „reduced motion”; altfel nici nu se descarcă */
+.js .orbit-still {
+  display: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .js .orbit-still {
+    display: block;
+  }
+}
+.orbit-video {
+  display: none;
+}
+.orbit[data-fallback] .orbit-video {
+  display: block;
+}
+.orbit[data-fallback] .orbit-canvas {
+  display: none;
+}
+/* Legendele: în colțul de sus (fundal întunecat de studio), una peste alta; opacitatea vine din derulare */
+.orbit-captions {
+  position: absolute;
+  inset: calc(4rem + 2.5rem) 0 auto;
+}
+@media (width >= 64rem) {
+  .orbit-captions {
+    inset: calc(5rem + 3rem) 0 auto;
+  }
+}
+.orbit-caption {
+  max-width: 22ch;
+}
+.js .orbit-caption {
+  position: absolute;
+  opacity: 0;
+}
+.orbit-caption + .orbit-caption {
+  margin-top: 1.5rem;
+}
+.js .orbit-caption + .orbit-caption {
+  margin-top: 0;
+}
+.orbit-link {
+  position: absolute;
+  inset: auto 0 calc(5.5rem + env(safe-area-inset-bottom));
+}
+@media (width >= 48rem) {
+  .orbit-link {
+    bottom: 2.5rem;
+  }
+}
+/* „Reduced motion”: o singură fotografie, fără fixare și fără canvas; legendele una sub alta */
+@media (prefers-reduced-motion: reduce) {
+  .orbit {
+    height: auto;
+  }
+  .orbit-sticky {
+    position: relative;
+    height: auto;
+    aspect-ratio: 9 / 16;
+  }
+  .orbit-canvas {
+    display: none;
+  }
+  .js .orbit-caption {
+    position: static;
+    opacity: 1;
+  }
+  .js .orbit-caption + .orbit-caption {
+    margin-top: 1.5rem;
+  }
+}
+@media (prefers-reduced-motion: reduce) and (width >= 48rem) {
+  .orbit-sticky {
+    aspect-ratio: 16 / 9;
+  }
+}
