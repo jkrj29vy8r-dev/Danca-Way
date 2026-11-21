@@ -1,4 +1,4 @@
-import { FlapText } from "../FlapText";
+import { CountUp } from "../CountUp";
 import { ArrowUpRight } from "../icons";
 import { site } from "@/config/site";
 import { cityName, fare, routes, stopAt, TIMETABLE_DISCLAIMER, type CityId, type Route } from "@/data/routes";
@@ -17,7 +17,7 @@ export function OtopeniTimes() {
     return (
       <li className="grid grid-cols-[5rem_1fr] items-baseline gap-x-4 border-t border-line-dark py-6 sm:grid-cols-[7rem_1fr] sm:gap-x-6">
         <span className="t-32 font-mono tabular-nums">
-          <FlapText value={at(r)!.time} />
+          <CountUp value={at(r)!.time} />
         </span>
         <div>
           <p className="t-21 font-semibold">{dir === "to" ? "Sosire la Terminalul Plecări" : "Plecare de la Terminalul Plecări"}</p>

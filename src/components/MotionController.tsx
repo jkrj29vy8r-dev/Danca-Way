@@ -3,10 +3,9 @@
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 import { loadGsap, prefersReducedMotion } from "@/lib/gsap";
-import { flipDigits, resetDigits } from "@/lib/flap";
+import { easeReveal } from "@/lib/ease";
 
 type Gsap = Awaited<ReturnType<typeof loadGsap>>["gsap"];
-type ST = Awaited<ReturnType<typeof loadGsap>>["ScrollTrigger"];
 
 /** Elementul e (măcar parțial) în ecran chiar acum. */
 const inView = (el: Element) => {
@@ -17,10 +16,10 @@ const inView = (el: Element) => {
 const EASE = "expo.out";
 
 /**
- * Animațiile de pe fiecare pagină (se refac la schimbarea rutei). Patru tipuri, fiecare cu un sens:
- * titluri dezvăluite linie cu linie, fotografii dezvăluite cu clip-path și cu paralaxă lentă, ore întoarse ca pe o tabelă de plecări.
- * (Harta, rândunica și countdown-ul au componentele lor.) Totul e dezactivat cu prefers-reduced-motion;
- * fără JavaScript conținutul rămâne static și vizibil. Durate 0,6–1,2 s, expo.out.
+ * Animațiile de pe fiecare pagină (se refac la schimbarea rutei). Trei tipuri, fiecare cu un sens:
+ * titluri dezvăluite linie cu linie (o singură dată), fotografii dezvăluite cu clip-path și cu paralaxă lentă.
+ * (Harta, orele și prețurile care numără, rândunica și countdown-ul au componentele lor.) Totul e dezactivat cu
+ * prefers-reduced-motion; fără JavaScript conținutul rămâne static și vizibil.
  */
 export function MotionController() {
   const pathname = usePathname();
@@ -39,7 +38,6 @@ export function MotionController() {
         disposers.push(revealLines(gsap, SplitText));
         revealPhotos(gsap);
         parallax(gsap);
-        disposers.push(splitFlaps(gsap, ScrollTrigger));
       });
 
       // Recalculăm pozițiile după ce se încarcă fonturile (liniile se pot rupe altfel).
@@ -73,10 +71,11 @@ function revealLines(gsap: Gsap, SplitText: typeof import("gsap/SplitText").Spli
         // Doar linii (nu cuvinte/litere): textul rămâne citibil ca atare, fără aria-label pe element.
         aria: "none",
         onSplit(self) {
+          // Aceeași mișcare ca titlul din hero: 0,9 s, cubic-bezier(0.22, 1, 0.36, 1), 80 ms între linii
           return gsap.from(self.lines, {
             yPercent: 110,
-            duration: 1.1,
-            ease: EASE,
+            duration: 0.9,
+            ease: easeReveal,
             stagger: 0.08,
             scrollTrigger: { trigger: el, start: "top 88%", once: true },
           });
@@ -108,14 +107,4 @@ function parallax(gsap: Gsap) {
       { yPercent: 5, ease: "none", scrollTrigger: { trigger: frame, start: "top bottom", end: "bottom top", scrub: 0.6 } },
     );
   });
-}
-
-/* ───────── Tabelă de plecări (split-flap): cifrele se întorc când ora intră în ecran ───────── */
-function splitFlaps(gsap: Gsap, ScrollTrigger: ST) {
-  const els = Array.from(document.querySelectorAll<HTMLElement>("[data-flap]"));
-  els.forEach((el) =>
-    ScrollTrigger.create({ trigger: el, start: "top 92%", once: true, onEnter: () => flipDigits(gsap, el) }),
-  );
-  // La ieșire, cifrele revin la valoarea corectă chiar dacă animația a fost întreruptă.
-  return () => resetDigits(document);
 }

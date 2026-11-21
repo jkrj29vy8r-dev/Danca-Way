@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useId, useMemo, useRef, useState, useSyncExternalStore } from "react";
-import { FlapText } from "../FlapText";
+import { useId, useMemo, useRef, useState, useSyncExternalStore } from "react";
+import { CountUp } from "../CountUp";
 import { NightLoop } from "./NightLoop";
 import { RouteMap } from "../RouteMap";
 import { ArrowRight, ArrowUpRight, ChevronDown } from "../icons";
@@ -24,8 +24,6 @@ import {
   type Trip,
 } from "@/data/routes";
 import { FILTER_EVENT, readFilter, setFilter, type RouteFilter } from "@/lib/route-filter";
-import { flipDigits } from "@/lib/flap";
-import { loadGsap, prefersReducedMotion } from "@/lib/gsap";
 import { useBucharestMinutes } from "@/lib/use-next-departure";
 
 /* Filtrul din URL, citit fără nepotriviri la hidratare */
@@ -57,7 +55,6 @@ export function Timetable({ full = false }: { full?: boolean } = {}) {
   const [hover, setHover] = useState<string | null>(null);
   const [open, setOpen] = useState<string | null>(null);
   const now = useBucharestMinutes();
-  const listRef = useRef<HTMLUListElement>(null);
   const tabsRef = useRef<HTMLDivElement>(null);
 
   // Rândurile: perechea căutată sau toate cursele din tab.
@@ -71,19 +68,6 @@ export function Timetable({ full = false }: { full?: boolean } = {}) {
     const t = rows.find((r) => r.depMin > now) ?? rows[0];
     return t ? t.route.code + t.dep.time : null;
   }, [rows, now]);
-
-  // La schimbarea tab-ului sau a perechii, orele se întorc ca pe o tabelă de plecări.
-  const firstRender = useRef(true);
-  const rowsKey = rows.map((r) => r.route.code + r.dep.time).join(",");
-  useEffect(() => {
-    if (firstRender.current) {
-      firstRender.current = false;
-      return;
-    }
-    const el = listRef.current;
-    if (!el || prefersReducedMotion()) return;
-    loadGsap().then(({ gsap }) => el.querySelectorAll("[data-flap]").forEach((f) => flipDigits(gsap, f)));
-  }, [rowsKey]);
 
   // Segmentul de pe hartă: rândul de sub cursor / deschis, altfel perechea căutată.
   const focusCode = hover ?? open;
@@ -122,7 +106,7 @@ export function Timetable({ full = false }: { full?: boolean } = {}) {
       <div className="container-x">
         {/* Titlul la stânga, un singur link discret la dreapta, pe aceeași linie */}
         <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-6">
-          <h2 id="curse-title" className="t-48 max-w-[22ch]">
+          <h2 id="curse-title" className="t-48 max-w-[22ch]" data-reveal="lines">
             Opt curse, trei direcții. <span className="text-mist">Același preț pe toate cursele dintre două orașe.</span>
           </h2>
           {!full && (
@@ -211,7 +195,7 @@ export function Timetable({ full = false }: { full?: boolean } = {}) {
                 <span>Traseu</span>
                 <span className="text-right">Preț</span>
               </div>
-              <ul ref={listRef} hidden={rows.length === 0} className="border-y border-line-dark">
+              <ul hidden={rows.length === 0} className="border-y border-line-dark">
                 {rows.map((t) => {
                   const code = t.route.code;
                   const key = code + t.dep.time;
@@ -235,7 +219,7 @@ export function Timetable({ full = false }: { full?: boolean } = {}) {
                         className="press grid w-full grid-cols-[5rem_1fr_auto] items-baseline gap-x-4 py-6 text-left sm:grid-cols-[7rem_1fr_6rem_1.5rem] sm:gap-x-6"
                       >
                         <span className="t-32 font-mono tabular-nums">
-                          <FlapText value={t.dep.time} />
+                          <CountUp value={t.dep.time} />
                         </span>
                         <span className="min-w-0">
                           <span className="t-21 block font-semibold">
@@ -250,7 +234,7 @@ export function Timetable({ full = false }: { full?: boolean } = {}) {
                             </span>
                           </span>
                         </span>
-                        <span className="t-21 text-right font-mono tabular-nums">{t.price ? `${t.price} lei` : "—"}</span>
+                        <span className="t-21 text-right font-mono tabular-nums">{t.price ? <CountUp value={`${t.price} lei`} /> : "—"}</span>
                         <ChevronDown
                           className={`hidden self-center text-mist transition-transform duration-[600ms] ease-[var(--ease-out-expo)] sm:block ${isOpen ? "rotate-180" : ""}`}
                         />

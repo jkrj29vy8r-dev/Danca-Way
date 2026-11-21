@@ -30,7 +30,7 @@ export function MobileActionBar() {
 
   const hidden = inZone || !pastHero;
   const item =
-    "press t-14 flex min-h-12 flex-1 items-center justify-center gap-2 rounded-full font-semibold transition-colors duration-[600ms] ease-[var(--ease-out-expo)]";
+    "lift t-14 flex min-h-12 flex-1 items-center justify-center gap-2 rounded-full font-semibold";
   return (
     <nav
       aria-label="Acțiuni rapide"

@@ -5,6 +5,7 @@ import "./globals.css";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { MotionController } from "@/components/MotionController";
+import { SmoothScroll } from "@/components/SmoothScroll";
 import { NavProgress } from "@/components/NavProgress";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { MobileActionBar } from "@/components/MobileActionBar";
@@ -78,6 +79,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <WhatsAppButton />
         <MobileActionBar />
         <MotionController />
+        <SmoothScroll />
         <JsonLd data={localBusinessJsonLd()} />
       </body>
     </html>

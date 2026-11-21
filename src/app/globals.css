@@ -201,16 +201,31 @@
 
 /* ───────────────────────── Components ───────────────────────── */
 @layer components {
-  /* Butoane: pastilă, 48 px. Hover = nuanță, apăsare = 0,98. */
+  /* Butoane: pastilă, 48 px. Hover = nuanță + ridicare de 1 px, apăsare = 0,97 (150 ms). */
   .btn {
     @apply relative inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-6 font-semibold whitespace-nowrap;
     font-size: 0.875rem;
     line-height: 1;
+  }
+  .btn,
+  .lift {
     transition:
       background-color 0.6s var(--ease-out-expo),
       border-color 0.6s var(--ease-out-expo),
       color 0.6s var(--ease-out-expo),
-      transform 0.6s var(--ease-out-expo);
+      translate 0.15s var(--ease-reveal),
+      scale 0.15s var(--ease-reveal);
+  }
+  @media (hover: hover) {
+    .btn:hover,
+    .lift:hover {
+      translate: 0 -1px;
+    }
+  }
+  .btn:active,
+  .lift:active {
+    translate: 0 0;
+    scale: 0.97;
   }
   .btn-lg {
     @apply min-h-14 px-8;
@@ -252,8 +267,7 @@
     pointer-events: none;
   }
 
-  /* Apăsare: tot ce e interactiv se strânge ușor */
-  .btn:active,
+  /* Apăsare: rândurile, filele și linkurile mari se strâng ușor */
   .press:active {
     transform: scale(0.98);
   }
@@ -327,19 +341,6 @@
     line-height: 1.5;
   }
 
-  /* Ora ca pe o tabelă de plecări: cifrele se întorc (fără casete în jurul lor) */
-  .flap {
-    display: inline-flex;
-    perspective: 400px;
-    font-variant-numeric: tabular-nums;
-  }
-  .flap-c {
-    display: inline-block;
-    min-width: 0.6em;
-    text-align: center;
-    transform-origin: 50% 55%;
-    backface-visibility: hidden;
-  }
 }
 
 /* ───────────────────────── Header ───────────────────────── */
@@ -1192,6 +1193,27 @@ input.bseg-input {
   .orbit-sticky {
     aspect-ratio: 16 / 9;
   }
+}
+
+/* ───────────────────────── Lenis (derularea lină; regulile din lenis/dist/lenis.css) ───────────────────────── */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis:not(.lenis-autoToggle).lenis-stopped {
+  overflow: clip;
+}
+.lenis [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
+}
+/* autoToggle: Lenis se oprește cât <html> are overflow: hidden (meniul deschis) */
+.lenis.lenis-autoToggle {
+  transition-property: overflow;
+  transition-duration: 1ms;
+  transition-behavior: allow-discrete;
 }
 
 /* ───────────────────────── Bucla de noapte în spatele orarului ───────────────────────── */
