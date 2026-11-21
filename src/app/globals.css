@@ -1194,6 +1194,39 @@ input.bseg-input {
   }
 }
 
+/* ───────────────────────── Bucla de noapte în spatele orarului ───────────────────────── */
+/* Stratul acoperă secțiunea; clipul stă lipit de ecran (sticky) cât o derulezi, deci nu e mărit pe toată înălțimea ei */
+.night-loop {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+.night-loop-sticky {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  overflow: clip;
+}
+.night-loop video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 1.2s var(--ease-reveal);
+}
+.night-loop[data-ready] video {
+  opacity: 0.35;
+}
+/* Stratul bleumarin (40%): contrast AA pentru textul gri chiar peste cele mai luminoase dâre */
+.night-loop-sticky::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: color-mix(in oklab, var(--color-night) 40%, transparent);
+}
+
 /* ───────────────────────── Detaliile: rând cu scroll-snap pe telefon, grilă de 4 de la 64rem ───────────────────────── */
 .details-row {
   display: flex;

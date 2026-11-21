@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useId, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import { FlapText } from "../FlapText";
+import { NightLoop } from "./NightLoop";
 import { RouteMap } from "../RouteMap";
 import { ArrowRight, ArrowUpRight, ChevronDown } from "../icons";
 import { site } from "@/config/site";
@@ -115,7 +116,9 @@ export function Timetable({ full = false }: { full?: boolean } = {}) {
   const activeIndex = directions.findIndex((d) => d.id === tab);
 
   return (
-    <section id="curse" className="section-y scroll-mt-16 bg-night text-white" aria-labelledby="curse-title" data-bg="night">
+    <section id="curse" className="section-y relative isolate scroll-mt-16 bg-night text-white" aria-labelledby="curse-title" data-bg="night">
+      {/* Pe prima pagină: bucla de noapte în spate */}
+      {!full && <NightLoop />}
       <div className="container-x">
         {/* Titlul la stânga, un singur link discret la dreapta, pe aceeași linie */}
         <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-6">
